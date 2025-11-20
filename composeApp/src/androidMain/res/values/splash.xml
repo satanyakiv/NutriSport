@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style parent="Theme.SplashScreen" name="Theme.NutriSport.Splash">
+		<item name="windowSplashScreenBackground">#FFFFFF</item>
+		<item name="postSplashScreenTheme">@android:style/Theme.Material.NoActionBar</item>
+		<item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
+</resources>

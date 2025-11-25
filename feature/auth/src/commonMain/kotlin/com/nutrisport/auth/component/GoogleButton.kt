@@ -41,7 +41,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun GoogleButton(
     modifier: Modifier = Modifier,
-    loading: Boolean = false,
+    loading: Boolean,
     primaryText: String = "Sing in with Google",
     secondaryText: String = "Please wait...",
     icon: DrawableResource = Resources.Image.GoogleLogo,

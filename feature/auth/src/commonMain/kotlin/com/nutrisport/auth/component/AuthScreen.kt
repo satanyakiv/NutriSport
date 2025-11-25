@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +27,8 @@ import rememberMessageBarState
 @Composable
 fun AuthScreen() {
     val messageBarState = rememberMessageBarState()
-    val loadingState = remember { mutableListOf(false)}
+    val loadingState by remember { mutableStateOf(false) }
+
     Scaffold { padding ->
         ContentWithMessageBar(
             modifier = Modifier.padding(
@@ -61,7 +64,7 @@ fun AuthScreen() {
                 }
                 GoogleButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    loading = false,
+                    loading = loadingState,
                     onClicked = {
 
                     }

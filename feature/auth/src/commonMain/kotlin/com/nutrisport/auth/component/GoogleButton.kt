@@ -1,6 +1,6 @@
 package com.nutrisport.auth.component
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
@@ -37,6 +37,7 @@ import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GoogleButton(
@@ -54,7 +55,7 @@ fun GoogleButton(
     var buttonText by remember { mutableStateOf(primaryText) }
 
     LaunchedEffect(loading) {
-        buttonText = if(loading) secondaryText else primaryText
+        buttonText = if (loading) secondaryText else primaryText
     }
 
     Surface(
@@ -78,19 +79,22 @@ fun GoogleButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            AnimatedVisibility(!loading) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = "Google logo",
-                )
-            }
-
-            AnimatedVisibility(visible = loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp,
-                    color = progressIndicatorColor,
-                )
+            AnimatedContent(
+                targetState = loading,
+            ) { loadingState ->
+                if (!loadingState) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = "Google logo",
+                        tint = Color.Unspecified
+                    )
+                } else {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp,
+                        color = progressIndicatorColor,
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
@@ -100,4 +104,14 @@ fun GoogleButton(
             )
         }
     }
+}
+
+@Composable
+@Preview
+private fun Preview() {
+    GoogleButton(
+        modifier = Modifier,
+        loading = false,
+        onClicked = {}
+    )
 }

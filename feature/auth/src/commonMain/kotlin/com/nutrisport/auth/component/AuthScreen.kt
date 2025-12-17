@@ -48,7 +48,7 @@ fun AuthScreen() {
             errorContainerColor = SurfaceError,
             errorContentColor = TextWhite,
             successContainerColor = SurfaceBrand,
-            successContentColor = TextPrimary
+            successContentColor = TextPrimary,
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Column(

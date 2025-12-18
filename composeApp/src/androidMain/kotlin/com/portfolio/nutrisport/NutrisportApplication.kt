@@ -1,4 +1,4 @@
-package com.nutrisport.data
+package com.portfolio.nutrisport
 
 import android.app.Application
 import com.google.firebase.Firebase

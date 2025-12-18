@@ -41,18 +41,22 @@ kotlin {
       implementation(compose.components.resources)
       implementation(compose.components.uiToolingPreview)
 
+      implementation(libs.koin.core)
+      implementation(libs.koin.compose)
+
       implementation(libs.auth.kmp)
       implementation(libs.firebase.app)
 
       implementation(project(":navigation"))
       implementation(project(":shared"))
       implementation(project(":di"))
+      implementation(project(":data"))
     }
   }
 }
 
 android {
-  namespace = "com.nutrisport.data"
+  namespace = "com.portfolio.nutrisport"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

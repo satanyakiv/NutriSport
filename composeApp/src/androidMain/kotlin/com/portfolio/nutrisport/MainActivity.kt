@@ -1,4 +1,6 @@
-package com.nutrisport.data
+package com.portfolio.nutrisport
+
+import com.nutrisport.data.AppContent
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

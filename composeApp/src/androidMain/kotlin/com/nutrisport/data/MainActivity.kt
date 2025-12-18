@@ -1,4 +1,4 @@
-package com.portfolio.nutrisport
+package com.nutrisport.data
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,19 +9,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        installSplashScreen()
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge()
+    installSplashScreen()
+    super.onCreate(savedInstanceState)
 
-        setContent {
-            AppContent()
-        }
+    setContent {
+      AppContent()
     }
+  }
 }
 
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    AppContent()
+  AppContent()
 }

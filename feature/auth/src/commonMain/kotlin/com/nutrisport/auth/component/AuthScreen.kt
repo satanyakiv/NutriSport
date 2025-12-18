@@ -28,81 +28,87 @@ import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
 import com.nutrisport.shared.TextWhite
+import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
 @Composable
 fun AuthScreen() {
-    val messageBarState = rememberMessageBarState()
-    var loadingState by remember { mutableStateOf(false) }
+  val messageBarState = rememberMessageBarState()
+  val viewModel = koinViewModel<AuthViewModel>()
+  var loadingState by remember { mutableStateOf(false) }
 
-    Scaffold { padding ->
-        ContentWithMessageBar(
-            contentBackgroundColor = Surface,
-            modifier = Modifier
-                .padding(
-                    top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding()
-                ),
-            messageBarState = messageBarState,
-            errorMaxLines = 2,
-            errorContainerColor = SurfaceError,
-            errorContentColor = TextWhite,
-            successContainerColor = SurfaceBrand,
-            successContentColor = TextPrimary,
+  Scaffold { padding ->
+    ContentWithMessageBar(
+      contentBackgroundColor = Surface,
+      modifier = Modifier
+        .padding(
+          top = padding.calculateTopPadding(),
+          bottom = padding.calculateBottomPadding()
+        ),
+      messageBarState = messageBarState,
+      errorMaxLines = 2,
+      errorContainerColor = SurfaceError,
+      errorContentColor = TextWhite,
+      successContainerColor = SurfaceBrand,
+      successContentColor = TextPrimary,
+    ) {
+      Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+          modifier = Modifier.weight(2f),
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Column(
-                    modifier = Modifier.weight(2f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "NUTRISPORT",
-                        textAlign = TextAlign.Center,
-                        fontFamily = BebasNeuFont(),
-                        fontSize = FontSize.EXTRA_LARGE,
-                        color = TextSecondary,
-                    )
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(Alpha.HALF),
-                        text = "Sign in to continue",
-                        textAlign = TextAlign.Center,
-                        fontSize = FontSize.EXTRA_REGULAR,
-                        color = TextSecondary,
-                    )
-                }
-                GoogleButtonUiContainerFirebase(
-                    linkAccount = false,
-                    onResult = { result ->
-                        result.onSuccess { user ->
-                            loadingState = false
-                            messageBarState.addSuccess("Auth Successful")
-
-                        }.onFailure { error ->
-                            if (error.message?.contains("A network error") == true) {
-                                messageBarState.addError("Internet connection unavailable")
-                            } else if (error.message?.contains("Idtoken is null") == true) {
-                                messageBarState.addError("Sign in cancelled")
-                            } else {
-                                messageBarState.addError(error.message ?: "Something went wrong")
-                            }
-                            loadingState = false
-                        }
-                    }
-                ) {
-                    GoogleButton(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        loading = loadingState,
-                        onClicked = {
-                            loadingState = true
-                            this@GoogleButtonUiContainerFirebase.onClick()
-                        }
-                    )
-                }
-            }
+          Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "NUTRISPORT",
+            textAlign = TextAlign.Center,
+            fontFamily = BebasNeuFont(),
+            fontSize = FontSize.EXTRA_LARGE,
+            color = TextSecondary,
+          )
+          Text(
+            modifier = Modifier
+              .fillMaxWidth()
+              .alpha(Alpha.HALF),
+            text = "Sign in to continue",
+            textAlign = TextAlign.Center,
+            fontSize = FontSize.EXTRA_REGULAR,
+            color = TextSecondary,
+          )
         }
+        GoogleButtonUiContainerFirebase(
+          linkAccount = false,
+          onResult = { result ->
+            result.onSuccess { user ->
+              viewModel.createCustomer(
+                user = user,
+                onSuccess = { messageBarState.addSuccess("Auth Successful") },
+                onError = { e -> messageBarState.addError(e) }
+              )
+              loadingState = false
+
+            }.onFailure { error ->
+              if (error.message?.contains("A network error") == true) {
+                messageBarState.addError("Internet connection unavailable")
+              } else if (error.message?.contains("Idtoken is null") == true) {
+                messageBarState.addError("Sign in cancelled")
+              } else {
+                messageBarState.addError(error.message ?: "Something went wrong")
+              }
+              loadingState = false
+            }
+          }
+        ) {
+          GoogleButton(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            loading = loadingState,
+            onClicked = {
+              loadingState = true
+              this@GoogleButtonUiContainerFirebase.onClick()
+            }
+          )
+        }
+      }
     }
+  }
 }

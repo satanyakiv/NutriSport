@@ -41,77 +41,77 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GoogleButton(
-    modifier: Modifier = Modifier,
-    loading: Boolean,
-    primaryText: String = "Sing in with Google",
-    secondaryText: String = "Please wait...",
-    icon: DrawableResource = Resources.Image.GoogleLogo,
-    shape: Shape = RoundedCornerShape(99.dp),
-    backgroundColor: Color = SurfaceLighter,
-    borderColor: Color = SurfaceDarker,
-    progressIndicatorColor: Color = IconSecondary,
-    onClicked: () -> Unit
+  modifier: Modifier = Modifier,
+  loading: Boolean,
+  primaryText: String = "Sing in with Google",
+  secondaryText: String = "Please wait...",
+  icon: DrawableResource = Resources.Image.GoogleLogo,
+  shape: Shape = RoundedCornerShape(99.dp),
+  backgroundColor: Color = SurfaceLighter,
+  borderColor: Color = SurfaceDarker,
+  progressIndicatorColor: Color = IconSecondary,
+  onClicked: () -> Unit
 ) {
-    var buttonText by remember { mutableStateOf(primaryText) }
+  var buttonText by remember { mutableStateOf(primaryText) }
 
-    LaunchedEffect(loading) {
-        buttonText = if (loading) secondaryText else primaryText
-    }
+  LaunchedEffect(loading) {
+    buttonText = if (loading) secondaryText else primaryText
+  }
 
-    Surface(
-        modifier = modifier
-            .clip(shape)
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = shape
-            )
-            .clickable(enabled = !loading) { onClicked() },
-        color = backgroundColor,
+  Surface(
+    modifier = modifier
+      .clip(shape)
+      .border(
+        width = 1.dp,
+        color = borderColor,
+        shape = shape
+      )
+      .clickable(enabled = !loading) { onClicked() },
+    color = backgroundColor,
+  ) {
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(all = 24.dp)
+        .animateContentSize(
+          animationSpec = tween(durationMillis = 200)
+        ),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Center,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 24.dp)
-                .animateContentSize(
-                    animationSpec = tween(durationMillis = 200)
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            AnimatedContent(
-                targetState = loading,
-            ) { loadingState ->
-                if (!loadingState) {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = "Google logo",
-                        tint = Color.Unspecified
-                    )
-                } else {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp,
-                        color = progressIndicatorColor,
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = buttonText,
-                color = TextPrimary,
-                fontSize = FontSize.REGULAR,
-            )
+      AnimatedContent(
+        targetState = loading,
+      ) { loadingState ->
+        if (!loadingState) {
+          Icon(
+            painter = painterResource(icon),
+            contentDescription = "Google logo",
+            tint = Color.Unspecified
+          )
+        } else {
+          CircularProgressIndicator(
+            modifier = Modifier.size(24.dp),
+            strokeWidth = 2.dp,
+            color = progressIndicatorColor,
+          )
         }
+      }
+      Spacer(modifier = Modifier.width(12.dp))
+      Text(
+        text = buttonText,
+        color = TextPrimary,
+        fontSize = FontSize.REGULAR,
+      )
     }
+  }
 }
 
 @Composable
 @Preview
 private fun Preview() {
-    GoogleButton(
-        modifier = Modifier,
-        loading = false,
-        onClicked = {}
-    )
+  GoogleButton(
+    modifier = Modifier,
+    loading = false,
+    onClicked = {}
+  )
 }

@@ -27,7 +27,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
-splash-screen = { module = "androidx.core:core-splashscreen" , version.ref ="splash" }
+splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "splash" }
 compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 auth-kmp = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "auth" }

@@ -1,60 +1,64 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
+  alias(libs.plugins.kotlinMultiplatform)
+  alias(libs.plugins.androidLibrary)
+  alias(libs.plugins.composeMultiplatform)
+  alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+  androidTarget {
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_17)
     }
+  }
 
-    listOf(
-        iosArm64(),
-        iosX64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "auth"
-            isStatic = true
-        }
+  listOf(
+    iosArm64(),
+    iosX64(),
+    iosSimulatorArm64()
+  ).forEach { iosTarget ->
+    iosTarget.binaries.framework {
+      baseName = "auth"
+      isStatic = true
     }
+  }
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+  sourceSets {
+    commonMain.dependencies {
+      implementation(compose.runtime)
+      implementation(compose.foundation)
+      implementation(compose.material3)
+      implementation(compose.ui)
+      implementation(compose.components.resources)
+      implementation(compose.components.uiToolingPreview)
 
-            implementation(libs.messagebar.kmp)
+      implementation(libs.messagebar.kmp)
 
-            implementation(libs.auth.kmp)
-            implementation(libs.auth.firebase.kmp)
+      implementation(libs.auth.kmp)
+      implementation(libs.auth.firebase.kmp)
 
-            implementation(project(path = ":shared"))
-        }
+      implementation(libs.koin.compose)
+      implementation(libs.koin.compose.viewmodel)
+
+      implementation(project(path = ":shared"))
+      implementation(project(path = ":data"))
     }
+  }
 }
 
 android {
-    namespace = "com.portfolio.auth"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+  namespace = "com.portfolio.auth"
+  compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-    }
+  defaultConfig {
+    minSdk = libs.versions.android.minSdk.get().toInt()
+    targetSdk = libs.versions.android.targetSdk.get().toInt()
+  }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
 }

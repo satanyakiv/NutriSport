@@ -15,6 +15,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+include(":di")
 
 include(":feature:auth")
 include(":navigation")

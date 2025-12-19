@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nutrisport.auth.component.AuthScreen
 import com.nutrisport.home.HomeGraphScreen
+import com.nutrisport.shared.navigation.Screen
 
 @Composable
 fun SetupNavGraph(
@@ -14,7 +15,7 @@ fun SetupNavGraph(
   val navController = rememberNavController()
   NavHost(
     navController = navController,
-    startDestination = startDestination
+    startDestination = startDestination,
   ) {
     composable<Screen.Auth> {
       AuthScreen(

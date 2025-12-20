@@ -26,31 +26,50 @@ kotlin {
   }
 
   sourceSets {
-    androidMain.dependencies {
-      implementation(compose.preview)
-      implementation(libs.androidx.activity.compose)
-      implementation(libs.splash.screen)
-      implementation(compose.material3)
-      implementation(libs.koin.android)
+    val commonMain by getting {
+      dependencies {
+        implementation(compose.runtime)
+        implementation(compose.foundation)
+        implementation(compose.material3)
+        implementation(compose.ui)
+        implementation(compose.components.resources)
+        implementation(compose.components.uiToolingPreview)
+
+        implementation(libs.koin.core)
+        implementation(libs.koin.compose)
+
+        implementation(libs.auth.kmp)
+        implementation(libs.firebase.app)
+
+        implementation(project(":navigation"))
+        implementation(project(":shared"))
+        implementation(project(":di"))
+        implementation(project(":data"))
+      }
     }
-    commonMain.dependencies {
-      implementation(compose.runtime)
-      implementation(compose.foundation)
-      implementation(compose.material3)
-      implementation(compose.ui)
-      implementation(compose.components.resources)
-      implementation(compose.components.uiToolingPreview)
 
-      implementation(libs.koin.core)
-      implementation(libs.koin.compose)
+    val androidMain by getting {
+      dependencies {
+        implementation(compose.preview)
+        implementation(libs.androidx.activity.compose)
+        implementation(libs.splash.screen)
+        implementation(compose.material3)
+        implementation(libs.koin.android)
+      }
+    }
 
-      implementation(libs.auth.kmp)
-      implementation(libs.firebase.app)
+    // Shared iOS source set for all iOS targets.
+    // Put iOS `actual` implementations into: composeApp/src/iosMain/kotlin
+    val iosMain by creating {
+      dependsOn(commonMain)
+    }
 
-      implementation(project(":navigation"))
-      implementation(project(":shared"))
-      implementation(project(":di"))
-      implementation(project(":data"))
+    val iosArm64Main by getting {
+      dependsOn(iosMain)
+    }
+
+    val iosSimulatorArm64Main by getting {
+      dependsOn(iosMain)
     }
   }
 }
@@ -86,4 +105,3 @@ dependencies {
 //    implementation(libs.core.splashscreen)
   debugImplementation(compose.uiTooling)
 }
-

@@ -1,5 +1,6 @@
 package com.nutrisport.home
 
+import ContentWithMessageBar
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -57,10 +58,14 @@ import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.getScreenWidth
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
+import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeGraphScreen() {
+fun HomeGraphScreen(
+  goToAuth: () -> Unit,
+) {
   val navController = rememberNavController()
   val currentRoute = navController.currentBackStackEntryAsState()
 
@@ -94,6 +99,9 @@ fun HomeGraphScreen() {
     targetValue = if (drawerState.isOpened()) 20.dp else 0.dp,
   )
 
+  val viewModel = koinViewModel<HomeGraphViewModel>()
+  val messageBarState = rememberMessageBarState()
+
   Box(
     modifier = Modifier
       .fillMaxSize()
@@ -103,7 +111,14 @@ fun HomeGraphScreen() {
     CustomDrawer(
       onProfileClick = { },
       onContactUsClick = { },
-      onSignOutClick = { },
+      onSignOutClick = {
+        viewModel.signOut(
+          onSuccess = { goToAuth() },
+          onError = { message ->
+            messageBarState.addError(message)
+          }
+        )
+      },
       onAdminPanelClick = { }
     )
     Box(
@@ -161,36 +176,45 @@ fun HomeGraphScreen() {
           }
         )
       }) { innerPadding ->
-        Column(
-          modifier = Modifier.fillMaxSize().padding(
-            top = innerPadding.calculateTopPadding(),
-            bottom = innerPadding.calculateBottomPadding(),
-          )
-        ) {
-          NavHost(
-            modifier = Modifier.weight(1f),
-            navController = navController,
-            startDestination = Screen.ProductsOverview
-          ) {
-            composable<Screen.ProductsOverview> { }
-            composable<Screen.Cart> { }
-            composable<Screen.Categories> { }
-          }
-          Spacer(modifier = Modifier.height(12.dp))
-          Box(modifier = Modifier.padding(12.dp)) {
-            BottomBar(
-              selected = selectedDestination,
-              onSelect = { destination ->
-                navController.navigate(destination.screen) {
-                  launchSingleTop = true
-                  popUpTo<Screen.ProductsOverview> {
-                    saveState = true
-                    inclusive = true
-                  }
-                  restoreState = true
-                }
-              }
+        ContentWithMessageBar(
+          messageBarState = messageBarState,
+          errorMaxLines = 2,
+          contentBackgroundColor = Surface,
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(
+              top = innerPadding.calculateTopPadding(),
+              bottom = innerPadding.calculateBottomPadding(),
             )
+        ) {
+          Column(
+            modifier = Modifier.fillMaxSize(),
+          ) {
+            NavHost(
+              modifier = Modifier.weight(1f),
+              navController = navController,
+              startDestination = Screen.ProductsOverview
+            ) {
+              composable<Screen.ProductsOverview> { }
+              composable<Screen.Cart> { }
+              composable<Screen.Categories> { }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Box(modifier = Modifier.padding(12.dp)) {
+              BottomBar(
+                selected = selectedDestination,
+                onSelect = { destination ->
+                  navController.navigate(destination.screen) {
+                    launchSingleTop = true
+                    popUpTo<Screen.ProductsOverview> {
+                      saveState = true
+                      inclusive = true
+                    }
+                    restoreState = true
+                  }
+                }
+              )
+            }
           }
         }
       }

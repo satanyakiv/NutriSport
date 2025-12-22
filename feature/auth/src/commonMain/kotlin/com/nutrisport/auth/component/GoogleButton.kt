@@ -29,10 +29,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.nutrisport.shared.BorderIdle
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconSecondary
 import com.nutrisport.shared.Resources
-import com.nutrisport.shared.SurfaceDarker
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import org.jetbrains.compose.resources.DrawableResource
@@ -48,7 +48,7 @@ fun GoogleButton(
   icon: DrawableResource = Resources.Image.GoogleLogo,
   shape: Shape = RoundedCornerShape(99.dp),
   backgroundColor: Color = SurfaceLighter,
-  borderColor: Color = SurfaceDarker,
+  borderColor: Color = BorderIdle,
   progressIndicatorColor: Color = IconSecondary,
   onClicked: () -> Unit
 ) {

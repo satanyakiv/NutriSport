@@ -19,6 +19,7 @@ include(":data")
 include(":di")
 
 include(":feature:home")
+include(":feature:prorile")
 include(":feature:auth")
 include(":navigation")
 include(":composeApp")

@@ -20,7 +20,7 @@ kotlin {
     iosSimulatorArm64()
   ).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "profile"
+      baseName = "prorile"
       isStatic = true
     }
   }
@@ -46,7 +46,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.portfolio.profile"
+  namespace = "com.portfolio.prorile"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

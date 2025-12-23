@@ -1,4 +1,4 @@
-package com.nutrisport.profile
+package com.nutrisport.shared.composent
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.border
@@ -68,10 +68,10 @@ fun CustomTextField(
       focusedContainerColor = SurfaceLighter,
       focusedTextColor = TextPrimary,
       unfocusedTextColor = TextPrimary,
-      disabledTextColor = TextPrimary.copy(alpha = Alpha.DISABLE),
+      disabledTextColor = TextPrimary.copy(alpha = Alpha.DISABLED),
       focusedPlaceholderColor = TextPrimary.copy(alpha = Alpha.HALF),
       unfocusedPlaceholderColor = TextPrimary.copy(alpha = Alpha.HALF),
-      disabledPlaceholderColor = TextPrimary.copy(alpha = Alpha.DISABLE),
+      disabledPlaceholderColor = TextPrimary.copy(alpha = Alpha.DISABLED),
       disabledContainerColor = SurfaceDarker,
       focusedIndicatorColor = Color.Transparent,
       unfocusedIndicatorColor = Color.Transparent,

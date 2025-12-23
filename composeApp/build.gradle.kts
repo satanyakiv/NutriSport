@@ -15,6 +15,10 @@ kotlin {
     }
   }
 
+  compilerOptions {
+    freeCompilerArgs.add("-Xreturn-value-checker=full")
+  }
+
   listOf(
     iosArm64(),
     iosSimulatorArm64()

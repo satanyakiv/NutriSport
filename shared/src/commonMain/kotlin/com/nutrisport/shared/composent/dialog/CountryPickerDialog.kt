@@ -1,4 +1,5 @@
 package com.nutrisport.shared.composent.dialog
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
@@ -45,6 +46,7 @@ import com.nutrisport.shared.SurfaceSecondary
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
 import com.nutrisport.shared.composent.CustomTextField
+import com.nutrisport.shared.composent.ErrorCard
 import com.nutrisport.shared.domain.Country
 import org.jetbrains.compose.resources.painterResource
 
@@ -111,10 +113,10 @@ fun CountryPickerDialog(
             }
           }
         } else {
-//          ErrorCard(
-//            modifier = Modifier.weight(1f),
-//            message = "Dial code not found."
-//          )
+          ErrorCard(
+            modifier = Modifier.weight(1f),
+            message = "Dial code not found."
+          )
         }
       }
     },

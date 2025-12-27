@@ -4,14 +4,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.nutrisport.shared.Surface
 import com.nutrisport.shared.composent.ProfileForm
+import com.nutrisport.shared.domain.Country
 
 @Composable
 fun ProfileScreen(
   modifier: Modifier = Modifier,
 ) {
+  var country by remember { mutableStateOf(Country.Serbia) }
+
   Box(
     modifier = modifier
       .background(Surface)
@@ -19,6 +26,10 @@ fun ProfileScreen(
   ) {
     ProfileForm(
       modifier = modifier,
+      country = country,
+      onCountrySelect = { selectedCountry ->
+        country = selectedCountry
+      },
       firstName = "Miranda Jennings",
       firstNameChange = {},
       lastName = "",

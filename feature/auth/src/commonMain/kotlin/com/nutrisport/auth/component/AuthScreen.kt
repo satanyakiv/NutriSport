@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
 import com.nutrisport.shared.Alpha
-import com.nutrisport.shared.BebasNeuFont
+import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.Surface
 import com.nutrisport.shared.SurfaceBrand
@@ -67,7 +67,7 @@ fun AuthScreen(
             modifier = Modifier.fillMaxWidth(),
             text = "NUTRISPORT",
             textAlign = TextAlign.Center,
-            fontFamily = BebasNeuFont(),
+            fontFamily = BebasNeueFont(),
             fontSize = FontSize.EXTRA_LARGE,
             color = TextSecondary,
           )

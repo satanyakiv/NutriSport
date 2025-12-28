@@ -42,7 +42,7 @@ import com.nutrisport.home.domain.CustomDrawerState
 import com.nutrisport.home.domain.isOpened
 import com.nutrisport.home.domain.opposite
 import com.nutrisport.shared.Alpha
-import com.nutrisport.shared.BebasNeuFont
+import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
@@ -145,7 +145,7 @@ fun HomeGraphScreen(
             ) { destination ->
               Text(
                 text = destination.title,
-                fontFamily = BebasNeuFont(),
+                fontFamily = BebasNeueFont(),
                 fontSize = FontSize.LARGE,
                 color = TextPrimary,
               )

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nutrisport.home.domain.DrawerItem
-import com.nutrisport.shared.BebasNeuFont
+import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
@@ -35,7 +35,7 @@ fun CustomDrawer(
       text = "NUTRISPORT",
       textAlign = TextAlign.Center,
       color = TextSecondary,
-      fontFamily = BebasNeuFont(),
+      fontFamily = BebasNeueFont(),
       fontSize = FontSize.EXTRA_LARGE,
     )
     Text(

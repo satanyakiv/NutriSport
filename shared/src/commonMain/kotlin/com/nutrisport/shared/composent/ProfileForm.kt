@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,13 +32,13 @@ fun ProfileForm(
   lastName: String,
   lastNameChange: (String) -> Unit,
   email: String,
-  city: String,
+  city: String?,
   onCityChange: (String) -> Unit,
   postalCode: Int?,
   postalCodeChange: (Int?) -> Unit,
-  address: String,
+  address: String?,
   onAddressChange: (String) -> Unit,
-  phoneNumber: String,
+  phoneNumber: String?,
   onPhoneNumberChange: (String) -> Unit,
 ) {
   var showCountryDialog by remember { mutableStateOf(false) }
@@ -58,7 +59,7 @@ fun ProfileForm(
   Column(
     modifier = modifier
       .fillMaxSize()
-      .padding(horizontal = 24.dp, vertical = 12.dp)
+      .verticalScroll(rememberScrollState())
       .imePadding(),
     verticalArrangement = Arrangement.spacedBy(12.dp)
   ) {
@@ -81,10 +82,10 @@ fun ProfileForm(
       placeholder = "Email",
     )
     CustomTextField(
-      value = city,
+      value = city.orEmpty(),
       onValueChange = onCityChange,
       placeholder = "City",
-      error = city.length !in 3..50
+      error = city?.length !in 3..50
     )
     CustomTextField(
       value = postalCode?.toString() ?: "",
@@ -93,10 +94,10 @@ fun ProfileForm(
       error = postalCode.toString().length !in 3..8,
     )
     CustomTextField(
-      value = address,
+      value = address.orEmpty(),
       onValueChange = onAddressChange,
       placeholder = "Address",
-      error = address.length !in 3..50
+      error = address?.length !in 3..50
     )
     Row(
       verticalAlignment = CenterVertically,
@@ -111,10 +112,10 @@ fun ProfileForm(
       )
       Spacer(modifier = Modifier.width(12.dp))
       CustomTextField(
-        value = phoneNumber,
+        value = phoneNumber.orEmpty(),
         onValueChange = onPhoneNumberChange,
         placeholder = "Phone number",
-        error = phoneNumber.length !in 5..15
+        error = phoneNumber?.length !in 5..15
       )
     }
   }

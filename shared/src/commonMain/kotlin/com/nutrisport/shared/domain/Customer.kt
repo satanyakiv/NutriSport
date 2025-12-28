@@ -10,13 +10,14 @@ data class Customer(
   val email: String,
   val city: String? = null,
   val postalCode: Int? = null,
+  val address: String? = null,
   val phoneNumber: PhoneNumber? = null,
   val cart: List<CartItem> = emptyList(),
 )
 
 @Serializable
 data class PhoneNumber(
-  val dialCode: String,
+  val dialCode: Int,
   val number: String,
 )
 

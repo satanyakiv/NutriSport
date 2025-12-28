@@ -6,6 +6,11 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class CustomerRepositoryImpl : CustomerRepository {
   override suspend fun createCustomer(
@@ -51,4 +56,35 @@ class CustomerRepositoryImpl : CustomerRepository {
   override fun getCurrentUserId(): String? {
     return Firebase.auth.currentUser?.uid
   }
+
+  override fun readCustomerFlow(): Flow<RequestState<Customer>> {
+    val userId = getCurrentUserId()
+      ?: return flowOf(RequestState.Error("User is not available"))
+    return Firebase.firestore.collection(collectionPath = "customer")
+      .document(userId)
+      .snapshots
+      .map { document ->
+        if (document.exists) {
+          val customer = Customer(
+            id = document.id,
+            firstName = document.get("firstName"),
+            lastName = document.get("lastName"),
+            email = document.get("email"),
+            city = document.get("city"),
+            postalCode = document.get("postalCode"),
+            address = document.get("address"),
+            phoneNumber = document.get("phoneNumber"),
+            cart = document.get("cart"),
+          )
+          RequestState.Success(customer)
+        } else {
+          RequestState.Error("User is not available.")
+        }
+      }
+      .onStart { emit(RequestState.Loading) }
+      .catch { e ->
+        emit(RequestState.Error("Error while reading Customer information: ${e.message}"))
+      }
+  }
+
 }

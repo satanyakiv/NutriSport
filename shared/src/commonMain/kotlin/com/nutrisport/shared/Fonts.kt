@@ -9,7 +9,7 @@ import nutrisport.shared.generated.resources.roboto_condensed_medium
 import org.jetbrains.compose.resources.Font
 
 @Composable
-fun BebasNeuFont() = FontFamily(
+fun BebasNeueFont() = FontFamily(
   Font(Res.font.besas_neu_regular)
 )
 

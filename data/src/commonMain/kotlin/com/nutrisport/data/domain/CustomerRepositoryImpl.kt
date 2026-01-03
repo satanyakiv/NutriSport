@@ -87,4 +87,29 @@ class CustomerRepositoryImpl : CustomerRepository {
       }
   }
 
+  override suspend fun updateCustomer(
+    customer: Customer,
+    onSuccess: () -> Unit,
+    onError: (String) -> Unit
+  ) {
+    try {
+      val userId = getCurrentUserId()
+      if (userId != null) {
+        val firestore = Firebase.firestore
+        val customerCollection = firestore.collection(collectionPath = "customer")
+        val existingCustomer = customerCollection.document(customer.id).get()
+        if (existingCustomer.exists) {
+          customerCollection.document(userId).update(customer)
+          onSuccess()
+        } else {
+          onError("User not found")
+        }
+      } else {
+        onError("User is not available")
+      }
+    } catch (e: Exception) {
+      onError("Error while updating a customer: ${e.message}")
+    }
+  }
+
 }

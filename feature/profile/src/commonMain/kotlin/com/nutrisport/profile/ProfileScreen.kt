@@ -122,24 +122,20 @@ fun ProfileScreen(
                 icon = Resources.Icon.Checkmark,
                 enabled = isFormValid,
                 onClick = {
-                  /*viewModel.updateCustomer(
-                    onSuccess = {
-                      messageBarState.addSuccess("Successfully updated!")
-                    },
-                    onError = { message ->
-                      messageBarState.addError(message)
-                    }
-                  )*/
+                  viewModel.updateCustomer(
+                    onSuccess = { messageBarState.addSuccess("Successfully updated!") },
+                    onError = { message -> messageBarState.addError(message) },
+                  )
                 }
               )
             }
           },
           onError = { message ->
-            /*InfoCard(
-              image = Resources.Image.Cat,
-              title = "Oops!",
-              subtitle = message
-            )*/
+//            InfoCard(
+//              image = Resources.Image.Cat,
+//              title = "Oops!",
+//              subtitle = message
+//            )
           }
         )
       }

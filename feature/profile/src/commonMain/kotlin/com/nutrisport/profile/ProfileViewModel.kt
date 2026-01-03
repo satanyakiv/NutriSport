@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.shared.domain.Country
+import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.flow.collectLatest
@@ -104,7 +105,7 @@ class ProfileViewModel(
     )
   }
 
-  /*fun updateCustomer(
+  fun updateCustomer(
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
@@ -124,5 +125,5 @@ class ProfileViewModel(
         onError = onError
       )
     }
-  }*/
+  }
 }

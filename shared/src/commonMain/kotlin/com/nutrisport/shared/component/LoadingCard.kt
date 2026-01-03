@@ -1,4 +1,4 @@
-package com.nutrisport.shared.composent
+package com.nutrisport.shared.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*

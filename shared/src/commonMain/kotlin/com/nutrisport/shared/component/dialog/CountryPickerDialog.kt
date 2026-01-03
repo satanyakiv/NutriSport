@@ -1,4 +1,4 @@
-package com.nutrisport.shared.composent.dialog
+package com.nutrisport.shared.component.dialog
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -45,8 +45,8 @@ import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.SurfaceSecondary
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
-import com.nutrisport.shared.composent.CustomTextField
-import com.nutrisport.shared.composent.ErrorCard
+import com.nutrisport.shared.component.CustomTextField
+import com.nutrisport.shared.component.ErrorCard
 import com.nutrisport.shared.domain.Country
 import org.jetbrains.compose.resources.painterResource
 

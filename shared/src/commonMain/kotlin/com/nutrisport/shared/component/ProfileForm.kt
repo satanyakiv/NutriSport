@@ -1,4 +1,4 @@
-package com.nutrisport.shared.composent
+package com.nutrisport.shared.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nutrisport.shared.composent.dialog.CountryPickerDialog
+import com.nutrisport.shared.component.dialog.CountryPickerDialog
 import com.nutrisport.shared.domain.Country
 
 @Composable

@@ -1,4 +1,4 @@
-package com.nutrisport.shared.composent
+package com.nutrisport.shared.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

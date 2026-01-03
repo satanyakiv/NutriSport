@@ -20,9 +20,10 @@ import com.nutrisport.shared.SurfaceBrand
 import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
-import com.nutrisport.shared.composent.LoadingCard
-import com.nutrisport.shared.composent.PrimaryButton
-import com.nutrisport.shared.composent.ProfileForm
+import com.nutrisport.shared.component.InfoCard
+import com.nutrisport.shared.component.LoadingCard
+import com.nutrisport.shared.component.PrimaryButton
+import com.nutrisport.shared.component.ProfileForm
 import com.nutrisport.shared.util.DisplayResult
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -131,11 +132,11 @@ fun ProfileScreen(
             }
           },
           onError = { message ->
-//            InfoCard(
-//              image = Resources.Image.Cat,
-//              title = "Oops!",
-//              subtitle = message
-//            )
+            InfoCard(
+              image = Resources.Image.Cat,
+              title = "Oops!",
+              subtitle = message
+            )
           }
         )
       }

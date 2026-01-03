@@ -17,6 +17,7 @@ dependencyResolutionManagement {
 }
 include(":data")
 include(":di")
+include(":feature:adminPanel")
 
 include(":feature:home")
 include(":feature:profile")

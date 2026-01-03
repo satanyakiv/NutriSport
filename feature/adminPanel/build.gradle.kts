@@ -5,13 +5,13 @@ plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.composeCompiler)
-  alias(libs.plugins.serialization)
 }
 
 kotlin {
   androidTarget {
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
+      freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
   }
 
@@ -21,7 +21,7 @@ kotlin {
     iosSimulatorArm64()
   ).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "shared"
+      baseName = "admin_panel"
       isStatic = true
     }
   }
@@ -33,16 +33,21 @@ kotlin {
       implementation(compose.material3)
       implementation(compose.ui)
       implementation(compose.components.resources)
-
       implementation(compose.components.uiToolingPreview)
 
-      implementation(libs.kotlinx.serialization)
+      implementation(libs.messagebar.kmp)
+
+      implementation(libs.koin.compose)
+      implementation(libs.koin.compose.viewmodel)
+
+      implementation(project(path = ":shared"))
+      implementation(project(path = ":data"))
     }
   }
 }
 
 android {
-  namespace = "com.portfolio.nutrisport"
+  namespace = "com.portfolio.admin_panel"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

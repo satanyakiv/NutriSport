@@ -1,6 +1,7 @@
 package com.nutrisport.manage_product
 
 import ContentWithMessageBar
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +20,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +43,8 @@ import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.AlertTextField
 import com.nutrisport.shared.component.CustomTextField
 import com.nutrisport.shared.component.PrimaryButton
+import com.nutrisport.shared.component.dialog.CategoriesDialog
+import com.nutrisport.shared.domain.ProductCategory
 import org.jetbrains.compose.resources.painterResource
 import rememberMessageBarState
 
@@ -48,6 +55,21 @@ fun ManageProductScreen(
   goBack: () -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
+  var category by remember { mutableStateOf(ProductCategory.Protein) }
+  var showCategoriesDialog by remember { mutableStateOf(false) }
+
+  AnimatedVisibility(
+    visible = showCategoriesDialog
+  ) {
+    CategoriesDialog(
+      category = category,
+      onDismiss  = { showCategoriesDialog = false },
+      onConfirmClick = {
+        category = it
+        showCategoriesDialog = false
+      }
+    )
+  }
 
   Scaffold(
     containerColor = Surface,
@@ -142,8 +164,8 @@ fun ManageProductScreen(
           )
           AlertTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = "Protein",
-            onClick = {},
+            text = category.title,
+            onClick = { showCategoriesDialog = true },
           )
           CustomTextField(
             value = "",

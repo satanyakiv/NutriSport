@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.nutrisport.admin_panel.AdminPanelScreen
 import com.nutrisport.auth.component.AuthScreen
 import com.nutrisport.home.HomeGraphScreen
+import com.nutrisport.manage_product.ManageProductScreen
 import com.nutrisport.profile.ProfileScreen
 import com.nutrisport.shared.navigation.Screen
 
@@ -36,27 +38,25 @@ fun SetupNavGraph(
             popUpTo<Screen.HomeGraph> { inclusive = true }
           }
         },
-        goToProfile = {
-          navController.navigate(Screen.Profile) {
-          }
-        },
-        goToAdminPanel = {
-          navController.navigate(Screen.AdminPanel)
-        }
+        goToProfile = { navController.navigate(Screen.Profile) },
+        goToAdminPanel = { navController.navigate(Screen.AdminPanel) }
       )
     }
     composable<Screen.Profile> {
       ProfileScreen(
-        goBack = {
-          navController.navigateUp()
-        },
+        goBack = { navController.navigateUp() },
       )
     }
     composable<Screen.AdminPanel> {
       AdminPanelScreen(
-        goBack = {
-          navController.navigateUp()
-        },
+        goBack = { navController.navigateUp() },
+        goToManageProduct = { id -> navController.navigate(Screen.ManageProduct(id)) }
+      )
+    }
+    composable<Screen.ManageProduct> {
+      ManageProductScreen(
+        id = it.toRoute<Screen.ManageProduct>().id,
+        goBack = { navController.navigateUp() },
       )
     }
   }

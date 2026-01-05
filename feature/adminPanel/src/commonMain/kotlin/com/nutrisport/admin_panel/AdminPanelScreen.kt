@@ -23,6 +23,7 @@ import rememberMessageBarState
 fun AdminPanelScreen(
   modifier: Modifier = Modifier,
   goBack: () -> Unit,
+  goToManageProduct: (String?) -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
 
@@ -67,7 +68,7 @@ fun AdminPanelScreen(
     },
     floatingActionButton = {
       FloatingActionButton(
-        onClick = {},
+        onClick = { goToManageProduct(null) },
         containerColor = ButtonPrimary,
         contentColor = TextPrimary,
         content = {

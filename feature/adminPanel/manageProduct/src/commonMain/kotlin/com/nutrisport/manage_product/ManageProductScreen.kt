@@ -39,6 +39,7 @@ import coil3.request.crossfade
 import com.nutrisport.manage_product.util.PhotoPicker
 import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.BorderIdle
+import com.nutrisport.shared.ButtonPrimary
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
@@ -190,12 +191,42 @@ fun ManageProductScreen(
                 )
               },
               onSuccess = {
-                AsyncImage(
+                Box(
                   modifier = Modifier.fillMaxSize(),
-                  model = ImageRequest.Builder(LocalPlatformContext.current).data(screenState.thumbnail).crossfade(enable = true).build(),
-                  contentDescription = "Product thumbnail image",
-                  contentScale = ContentScale.Crop,
-                )
+                  contentAlignment = Alignment.TopEnd,
+                ) {
+                  AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
+                    model = ImageRequest.Builder(LocalPlatformContext.current).data(screenState.thumbnail).crossfade(enable = true).build(),
+                    contentDescription = "Product thumbnail image",
+                    contentScale = ContentScale.Crop,
+                  )
+                  Box(
+                    modifier = Modifier
+                      .clip(RoundedCornerShape(6.dp))
+                      .padding(top = 12.dp, end = 12.dp)
+                      .background(ButtonPrimary)
+                      .clickable {
+                        viewModel.deleteThumbnail(
+                          onSuccess = {
+                            messageBarState.addSuccess("Thumbnail successfully deleted")
+                          },
+                          onError = {
+                            messageBarState.addError("Error while deleting thumbnail: $it")
+                          }
+                        )
+                      }
+                      .padding(12.dp),
+                    contentAlignment = Alignment.Center,
+
+                  ) {
+                    Icon(
+                      modifier = Modifier.size(14.dp),
+                      painter = painterResource(Resources.Icon.Delete),
+                      contentDescription = "Delete icon",
+                    )
+                  }
+                }
               },
               onError = {
                 Column(
@@ -216,7 +247,8 @@ fun ManageProductScreen(
                   ) {
                     Text(
                       fontSize = FontSize.SMALL,
-                      text = "Try again"
+                      text = "Try again",
+                      color = TextSecondary,
                     )
                   }
                 }

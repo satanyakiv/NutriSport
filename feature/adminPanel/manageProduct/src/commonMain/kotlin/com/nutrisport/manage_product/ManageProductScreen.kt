@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -27,8 +28,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import com.nutrisport.manage_product.util.PhotoPicker
 import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.BorderIdle
 import com.nutrisport.shared.FontSize
@@ -39,13 +47,19 @@ import com.nutrisport.shared.SurfaceBrand
 import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
+import com.nutrisport.shared.TextSecondary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.AlertTextField
 import com.nutrisport.shared.component.CustomTextField
+import com.nutrisport.shared.component.ErrorCard
+import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.dialog.CategoriesDialog
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.util.DisplayResult
+import com.nutrisport.shared.util.RequestState
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
@@ -61,6 +75,17 @@ fun ManageProductScreen(
   val viewModel = koinViewModel<ManageProductViewModule>()
   val screenState = viewModel.screenState
   val isFormValid = viewModel.isFormValid
+  val thumbnailUploaderState = viewModel.thumbnailUploaderState
+  val photoPicker = koinInject<PhotoPicker>()
+
+  photoPicker.InitializePhotoPicker { file ->
+    viewModel.uploadThumbnailToStorage(
+      file = file,
+      onSuccess = {
+        messageBarState.addSuccess("Thumbnail successfully uploaded")
+      },
+    )
+  }
 
   AnimatedVisibility(
     visible = showCategoriesDialog
@@ -143,14 +168,59 @@ fun ManageProductScreen(
                 shape = RoundedCornerShape(12.dp)
               )
               .background(SurfaceLighter)
-              .clickable { },
+              .clickable(
+                enabled = thumbnailUploaderState.isIdle(),
+              ) {
+                photoPicker.open()
+              },
             contentAlignment = Alignment.Center,
           ) {
-            Icon(
-              painter = painterResource(Resources.Icon.Plus),
-              contentDescription = "Plus icon",
-              modifier = Modifier.size(24.dp),
-              tint = IconPrimary
+            thumbnailUploaderState.DisplayResult(
+              onIdle = {
+                Icon(
+                  painter = painterResource(Resources.Icon.Plus),
+                  contentDescription = "Plus icon",
+                  modifier = Modifier.size(24.dp),
+                  tint = IconPrimary
+                )
+              },
+              onLoading = {
+                LoadingCard(
+                  modifier = Modifier.fillMaxSize()
+                )
+              },
+              onSuccess = {
+                AsyncImage(
+                  modifier = Modifier.fillMaxSize(),
+                  model = ImageRequest.Builder(LocalPlatformContext.current).data(screenState.thumbnail).crossfade(enable = true).build(),
+                  contentDescription = "Product thumbnail image",
+                  contentScale = ContentScale.Crop,
+                )
+              },
+              onError = {
+                Column(
+                  modifier = Modifier.fillMaxSize(),
+                  verticalArrangement = Arrangement.Center,
+                  horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                  ErrorCard(message = it)
+                  Spacer(Modifier.height(12.dp))
+                  TextButton(
+                    onClick = {
+                      viewModel.updateThumbnailUploaderState(RequestState.Idle)
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                      containerColor = Transparent,
+                      contentColor = TextSecondary,
+                    )
+                  ) {
+                    Text(
+                      fontSize = FontSize.SMALL,
+                      text = "Try again"
+                    )
+                  }
+                }
+              },
             )
           }
           CustomTextField(

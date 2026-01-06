@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.util.RequestState
+import dev.gitlive.firebase.storage.File
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -23,9 +25,10 @@ data class ManageProductState(
   val weight: Int? = null,
   val price: Double = 0.0,
 )
+
 class ManageProductViewModule(
   private val adminRepository: AdminRepository,
-): ViewModel() {
+) : ViewModel() {
   var screenState by mutableStateOf(ManageProductState())
     private set
   val isFormValid: Boolean
@@ -34,6 +37,8 @@ class ManageProductViewModule(
         && screenState.thumbnail.isNotEmpty()
         && screenState.price != 0.0
 
+  var thumbnailUploaderState: RequestState<Unit> by mutableStateOf(RequestState.Idle)
+    private set
 
   fun updateTitle(title: String) {
     screenState = screenState.copy(title = title)
@@ -44,7 +49,11 @@ class ManageProductViewModule(
   }
 
   fun updateThumbnail(thumbnail: String) {
+    screenState = screenState.copy(thumbnail = thumbnail)
+  }
 
+  fun updateThumbnailUploaderState(value: RequestState<Unit>) {
+    thumbnailUploaderState = value
   }
 
   fun updateCategory(category: ProductCategory) {
@@ -82,6 +91,31 @@ class ManageProductViewModule(
         onSuccess = onSuccess,
         onError = onError,
       )
+    }
+  }
+
+  fun uploadThumbnailToStorage(
+    file: File?,
+    onSuccess: () -> Unit
+  ) {
+    if (file == null) {
+      updateThumbnailUploaderState(RequestState.Error("File is null. Error while selecting an image"))
+      return
+    }
+    viewModelScope.launch {
+      updateThumbnailUploaderState(RequestState.Loading)
+      val downloadUrl = adminRepository.uploadImageToStorage(file)
+      try {
+        if (downloadUrl.isNullOrEmpty()) {
+          throw Exception("Error while uploading image to storage")
+        } else {
+          updateThumbnail(downloadUrl)
+          updateThumbnailUploaderState(RequestState.Success(Unit))
+          onSuccess()
+        }
+      } catch (e: Exception) {
+        updateThumbnailUploaderState(RequestState.Error(e.message.orEmpty()))
+      }
     }
   }
 }

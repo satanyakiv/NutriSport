@@ -39,6 +39,7 @@ kotlin {
       implementation(compose.components.uiToolingPreview)
 
       implementation(libs.firebase.firestore)
+      implementation(libs.firebase.storage)
       implementation(libs.auth.firebase.kmp)
       implementation(project(path = ":shared"))
     }

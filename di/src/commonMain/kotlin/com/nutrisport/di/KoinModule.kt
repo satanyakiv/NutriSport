@@ -10,10 +10,11 @@ import com.nutrisport.manage_product.ManageProductViewModule
 import com.nutrisport.profile.ProfileViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val shared = module {
+val sharedModule = module {
   single<CustomerRepository> { CustomerRepositoryImpl() }
   single<AdminRepository> { AdminRepositoryImpl() }
 
@@ -23,13 +24,16 @@ val shared = module {
   viewModelOf(::ManageProductViewModule)
 }
 
+expect val targetModule: Module
+
 fun initializeKoin(
   config: (KoinApplication.() -> Unit)? = null,
 ) {
   startKoin {
     config?.invoke(this)
     modules(
-      shared
+      sharedModule,
+      targetModule
     )
   }
 }

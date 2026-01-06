@@ -6,7 +6,9 @@ import com.nutrisport.shared.CategoryGreen
 import com.nutrisport.shared.CategoryPurple
 import com.nutrisport.shared.CategoryRed
 import com.nutrisport.shared.CategoryYellow
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Product(
   val id: String,
   val title: String,

@@ -41,6 +41,7 @@ fun AdminPanelScreen(
   val products = viewModel.products.collectAsState()
 
   Scaffold(
+    modifier = modifier,
     containerColor = Surface,
     topBar = {
       TopAppBar(

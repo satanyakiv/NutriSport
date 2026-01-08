@@ -106,7 +106,7 @@ class AdminRepositoryImpl : AdminRepository {
   override suspend fun readProductById(id: String): RequestState<Product> {
     return try {
       val userId = getCurrentUserId()
-      if (userId != null ) {
+      if (userId != null) {
         val database = Firebase.firestore
         val productDocument = database.collection(collectionPath = "product")
           .document(id)
@@ -134,6 +134,61 @@ class AdminRepositoryImpl : AdminRepository {
       }
     } catch (e: Exception) {
       RequestState.Error("Error while reading selected product: ${e.message}")
+    }
+  }
+
+  override suspend fun updateImageThumbnail(
+    productId: String,
+    downloadUrl: String,
+    onSuccess: () -> Unit,
+    onError: (String) -> Unit
+  ) {
+    try {
+      val userId = getCurrentUserId()
+      if (userId != null) {
+        val productCollection = Firebase.firestore
+          .collection("product")
+        val document = productCollection.document(productId)
+          .get()
+        if (document.exists) {
+          productCollection.document(productId)
+            .updateFields { "thumbnail" to downloadUrl }
+          onSuccess()
+        } else {
+          onError("Product is not available")
+        }
+      } else {
+        onError("User is not available")
+      }
+    } catch (e: Exception) {
+      onError("Error while updating image thumbnail: ${e.message}")
+    }
+  }
+
+  override suspend fun updateProduct(
+    product: Product,
+    onSuccess: () -> Unit,
+    onError: (String) -> Unit
+  ) {
+    try {
+      val userId = getCurrentUserId()
+      if (userId != null) {
+        val productCollection = Firebase.firestore
+          .collection("product")
+        val document = productCollection.document(product.id)
+          .get()
+        if (document.exists) {
+          productCollection.document(product.id)
+            .update(product)
+          onSuccess()
+        } else {
+          onError("Product is not available")
+        }
+      } else {
+        onError("User is not available")
+      }
+    } catch (e: Exception) {
+      onError("Error while updating product: ${e.message}")
     }
   }
 

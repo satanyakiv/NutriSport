@@ -218,7 +218,6 @@ fun ManageProductScreen(
                       }
                       .padding(12.dp),
                     contentAlignment = Alignment.Center,
-
                   ) {
                     Icon(
                       modifier = Modifier.size(14.dp),
@@ -272,23 +271,30 @@ fun ManageProductScreen(
             text = screenState.category.title,
             onClick = { showCategoriesDialog = true },
           )
-          CustomTextField(
-            value = screenState.weight?.toString().orEmpty(),
-            onValueChange = { viewModel.updateWeight(it.toIntOrNull() ?: 0) },
-            placeholder = "Weight (Optional)",
-            keyboardOptions = KeyboardOptions(
-              keyboardType = KeyboardType.Number,
-            )
-          )
-          CustomTextField(
+          AnimatedVisibility(
+            visible = screenState.category != ProductCategory.Accessories,
+          ) {
+            Column {
+              CustomTextField(
+                value = screenState.weight?.toString().orEmpty(),
+                onValueChange = { viewModel.updateWeight(it.toIntOrNull() ?: 0) },
+                placeholder = "Weight",
+                keyboardOptions = KeyboardOptions(
+                  keyboardType = KeyboardType.Number,
+                )
+              )
+              Spacer(Modifier.height(12.dp))
+              CustomTextField(
 //            value = screenState.flavors?.joinToString { ", " }.orEmpty(),
-            value = screenState.flavors.orEmpty(),
-            onValueChange = {
+                value = screenState.flavors.orEmpty(),
+                onValueChange = {
 //              val flavors = it.split(",").map { flavor -> flavor.trim() }
-              viewModel.updateFlavors(it)
-            },
-            placeholder = "Flavors (Optional)",
-          )
+                  viewModel.updateFlavors(it)
+                },
+                placeholder = "Flavors",
+              )
+            }
+          }
           CustomTextField(
             value = screenState.price.toString(),
             onValueChange = {

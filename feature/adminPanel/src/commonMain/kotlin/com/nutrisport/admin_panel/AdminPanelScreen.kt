@@ -1,10 +1,16 @@
 package com.nutrisport.admin_panel
 
 import ContentWithMessageBar
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.ButtonPrimary
 import com.nutrisport.shared.FontSize
@@ -15,7 +21,12 @@ import com.nutrisport.shared.SurfaceBrand
 import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
+import com.nutrisport.shared.component.InfoCard
+import com.nutrisport.shared.component.LoadingCard
+import com.nutrisport.shared.component.ProductCard
+import com.nutrisport.shared.util.DisplayResult
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,6 +37,8 @@ fun AdminPanelScreen(
   goToManageProduct: (String?) -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
+  val viewModel = koinViewModel<AdminPanelVewModel>()
+  val products = viewModel.products.collectAsState()
 
   Scaffold(
     containerColor = Surface,
@@ -94,7 +107,34 @@ fun AdminPanelScreen(
       successContainerColor = SurfaceBrand,
       successContentColor = TextPrimary
     ) {
-
+      products.value.DisplayResult(
+        onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
+        onError = { message ->
+          InfoCard(
+            image = Resources.Image.Cat,
+            title = "Oops!",
+            subtitle = message,
+          )
+        },
+        onSuccess = { lastProducts ->
+          LazyColumn(
+            modifier = Modifier
+              .fillMaxSize()
+              .padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+          ) {
+            items(
+              items = lastProducts,
+              key = { it.id },
+            ) { product ->
+              ProductCard(
+                product = product,
+                onClick = { goToManageProduct(product.id) },
+              )
+            }
+          }
+        },
+      )
     }
   }
 }

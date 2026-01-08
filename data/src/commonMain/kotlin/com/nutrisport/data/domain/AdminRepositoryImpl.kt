@@ -1,11 +1,18 @@
 package com.nutrisport.data.domain
 
 import com.nutrisport.shared.domain.Product
+import com.nutrisport.shared.util.RequestState
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.storage.File
 import dev.gitlive.firebase.storage.storage
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withTimeout
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -55,21 +62,52 @@ class AdminRepositoryImpl : AdminRepository {
     onError: (String) -> Unit
   ) {
     try {
-        extractFirebaseStoragePath(downloadUrl)?.let {
-          Firebase.storage.reference(it).delete()
-          onSuccess()
-        } ?: onError("Error while extracting the path")
+      extractFirebaseStoragePath(downloadUrl)?.let {
+        Firebase.storage.reference(it).delete()
+        onSuccess()
+      } ?: onError("Error while extracting the path")
     } catch (e: Exception) {
       onError("Error while deleting the image: ${e.message}")
     }
   }
 
+  override fun readLastTenProducts(): Flow<RequestState<List<Product>>> {
+    getCurrentUserId()
+      ?: return flowOf(RequestState.Error("User is not available"))
+    return Firebase.firestore
+      .collection(collectionPath = "product")
+      .orderBy("createdAt", Direction.DESCENDING)
+      .limit(10)
+      .snapshots
+      .map { query ->
+        val products = query.documents.map { document ->
+          Product(
+            id = document.id,
+            createdAt = document.get("createdAt"),
+            title = document.get("title"),
+            description = document.get("description"),
+            thumbnail = document.get("thumbnail"),
+            category = document.get("category"),
+            flavors = document.get("flavors"),
+            weight = document.get("weight"),
+            price = document.get("price"),
+            isPopular = document.get("isPopular"),
+            isNew = document.get("isNew"),
+          )
+        }
+        RequestState.Success(products) as RequestState<List<Product>>
+      }
+      .onStart { emit(RequestState.Loading) }
+      .catch {
+        emit(RequestState.Error("Error while retriving products: ${it.message}"))
+      }
+  }
 
   private fun extractFirebaseStoragePath(downloadUrl: String): String? {
     val startIndex = downloadUrl.indexOf("/o/") + 3 //3 character in /o/
     if (startIndex < 3) return null
     val endIndex = downloadUrl.indexOf("?", startIndex)
-    val encodedPath = if(endIndex != -1) {
+    val encodedPath = if (endIndex != -1) {
       downloadUrl.substring(startIndex, endIndex)
     } else {
       downloadUrl.substring(startIndex)

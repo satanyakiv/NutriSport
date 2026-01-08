@@ -27,6 +27,12 @@ kotlin {
   }
 
   sourceSets {
+    androidMain.dependencies {
+      implementation(libs.ktor.android.client)
+    }
+    iosMain.dependencies {
+      implementation(libs.ktor.darwin.client)
+    }
     commonMain.dependencies {
       implementation(compose.runtime)
       implementation(compose.foundation)
@@ -35,6 +41,11 @@ kotlin {
       implementation(compose.components.resources)
 
       implementation(compose.components.uiToolingPreview)
+
+      implementation(libs.coil3)
+      implementation(libs.coil3.compose)
+      implementation(libs.coil3.compose.core)
+      implementation(libs.coil3.network.ktor)
 
       implementation(libs.kotlinx.serialization)
     }

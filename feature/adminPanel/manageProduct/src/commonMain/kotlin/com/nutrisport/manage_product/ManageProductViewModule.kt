@@ -147,7 +147,7 @@ class ManageProductViewModule(
         }
 
         productId.takeIf { it.isNotEmpty() }?.let { id ->
-          adminRepository.updateImageThumbnail(
+          adminRepository.updateProductThumbnail(
             productId = productId,
             downloadUrl = downloadUrl,
             onSuccess = {
@@ -210,7 +210,7 @@ class ManageProductViewModule(
         onSuccess = {
           productId.takeIf { it.isNotEmpty() }?.let { id ->
             viewModelScope.launch {
-              adminRepository.updateImageThumbnail(
+              adminRepository.updateProductThumbnail(
                 productId = productId,
                 downloadUrl = "",
                 onSuccess = {

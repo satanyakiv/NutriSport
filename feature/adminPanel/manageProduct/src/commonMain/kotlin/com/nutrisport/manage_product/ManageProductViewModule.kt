@@ -27,6 +27,9 @@ data class ManageProductState(
   val flavors: String? = null,
   val weight: Int? = null,
   val price: Double = 0.0,
+  val isNew: Boolean = false,
+  val isPopular: Boolean = false,
+  val isDiscounted: Boolean = false,
 )
 
 class ManageProductViewModule(
@@ -62,6 +65,9 @@ class ManageProductViewModule(
           updateFlavors(product.flavors?.joinToString(",").orEmpty())
           updateWeight(product.weight)
           updatePrice(product.price)
+          updateIsNew(product.isNew)
+          updateIsPopular(product.isPopular)
+          updateIsDiscounted(product.isDiscounted)
         }
       }
     }
@@ -122,6 +128,9 @@ class ManageProductViewModule(
           flavors = screenState.flavors?.split(","),
           weight = screenState.weight,
           price = screenState.price,
+          isNew = screenState.isNew,
+          isPopular = screenState.isPopular,
+          isDiscounted = screenState.isDiscounted,
         ),
         onSuccess = onSuccess,
         onError = onError,
@@ -190,6 +199,9 @@ class ManageProductViewModule(
               ?.filter { it.isNotEmpty() },
             weight = screenState.weight,
             price = screenState.price,
+            isNew = screenState.isNew,
+            isPopular = screenState.isPopular,
+            isDiscounted = screenState.isDiscounted,
           ),
           onSuccess = onSuccess,
           onError = onError,
@@ -254,5 +266,17 @@ class ManageProductViewModule(
         )
       }
     }
+  }
+
+  fun updateIsNew(new: Boolean) {
+    screenState = screenState.copy(isNew = new)
+  }
+
+  fun updateIsPopular(it: Boolean) {
+    screenState = screenState.copy(isPopular = it)
+  }
+
+  fun updateIsDiscounted(it: Boolean) {
+    screenState = screenState.copy(isDiscounted = it)
   }
 }

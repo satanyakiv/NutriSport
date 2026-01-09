@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -96,6 +97,7 @@ fun HomeGraphScreen(
   )
 
   val viewModel = koinViewModel<HomeGraphViewModel>()
+  val customer by viewModel.customer.collectAsState()
   val messageBarState = rememberMessageBarState()
 
   Box(
@@ -105,14 +107,13 @@ fun HomeGraphScreen(
       .systemBarsPadding()
   ) {
     CustomDrawer(
+      customer = customer,
       onProfileClick = { goToProfile() },
       onContactUsClick = { },
       onSignOutClick = {
         viewModel.signOut(
           onSuccess = { goToAuth() },
-          onError = { message ->
-            messageBarState.addError(message)
-          }
+          onError = { message -> messageBarState.addError(message) }
         )
       },
       onAdminPanelClick = goToAdminPanel,

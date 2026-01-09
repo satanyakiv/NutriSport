@@ -35,6 +35,10 @@ class CustomerRepositoryImpl : CustomerRepository {
           onSuccess()
         } else {
           customerCollection.document(user.uid).set(customer)
+          customerCollection.document(user.uid)
+            .collection("privateData")
+            .document("role")
+            .set(mapOf("isAdmin" to false))
           onSuccess()
         }
       } else {
@@ -66,6 +70,12 @@ class CustomerRepositoryImpl : CustomerRepository {
       .snapshots
       .map { document ->
         if (document.exists) {
+          val privateDataDocument = Firebase.firestore.collection(collectionPath = "customer")
+            .document(userId)
+            .collection("privateData")
+            .document("role")
+            .get()
+
           val customer = Customer(
             id = document.id,
             firstName = document.get("firstName"),
@@ -76,6 +86,7 @@ class CustomerRepositoryImpl : CustomerRepository {
             address = document.get("address"),
             phoneNumber = document.get("phoneNumber"),
             cart = document.get("cart"),
+            isAdmin = privateDataDocument.get("isAdmin") ?: false
           )
           RequestState.Success(customer)
         } else {

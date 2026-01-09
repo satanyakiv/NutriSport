@@ -13,6 +13,7 @@ data class Customer(
   val address: String? = null,
   val phoneNumber: PhoneNumber? = null,
   val cart: List<CartItem> = emptyList(),
+  val isAdmin: Boolean = false,
 )
 
 @Serializable

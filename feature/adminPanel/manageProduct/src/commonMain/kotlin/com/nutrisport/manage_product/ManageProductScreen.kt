@@ -73,6 +73,7 @@ fun ManageProductScreen(
   val messageBarState = rememberMessageBarState()
   var category by remember { mutableStateOf(ProductCategory.Protein) }
   var showCategoriesDialog by remember { mutableStateOf(false) }
+  var dropDownMenuOpen by remember { mutableStateOf(false) }
   val viewModel = koinViewModel<ManageProductViewModule>()
   val screenState = viewModel.screenState
   val isFormValid = viewModel.isFormValid
@@ -129,6 +130,42 @@ fun ManageProductScreen(
           titleContentColor = TextPrimary,
           actionIconContentColor = IconPrimary
         ),
+        actions = {
+          id?.let {
+            Box {
+              IconButton(onClick = { dropDownMenuOpen = true }) {
+                Icon(
+                  painter = painterResource(Resources.Icon.VerticalMenu),
+                  contentDescription = "Vertical menu icon",
+                  tint = IconPrimary
+                )
+              }
+              DropdownMenu(
+                expanded = dropDownMenuOpen,
+                onDismissRequest = { dropDownMenuOpen = false }
+              ) {
+                DropdownMenuItem(
+                  text = { Text("Delete", color = TextPrimary) },
+                  leadingIcon = {
+                    Icon(
+                      modifier = Modifier.size(14.dp),
+                      painter = painterResource(Resources.Icon.Delete),
+                      contentDescription = "Delete icon",
+                      tint = IconPrimary,
+                    )
+                  },
+                  onClick = {
+                    dropDownMenuOpen = false
+                    viewModel.deleteProduct(
+                      onSuccess = goBack,
+                      onError = { messageBarState.addError(it) },
+                    )
+                  },
+                )
+              }
+            }
+          }
+        }
       )
     },
   ) { padding ->

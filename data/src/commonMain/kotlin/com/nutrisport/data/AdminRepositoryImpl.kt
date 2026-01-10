@@ -1,5 +1,6 @@
-package com.nutrisport.data.domain
+package com.nutrisport.data
 
+import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.util.RequestState
 import dev.gitlive.firebase.Firebase

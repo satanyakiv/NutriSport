@@ -41,18 +41,19 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nutrisport.shared.Alpha
 import com.nutrisport.shared.FontSize
+import com.nutrisport.shared.IconWhite
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.TextBrand
-import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.domain.Product
+import com.nutrisport.shared.domain.ProductCategory
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MainProductCard(
   modifier: Modifier = Modifier,
   product: Product,
-  isVisible: Boolean = false,
+  isLarge: Boolean = false,
   onClick: (String) -> Unit,
 ) {
   val infiniteTransition = rememberInfiniteTransition()
@@ -76,13 +77,13 @@ fun MainProductCard(
   Box(
     modifier = modifier
       .fillMaxHeight()
+      .clip(RoundedCornerShape(12.dp))
       .clickable { onClick(product.id) },
   ) {
     AsyncImage(
       modifier = Modifier.fillMaxSize()
-        .clip(RoundedCornerShape(12.dp))
         .animateContentSize()
-        .then(if (isVisible) Modifier.scale(animatedScale).rotate(animatedRotation) else Modifier),
+        .then(if (isLarge) Modifier.scale(animatedScale).rotate(animatedRotation) else Modifier),
       model = ImageRequest.Builder(LocalPlatformContext.current).data(product.thumbnail).crossfade(true).build(),
       contentDescription = "Image of ${product.title}",
       contentScale = ContentScale.Crop,
@@ -114,6 +115,7 @@ fun MainProductCard(
       Text(
         text = product.description,
         fontSize = FontSize.REGULAR,
+        lineHeight = FontSize.REGULAR * 1.3f,
         color = TextWhite.copy(alpha = Alpha.HALF),
         maxLines = 3,
         overflow = TextOverflow.Ellipsis,
@@ -132,31 +134,34 @@ fun MainProductCard(
           AnimatedContent(
             targetState = product.category,
           ) {
-            product.weight?.let {
+            if (ProductCategory.valueOf(it) == ProductCategory.Accessories) {
+              Spacer(modifier = Modifier.weight(1f))
+            } else {
               Row(
                 verticalAlignment = Alignment.CenterVertically,
               ) {
                 Icon(
                   painter = painterResource(Resources.Icon.Weight),
                   contentDescription = "Weight icon",
-                  modifier = Modifier.size(14.dp)
+                  modifier = Modifier.size(14.dp),
+                  tint = IconWhite,
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                   text = "${product.weight}g",
                   fontSize = FontSize.EXTRA_SMALL,
-                  color = TextPrimary.copy(alpha = Alpha.HALF),
+                  color = TextWhite,
                 )
               }
             }
           }
-          Text(
-            text = "$${product.price}",
-            fontSize = FontSize.EXTRA_REGULAR,
-            color = TextBrand,
-            fontWeight = FontWeight.Medium,
-          )
         }
+        Text(
+          text = "$${product.price}",
+          fontSize = FontSize.EXTRA_REGULAR,
+          color = TextBrand,
+          fontWeight = FontWeight.Medium,
+        )
       }
     }
   }

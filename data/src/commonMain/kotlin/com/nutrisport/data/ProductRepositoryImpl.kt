@@ -47,7 +47,34 @@ class ProductRepositoryImpl(
   }
 
   override fun readNewProducts(): Flow<RequestState<List<Product>>> {
-    TODO("Not yet implemented")
+    getCurrentUserId()
+      ?: return flowOf(RequestState.Error("User is not available"))
+    return Firebase.firestore
+      .collection(collectionPath = "product")
+      .where { "isNew" equalTo true }
+      .snapshots
+      .map { query ->
+        val products = query.documents.map { document ->
+          Product(
+            id = document.id,
+            createdAt = document.get("createdAt"),
+            title = (document.get("title") as String).uppercase(),
+            description = document.get("description"),
+            thumbnail = document.get("thumbnail"),
+            category = document.get("category"),
+            flavors = document.get("flavors"),
+            weight = document.get("weight"),
+            price = document.get("price"),
+            isPopular = document.get("isPopular"),
+            isNew = document.get("isNew"),
+          )
+        }
+        RequestState.Success(products.map { it.copy(title = it.title.uppercase()) }) as RequestState<List<Product>>
+      }
+      .onStart { emit(RequestState.Loading) }
+      .catch {
+        emit(RequestState.Error("Error while retriving products: ${it.message}"))
+      }
   }
 
   override fun getCurrentUserId(): String? = Firebase.auth.currentUser?.uid

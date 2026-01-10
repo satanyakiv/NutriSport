@@ -194,7 +194,11 @@ fun HomeGraphScreen(
               startDestination = Screen.ProductsOverview
             ) {
               composable<Screen.ProductsOverview> {
-                ProductsOverviewScreen()
+                ProductsOverviewScreen(
+                  onClick = {
+
+                  }
+                )
               }
               composable<Screen.Cart> { }
               composable<Screen.Categories> { }

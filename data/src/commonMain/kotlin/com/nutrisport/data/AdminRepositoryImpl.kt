@@ -33,7 +33,12 @@ class AdminRepositoryImpl : AdminRepository {
         val firestore = Firebase.firestore
         val productCollection = firestore.collection(collectionPath = "product")
         productCollection.document(product.id)
-          .set(product.copy(title = product.title.lowercase()))
+          .set(
+            product.copy(
+              title = product.title.lowercase(),
+              category = product.category.filter { it.isLetter() },
+            ),
+          )
         onSuccess()
       } else {
         onError("User is not available")
@@ -181,7 +186,12 @@ class AdminRepositoryImpl : AdminRepository {
           .get()
         if (document.exists) {
           productCollection.document(product.id)
-            .update(product.copy(title = product.title.lowercase()))
+            .update(
+              product.copy(
+                title = product.title.lowercase(),
+                category = product.category.filter { it.isLetter() },
+              )
+            )
           onSuccess()
         } else {
           onError("Product is not available")

@@ -5,13 +5,13 @@ plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.composeCompiler)
-  alias(libs.plugins.serialization)
 }
 
 kotlin {
   androidTarget {
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
+      freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
   }
 
@@ -21,12 +21,18 @@ kotlin {
     iosSimulatorArm64()
   ).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "navigation"
+      baseName = "cart"
       isStatic = true
     }
   }
 
   sourceSets {
+    androidMain.dependencies {
+      implementation(libs.ktor.android.client)
+    }
+    iosMain.dependencies {
+      implementation(libs.ktor.darwin.client)
+    }
     commonMain.dependencies {
       implementation(compose.runtime)
       implementation(compose.foundation)
@@ -34,23 +40,26 @@ kotlin {
       implementation(compose.ui)
       implementation(compose.components.resources)
       implementation(compose.components.uiToolingPreview)
-      implementation(libs.kotlinx.serialization)
+
+      implementation(libs.koin.compose)
+      implementation(libs.koin.compose.viewmodel)
+
+      implementation(libs.messagebar.kmp)
       implementation(libs.compose.navigation)
 
-      implementation(project(":feature:auth"))
-      implementation(project(":feature:home"))
-      implementation(project(":feature:profile"))
-      implementation(project(":feature:adminPanel"))
-      implementation(project(":feature:details"))
-      implementation(project(":feature:cart"))
-      implementation(project(":feature:adminPanel:manageProduct"))
-      implementation(project(":shared"))
+      implementation(libs.coil3)
+      implementation(libs.coil3.compose)
+      implementation(libs.coil3.compose.core)
+      implementation(libs.coil3.network.ktor)
+
+      implementation(project(path = ":shared"))
+      implementation(project(path = ":data"))
     }
   }
 }
 
 android {
-  namespace = "com.portfolio.navigation"
+  namespace = "com.portfolio.cart"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

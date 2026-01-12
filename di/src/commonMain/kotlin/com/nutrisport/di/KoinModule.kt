@@ -2,6 +2,7 @@ package com.nutrisport.di
 
 import com.nutrisport.admin_panel.AdminPanelVewModel
 import com.nutrisport.auth.component.AuthViewModel
+import com.nutrisport.cart.CartViewModel
 import com.nutrisport.data.AdminRepositoryImpl
 import com.nutrisport.data.CustomerRepositoryImpl
 import com.nutrisport.data.ProductRepositoryImpl
@@ -31,6 +32,7 @@ val sharedModule = module {
   viewModelOf(::AdminPanelVewModel)
   viewModelOf(::ProductsOverviewViewModel)
   viewModelOf(::DetailsViewModel)
+  viewModelOf(::CartViewModel)
 }
 
 expect val targetModule: Module

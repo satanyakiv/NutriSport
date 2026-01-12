@@ -43,7 +43,7 @@ enum class ProductCategory(
     color = CategoryBlue,
   ),
   PreWorkout(
-    title = "Pre-workout",
+    title = "Pre-Workout",
     color = CategoryGreen,
   ),
   Gainers(

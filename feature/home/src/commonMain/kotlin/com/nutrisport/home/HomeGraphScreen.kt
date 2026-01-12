@@ -34,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.nutrisport.cart.CartScreen
 import com.nutrisport.home.component.BottomBar
 import com.nutrisport.home.component.CustomDrawer
 import com.nutrisport.home.domain.BottomBarDestination.Cart
@@ -199,13 +200,14 @@ fun HomeGraphScreen(
                   goToDetails = { id -> goToDetails(id) }
                 )
               }
-              composable<Screen.Cart> { }
+              composable<Screen.Cart> { CartScreen() }
               composable<Screen.Categories> { }
             }
             Spacer(modifier = Modifier.height(12.dp))
             Box(modifier = Modifier.padding(12.dp)) {
               BottomBar(
                 selected = selectedDestination,
+                customer = customer,
                 onSelect = { destination ->
                   navController.navigate(destination.screen) {
                     launchSingleTop = true

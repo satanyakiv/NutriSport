@@ -11,11 +11,8 @@ kotlin {
   androidTarget {
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
+      freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
-  }
-
-  compilerOptions {
-    freeCompilerArgs.add("-Xreturn-value-checker=full")
   }
 
   listOf(
@@ -24,12 +21,18 @@ kotlin {
     iosSimulatorArm64()
   ).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "di"
+      baseName = "details"
       isStatic = true
     }
   }
 
   sourceSets {
+    androidMain.dependencies {
+      implementation(libs.ktor.android.client)
+    }
+    iosMain.dependencies {
+      implementation(libs.ktor.darwin.client)
+    }
     commonMain.dependencies {
       implementation(compose.runtime)
       implementation(compose.foundation)
@@ -38,24 +41,27 @@ kotlin {
       implementation(compose.components.resources)
       implementation(compose.components.uiToolingPreview)
 
-      implementation(libs.koin.core)
-      implementation(libs.koin.compose.viewmodel)
       implementation(libs.koin.compose)
+      implementation(libs.koin.compose.viewmodel)
 
-      implementation(project(path = ":feature:auth"))
-      implementation(project(path = ":feature:home"))
-      implementation(project(path = ":feature:home:productsOverview"))
-      implementation(project(path = ":feature:details"))
-      implementation(project(path = ":feature:profile"))
-      implementation(project(path = ":feature:adminPanel"))
-      implementation(project(path = ":feature:adminPanel:manageProduct"))
+      implementation(libs.messagebar.kmp)
+      implementation(libs.compose.navigation)
+
+      implementation(libs.messagebar.kmp)
+
+      implementation(libs.coil3)
+      implementation(libs.coil3.compose)
+      implementation(libs.coil3.compose.core)
+      implementation(libs.coil3.network.ktor)
+
+      implementation(project(path = ":shared"))
       implementation(project(path = ":data"))
     }
   }
 }
 
 android {
-  namespace = "com.nutrisport.data"
+  namespace = "com.portfolio.details"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

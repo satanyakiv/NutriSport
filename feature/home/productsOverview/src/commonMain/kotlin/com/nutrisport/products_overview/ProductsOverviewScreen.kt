@@ -40,7 +40,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ProductsOverviewScreen(
-  onClick: (String) -> Unit,
+  goToDetails: (String) -> Unit,
 ) {
   val viewModel = koinViewModel<ProductsOverviewViewModel>()
   val products by viewModel.products.collectAsState()
@@ -49,7 +49,7 @@ fun ProductsOverviewScreen(
   val centeredIndex: Int? by remember {
     derivedStateOf {
       val layoutInfo = listState.layoutInfo
-      val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+      val viewportCenter = layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset / 2
       layoutInfo.visibleItemsInfo.minByOrNull { item ->
         val itemCenter = item.offset + item.size / 2
         kotlin.math.abs(itemCenter - viewportCenter)
@@ -58,23 +58,26 @@ fun ProductsOverviewScreen(
   }
 
   products.DisplayResult(
+    onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
     onSuccess = { productList ->
-      AnimatedContent(productList) { products ->
+      AnimatedContent(
+        targetState = productList.distinctBy { it.id }
+      ) { products ->
         if (products.isNotEmpty()) {
-          Column(modifier = Modifier) {
+          Column {
             Spacer(modifier = Modifier.height(12.dp))
             LazyRow(
               state = listState,
               modifier = Modifier.fillMaxWidth(),
               verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.Center,
+              horizontalArrangement = Arrangement.Center
             ) {
               itemsIndexed(
                 items = products
-                  .filter { it.isNew }
+                  .filter { it.isNew == true }
                   .sortedBy { it.createdAt }
-                  .take(5),
-                key = { _, product -> product.id }
+                  .take(6),
+                key = { index, item -> item.id }
               ) { index, product ->
                 val isLarge = index == centeredIndex
                 val animatedScale by animateFloatAsState(
@@ -89,16 +92,16 @@ fun ProductsOverviewScreen(
                     .fillParentMaxWidth(0.6f),
                   product = product,
                   isLarge = isLarge,
-                  onClick = onClick,
+                  onClick = { goToDetails(it) }
                 )
               }
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(
               modifier = Modifier
-                .alpha(Alpha.HALF)
-                .fillMaxWidth(),
-              text = "Discounted products",
+                .fillMaxWidth()
+                .alpha(Alpha.HALF),
+              text = "Discounted Products",
               fontSize = FontSize.EXTRA_REGULAR,
               color = TextPrimary,
               textAlign = TextAlign.Center
@@ -106,18 +109,18 @@ fun ProductsOverviewScreen(
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(
               modifier = Modifier.padding(horizontal = 12.dp),
-              verticalArrangement = Arrangement.spacedBy(12.dp),
+              verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
               items(
                 items = products
-                  .filter { it.isDiscounted }
+                  .filter { it.isDiscounted == true }
                   .sortedBy { it.createdAt }
                   .take(3),
                 key = { it.id }
               ) { product ->
                 ProductCard(
                   product = product,
-                  onClick = {},
+                  onClick = { goToDetails(it) }
                 )
               }
             }
@@ -126,21 +129,16 @@ fun ProductsOverviewScreen(
           InfoCard(
             image = Resources.Image.Cat,
             title = "Nothing here",
-            subtitle = "Empty product list"
+            subtitle = "Empty product list."
           )
         }
       }
     },
-    onLoading = {
-      LoadingCard(
-        modifier = Modifier.fillMaxSize()
-      )
-    },
-    onError = {
+    onError = { message ->
       InfoCard(
         image = Resources.Image.Cat,
-        title = "Error",
-        subtitle = it
+        title = "Oops!",
+        subtitle = message
       )
     }
   )

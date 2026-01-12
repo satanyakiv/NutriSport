@@ -167,6 +167,7 @@ fun AdminPanelScreen(
   ) { padding ->
     ContentWithMessageBar(
       contentBackgroundColor = Surface,
+      modifier = Modifier.padding(top = padding.calculateTopPadding()),
       messageBarState = messageBarState,
       errorMaxLines = 2,
       errorContainerColor = SurfaceError,

@@ -41,6 +41,7 @@ kotlin {
       implementation(project(":feature:home"))
       implementation(project(":feature:profile"))
       implementation(project(":feature:adminPanel"))
+      implementation(project(":feature:details"))
       implementation(project(":feature:adminPanel:manageProduct"))
       implementation(project(":shared"))
     }

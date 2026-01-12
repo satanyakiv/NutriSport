@@ -6,6 +6,11 @@ import com.nutrisport.shared.CategoryGreen
 import com.nutrisport.shared.CategoryPurple
 import com.nutrisport.shared.CategoryRed
 import com.nutrisport.shared.CategoryYellow
+import com.nutrisport.shared.domain.ProductCategory.Accessories
+import com.nutrisport.shared.domain.ProductCategory.Creatine
+import com.nutrisport.shared.domain.ProductCategory.Gainers
+import com.nutrisport.shared.domain.ProductCategory.PreWorkout
+import com.nutrisport.shared.domain.ProductCategory.Protein
 import kotlinx.serialization.Serializable
 import kotlin.time.Clock
 
@@ -48,5 +53,16 @@ enum class ProductCategory(
   Accessories(
     title = "Accessories",
     color = CategoryRed,
-  ),
+  );
+}
+
+fun String.valueOfProductCategory(): ProductCategory {
+  return when(lowercase().filter { it.isLetter() }) {
+    "protein" -> Protein
+    "creatine" -> Creatine
+    "preworkout" -> PreWorkout
+    "gainers" -> Gainers
+    "accessories" -> Accessories
+    else -> throw IllegalArgumentException("Invalid product category: $this")
+  }
 }

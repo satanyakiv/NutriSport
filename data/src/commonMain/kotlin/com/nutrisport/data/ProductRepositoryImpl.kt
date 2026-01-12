@@ -67,6 +67,7 @@ class ProductRepositoryImpl(
             price = document.get("price"),
             isPopular = document.get("isPopular"),
             isNew = document.get("isNew"),
+            isDiscounted = document.get("isDiscounted"),
           )
         }
         RequestState.Success(products.map { it.copy(title = it.title.uppercase()) }) as RequestState<List<Product>>
@@ -78,4 +79,37 @@ class ProductRepositoryImpl(
   }
 
   override fun getCurrentUserId(): String? = Firebase.auth.currentUser?.uid
+  override fun readProductByIdFlow(id: String): Flow<RequestState<Product>> {
+    getCurrentUserId()
+      ?: return flowOf(RequestState.Error("User is not available"))
+    return Firebase.firestore
+      .collection(collectionPath = "product")
+      .document(id)
+      .snapshots
+      .map { document ->
+        if (document.exists) {
+          val product = Product(
+            id = document.id,
+            createdAt = document.get("createdAt"),
+            title = (document.get("title") as String).uppercase(),
+            description = document.get("description"),
+            thumbnail = document.get("thumbnail"),
+            category = document.get("category"),
+            flavors = document.get("flavors"),
+            weight = document.get("weight"),
+            price = document.get("price"),
+            isPopular = document.get("isPopular"),
+            isNew = document.get("isNew"),
+            isDiscounted = document.get("isDiscounted"),
+          )
+          RequestState.Success(product)
+        } else {
+          RequestState.Error("Document $id doesn't exist")
+        }
+      }
+      .onStart { emit(RequestState.Loading) }
+      .catch {
+        emit(RequestState.Error("Error while reading selected product: ${it.message}"))
+      }
+  }
 }

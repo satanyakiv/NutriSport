@@ -53,7 +53,8 @@ fun ProductCard(
         shape = RoundedCornerShape(12.dp),
       )
       .background(SurfaceLighter)
-      .clickable { onClick(product.id) }
+      .clickable { onClick(product.id) },
+    verticalAlignment = Alignment.CenterVertically
   ) {
     AsyncImage(
       modifier = Modifier

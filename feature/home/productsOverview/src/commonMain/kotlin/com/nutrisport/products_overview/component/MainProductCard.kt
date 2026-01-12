@@ -18,12 +18,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +48,7 @@ import com.nutrisport.shared.TextBrand
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.domain.valueOfProductCategory
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -54,105 +56,113 @@ fun MainProductCard(
   modifier: Modifier = Modifier,
   product: Product,
   isLarge: Boolean = false,
-  onClick: (String) -> Unit,
+  onClick: (String) -> Unit
 ) {
   val infiniteTransition = rememberInfiniteTransition()
-  val animatedScale by infiniteTransition.animateFloat(
+  val animatedScale = infiniteTransition.animateFloat(
     initialValue = 1f,
     targetValue = 1.25f,
     animationSpec = infiniteRepeatable(
       animation = tween(10000, easing = LinearEasing),
-      repeatMode = RepeatMode.Reverse,
-    ),
+      repeatMode = RepeatMode.Reverse
+    )
   )
-  val animatedRotation by infiniteTransition.animateFloat(
+
+  val animatedRotation = infiniteTransition.animateFloat(
     initialValue = 0f,
     targetValue = 10f,
     animationSpec = infiniteRepeatable(
       animation = tween(10000, easing = LinearEasing),
-      repeatMode = RepeatMode.Reverse,
-    ),
+      repeatMode = RepeatMode.Reverse
+    )
   )
-
   Box(
     modifier = modifier
       .fillMaxHeight()
-      .clip(RoundedCornerShape(12.dp))
-      .clickable { onClick(product.id) },
+      .clip(RoundedCornerShape(size = 12.dp))
+      .clickable { onClick(product.id) }
   ) {
     AsyncImage(
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier
+        .fillMaxSize()
         .animateContentSize()
-        .then(if (isLarge) Modifier.scale(animatedScale).rotate(animatedRotation) else Modifier),
-      model = ImageRequest.Builder(LocalPlatformContext.current).data(product.thumbnail).crossfade(true).build(),
-      contentDescription = "Image of ${product.title}",
-      contentScale = ContentScale.Crop,
+        .then(
+          if (isLarge) Modifier
+            .scale(animatedScale.value)
+            .rotate(animatedRotation.value)
+          else Modifier
+        ),
+      model = ImageRequest.Builder(LocalPlatformContext.current)
+        .data(product.thumbnail)
+        .crossfade(enable = true)
+        .build(),
+      contentDescription = "Product thumbnail",
+      contentScale = ContentScale.Crop
     )
     Box(
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier
+        .fillMaxSize()
         .background(
           brush = Brush.verticalGradient(
-            colors = listOf(Color.Black, Color.Black.copy(alpha = Alpha.ZERO)),
+            colors = listOf(
+              Color.Black,
+              Color.Black.copy(Alpha.ZERO)
+            ),
             startY = Float.POSITIVE_INFINITY,
-            endY = 0f,
-          ),
+            endY = 0.0f
+          )
         )
     )
     Column(
-      modifier = Modifier.fillMaxSize()
-        .padding(12.dp),
-      verticalArrangement = Arrangement.Bottom,
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(all = 12.dp),
+      verticalArrangement = Arrangement.Bottom
     ) {
       Text(
         text = product.title,
         fontSize = FontSize.EXTRA_MEDIUM,
+        fontWeight = FontWeight.Medium,
         color = TextWhite,
         maxLines = 2,
-        fontWeight = FontWeight.Medium,
-        overflow = TextOverflow.Ellipsis,
+        overflow = TextOverflow.Ellipsis
       )
-      Spacer(Modifier.size(4.dp))
+      Spacer(modifier = Modifier.height(4.dp))
       Text(
         text = product.description,
         fontSize = FontSize.REGULAR,
         lineHeight = FontSize.REGULAR * 1.3f,
         color = TextWhite.copy(alpha = Alpha.HALF),
         maxLines = 3,
-        overflow = TextOverflow.Ellipsis,
+        overflow = TextOverflow.Ellipsis
       )
-      Spacer(Modifier.size(12.dp))
+      Spacer(modifier = Modifier.height(12.dp))
       Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-          AnimatedContent(
-            targetState = product.category,
-          ) {
-            if (ProductCategory.valueOf(it) == ProductCategory.Accessories) {
-              Spacer(modifier = Modifier.weight(1f))
-            } else {
-              Row(
-                verticalAlignment = Alignment.CenterVertically,
-              ) {
-                Icon(
-                  painter = painterResource(Resources.Icon.Weight),
-                  contentDescription = "Weight icon",
-                  modifier = Modifier.size(14.dp),
-                  tint = IconWhite,
-                )
-                Spacer(modifier = Modifier.size(4.dp))
-                Text(
-                  text = "${product.weight}g",
-                  fontSize = FontSize.EXTRA_SMALL,
-                  color = TextWhite,
-                )
-              }
+        AnimatedContent(
+          targetState = product.category
+        ) { category ->
+          if (category.valueOfProductCategory() == ProductCategory.Accessories) {
+            Spacer(modifier = Modifier.weight(1f))
+          } else {
+            Row(
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              Icon(
+                modifier = Modifier.size(14.dp),
+                painter = painterResource(Resources.Icon.Weight),
+                contentDescription = "Weight icon",
+                tint = IconWhite
+              )
+              Spacer(modifier = Modifier.width(4.dp))
+              Text(
+                text = "${product.weight}g",
+                fontSize = FontSize.EXTRA_SMALL,
+                color = TextWhite
+              )
             }
           }
         }
@@ -160,7 +170,7 @@ fun MainProductCard(
           text = "$${product.price}",
           fontSize = FontSize.EXTRA_REGULAR,
           color = TextBrand,
-          fontWeight = FontWeight.Medium,
+          fontWeight = FontWeight.Medium
         )
       }
     }

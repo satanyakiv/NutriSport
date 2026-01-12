@@ -63,6 +63,7 @@ fun HomeGraphScreen(
   goToAuth: () -> Unit,
   goToProfile: () -> Unit,
   goToAdminPanel: () -> Unit,
+  goToDetails:(String) -> Unit,
 ) {
   val navController = rememberNavController()
   val currentRoute = navController.currentBackStackEntryAsState()
@@ -195,9 +196,7 @@ fun HomeGraphScreen(
             ) {
               composable<Screen.ProductsOverview> {
                 ProductsOverviewScreen(
-                  onClick = {
-
-                  }
+                  goToDetails = { id -> goToDetails(id) }
                 )
               }
               composable<Screen.Cart> { }

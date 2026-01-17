@@ -14,6 +14,7 @@ import com.nutrisport.home.HomeGraphViewModel
 import com.nutrisport.manage_product.ManageProductViewModule
 import com.nutrisport.products_overview.ProductsOverviewViewModel
 import com.nutrisport.profile.ProfileViewModel
+import com.portfolio.categories_search.CategorySearchViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -33,6 +34,7 @@ val sharedModule = module {
   viewModelOf(::ProductsOverviewViewModel)
   viewModelOf(::DetailsViewModel)
   viewModelOf(::CartViewModel)
+  viewModelOf(::CategorySearchViewModel)
 }
 
 expect val targetModule: Module

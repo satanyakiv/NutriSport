@@ -39,6 +39,7 @@ kotlin {
 
       implementation(project(":feature:auth"))
       implementation(project(":feature:home"))
+      implementation(project(":feature:home:categories:search"))
       implementation(project(":feature:profile"))
       implementation(project(":feature:adminPanel"))
       implementation(project(":feature:details"))

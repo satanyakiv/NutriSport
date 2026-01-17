@@ -45,6 +45,8 @@ kotlin {
       implementation(project(path = ":feature:auth"))
       implementation(project(path = ":feature:home"))
       implementation(project(path = ":feature:home:productsOverview"))
+      implementation(project(path = ":feature:home:categories"))
+      implementation(project(path = ":feature:home:categories:search"))
       implementation(project(path = ":feature:details"))
       implementation(project(path = ":feature:cart"))
       implementation(project(path = ":feature:profile"))

@@ -42,7 +42,7 @@ sealed class Screen {
 
   @Serializable
   data class Checkout(
-    val totalAmount: String
+    val totalAmount: Double
   ) : Screen()
 
   @Serializable

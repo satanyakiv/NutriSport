@@ -46,7 +46,7 @@ kotlin {
       implementation(project(path = ":data"))
       implementation(project(path = ":feature:home:productsOverview"))
       implementation(project(path = ":feature:home:categories"))
-      implementation(project(path = ":feature:cart"))
+      implementation(project(path = ":feature:home:cart"))
     }
   }
 }

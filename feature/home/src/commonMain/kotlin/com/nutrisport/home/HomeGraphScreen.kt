@@ -68,7 +68,7 @@ fun HomeGraphScreen(
   navigateToAdminPanel: () -> Unit,
   navigateToDetails: (String) -> Unit,
   navigateToCategorySearch: (String) -> Unit,
-  navigateToCheckout: (String) -> Unit,
+  navigateToCheckout: (Double) -> Unit,
 ) {
   val navController = rememberNavController()
   val currentRoute = navController.currentBackStackEntryAsState()
@@ -164,7 +164,7 @@ fun HomeGraphScreen(
                   IconButton(onClick = {
                     if (totalAmount.isSuccess()) {
                       navigateToCheckout(
-                        totalAmount.getSuccessData().toString()
+                        totalAmount.getSuccessData()
                       )
                     } else if (totalAmount.isError()) {
                       messageBarState.addError("Error while calculating a total amount: ${totalAmount.getErrorMessage()}")

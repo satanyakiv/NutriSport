@@ -49,6 +49,8 @@ kotlin {
       implementation(project(path = ":feature:home:categories:search"))
       implementation(project(path = ":feature:details"))
       implementation(project(":feature:home:cart"))
+      implementation(project(":feature:home:cart:checkout"))
+      implementation(project(":feature:home:cart:checkout:paymentCompleted"))
       implementation(project(path = ":feature:profile"))
       implementation(project(path = ":feature:adminPanel"))
       implementation(project(path = ":feature:adminPanel:manageProduct"))
@@ -58,7 +60,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.nutrisport.data"
+  namespace = "com.nutrisport.di"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

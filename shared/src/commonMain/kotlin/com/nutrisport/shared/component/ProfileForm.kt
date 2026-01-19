@@ -27,9 +27,9 @@ fun ProfileForm(
   country: Country,
   onCountrySelect: (Country) -> Unit,
   firstName: String,
-  firstNameChange: (String) -> Unit,
+  onFirstNameChange: (String) -> Unit,
   lastName: String,
-  lastNameChange: (String) -> Unit,
+  onLastNameChange: (String) -> Unit,
   email: String,
   city: String?,
   onCityChange: (String) -> Unit,
@@ -63,13 +63,13 @@ fun ProfileForm(
   ) {
     CustomTextField(
       value = firstName,
-      onValueChange = firstNameChange,
+      onValueChange = onFirstNameChange,
       placeholder = "First name",
       error = firstName.length !in 3..50
     )
     CustomTextField(
       value = lastName,
-      onValueChange = lastNameChange,
+      onValueChange = onLastNameChange,
       placeholder = "Last name",
       error = lastName.length !in 3..50
     )

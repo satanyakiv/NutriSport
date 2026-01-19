@@ -5,13 +5,13 @@ plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.composeCompiler)
-  alias(libs.plugins.serialization)
 }
 
 kotlin {
   androidTarget {
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
+      freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
   }
 
@@ -21,7 +21,7 @@ kotlin {
     iosSimulatorArm64()
   ).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "shared"
+      baseName = "payment_completed"
       isStatic = true
     }
   }
@@ -39,21 +39,27 @@ kotlin {
       implementation(compose.material3)
       implementation(compose.ui)
       implementation(compose.components.resources)
-
       implementation(compose.components.uiToolingPreview)
+
+      implementation(libs.koin.compose)
+      implementation(libs.koin.compose.viewmodel)
+
+      implementation(libs.messagebar.kmp)
+      implementation(libs.compose.navigation)
 
       implementation(libs.coil3)
       implementation(libs.coil3.compose)
       implementation(libs.coil3.compose.core)
       implementation(libs.coil3.network.ktor)
 
-      implementation(libs.kotlinx.serialization)
+      implementation(project(path = ":shared"))
+      implementation(project(path = ":data"))
     }
   }
 }
 
 android {
-  namespace = "com.portfolio.shared"
+  namespace = "com.portfolio.payment_completed"
   compileSdk = libs.versions.android.compileSdk.get().toInt()
 
   defaultConfig {

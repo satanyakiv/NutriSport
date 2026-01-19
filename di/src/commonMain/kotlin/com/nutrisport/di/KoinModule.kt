@@ -3,11 +3,14 @@ package com.nutrisport.di
 import com.nutrisport.admin_panel.AdminPanelVewModel
 import com.nutrisport.auth.component.AuthViewModel
 import com.nutrisport.cart.CartViewModel
+import com.nutrisport.checkout.CheckoutViewModel
 import com.nutrisport.data.AdminRepositoryImpl
 import com.nutrisport.data.CustomerRepositoryImpl
+import com.nutrisport.data.OrderRepositoryImpl
 import com.nutrisport.data.ProductRepositoryImpl
 import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.data.domain.CustomerRepository
+import com.nutrisport.data.domain.OrderRepository
 import com.nutrisport.data.domain.ProductRepository
 import com.nutrisport.details.DetailsViewModel
 import com.nutrisport.home.HomeGraphViewModel
@@ -15,6 +18,7 @@ import com.nutrisport.manage_product.ManageProductViewModule
 import com.nutrisport.products_overview.ProductsOverviewViewModel
 import com.nutrisport.profile.ProfileViewModel
 import com.portfolio.categories_search.CategorySearchViewModel
+import com.portfolio.payment_completed.PaymentViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -25,6 +29,7 @@ val sharedModule = module {
   single<CustomerRepository> { CustomerRepositoryImpl() }
   single<AdminRepository> { AdminRepositoryImpl() }
   single<ProductRepository> { ProductRepositoryImpl() }
+  single<OrderRepository> { OrderRepositoryImpl(get()) }
 
   viewModelOf(::AuthViewModel)
   viewModelOf(::HomeGraphViewModel)
@@ -35,6 +40,8 @@ val sharedModule = module {
   viewModelOf(::DetailsViewModel)
   viewModelOf(::CartViewModel)
   viewModelOf(::CategorySearchViewModel)
+  viewModelOf(::CheckoutViewModel)
+  viewModelOf(::PaymentViewModel)
 }
 
 expect val targetModule: Module

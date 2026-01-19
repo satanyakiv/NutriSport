@@ -8,12 +8,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.nutrisport.admin_panel.AdminPanelScreen
 import com.nutrisport.auth.component.AuthScreen
+import com.nutrisport.checkout.CheckoutScreen
 import com.nutrisport.details.DetailsScreen
 import com.nutrisport.home.HomeGraphScreen
 import com.nutrisport.manage_product.ManageProductScreen
 import com.nutrisport.profile.ProfileScreen
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.navigation.Screen
+import com.portfolio.payment_completed.PaymentCompletedScreen
 
 @Composable
 fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
@@ -73,7 +75,7 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
           navController.navigate(Screen.CategorySearch(categoryName))
         },
         navigateToCheckout = { totalAmount ->
-//          navController.navigate(Screen.Checkout(totalAmount))
+          navController.navigate(Screen.Checkout(totalAmount))
         }
       )
     }
@@ -122,28 +124,28 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
         }
       )
     }
-//    composable<Screen.Checkout> {
-//      val totalAmount = it.toRoute<Screen.Checkout>().totalAmount
-//      CheckoutScreen(
-//        totalAmount = totalAmount.toDoubleOrNull() ?: 0.0,
-//        navigateBack = {
-//          navController.navigateUp()
-//        },
-//        navigateToPaymentCompleted = { isSuccess, error ->
-//          navController.navigate(Screen.PaymentCompleted(isSuccess, error))
-//        }
-//      )
-//    }
-//    composable<Screen.PaymentCompleted> {
-//      PaymentCompleted(
-//        navigateBack = {
-//          navController.navigate(Screen.HomeGraph) {
-//            launchSingleTop = true
-//            // Clear backstack completely
-//            popUpTo(0) { inclusive = true }
-//          }
-//        }
-//      )
-//    }
+    composable<Screen.Checkout> {
+      val totalAmount = it.toRoute<Screen.Checkout>().totalAmount
+      CheckoutScreen(
+        totalAmount = totalAmount,
+        navigateBack = {
+          navController.navigateUp()
+        },
+        navigateToPaymentCompleted = { isSuccess, error ->
+          navController.navigate(Screen.PaymentCompleted(isSuccess, error))
+        }
+      )
+    }
+    composable<Screen.PaymentCompleted> {
+      PaymentCompletedScreen(
+        navigateBack = {
+          navController.navigate(Screen.HomeGraph) {
+            launchSingleTop = true
+            // Clear backstack completely
+            popUpTo(0) { inclusive = true }
+          }
+        }
+      )
+    }
   }
 }

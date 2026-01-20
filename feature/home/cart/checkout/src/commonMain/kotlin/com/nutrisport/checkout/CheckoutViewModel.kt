@@ -15,6 +15,7 @@ import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.Order
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.identityHash
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -35,7 +36,6 @@ class CheckoutViewModel(
   private val customerRepository: CustomerRepository,
   private val orderRepository: OrderRepository,
   private val savedStateHandle: SavedStateHandle,
-//  private val paypalApi: PaypalApi,
 ) : ViewModel() {
   var screenReady: RequestState<Unit> by mutableStateOf(RequestState.Loading)
   var screenState: CheckoutScreenState by mutableStateOf(CheckoutScreenState())
@@ -52,16 +52,6 @@ class CheckoutViewModel(
     }
 
   init {
-//    viewModelScope.launch {
-//      paypalApi.fetchAccessToken(
-//        onSuccess = { token ->
-//          println("TOKEN RECEIVED: $token")
-//        },
-//        onError = { message ->
-//          println(message)
-//        }
-//      )
-//    }
     viewModelScope.launch {
       customerRepository.readCustomerFlow().collectLatest { data ->
         if (data.isSuccess()) {
@@ -166,47 +156,21 @@ class CheckoutViewModel(
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
+    println("cart id=${identityHash(screenState.cart)} size=${screenState.cart.size}")
+
+    val order = Order(
+      customerId = screenState.id,
+      items = screenState.cart.map { item -> item.copy() },
+      totalAmount = savedStateHandle.get<Double>("totalAmount") ?: 0.0
+    )
+
+    println("order.items id=${identityHash(order.items)} size=${order.items.size}")
     viewModelScope.launch {
       orderRepository.createTheOrder(
-        order = Order(
-          customerId = screenState.id,
-          items = screenState.cart,
-          totalAmount = savedStateHandle.get<Double>("totalAmount")
-            ?: 0.0
-        ),
+        order = order,
         onSuccess = onSuccess,
         onError = onError
       )
     }
-  }
-
-  fun payWithPayPal(
-    onSuccess: () -> Unit,
-    onError: (String) -> Unit,
-  ) {
-    /*val totalAmount = savedStateHandle.get<String>("totalAmount")
-    if (totalAmount != null) {
-      viewModelScope.launch {
-        paypalApi.beginCheckout(
-          amount = Amount(
-            currencyCode = "USD",
-            value = totalAmount
-          ),
-          fullName = "${screenState.firstName} ${screenState.lastName}",
-          shippingAddress = ShippingAddress(
-            addressLine1 = screenState.address ?: "Unknown address",
-            city = screenState.city ?: "Unknown city",
-            state = screenState.country.name,
-            postalCode = screenState.postalCode.toString(),
-            countryCode = screenState.country.code
-          ),
-          onSuccess = onSuccess,
-          onError = onError
-        )
-      }
-    } else {
-      onError("Total amount couldn't be calculated.")
-    }
-  }*/
   }
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
@@ -124,22 +123,6 @@ fun CheckoutScreen(
           onPhoneNumberChange = viewModel::updatePhoneNumber
         )
         Column {
-          PrimaryButton(
-            text = "Pay with PayPal",
-            icon = Resources.Image.PaypalLogo,
-            enabled = isFormValid,
-            onClick = {
-              viewModel.payWithPayPal(
-                onSuccess = {
-
-                },
-                onError = { message ->
-                  messageBarState.addError(message)
-                }
-              )
-            }
-          )
-          Spacer(modifier = Modifier.height(12.dp))
           PrimaryButton(
             text = "Pay on Delivery",
             icon = Resources.Icon.ShoppingCart,

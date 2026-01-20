@@ -20,27 +20,6 @@ import com.portfolio.payment_completed.PaymentCompletedScreen
 @Composable
 fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
   val navController = rememberNavController()
-//    val intentHandler = koinInject<IntentHandler>()
-//    val navigateTo by intentHandler.navigateTo.collectAsState()
-//
-//    LaunchedEffect(navigateTo) {
-//        navigateTo?.let { paymentCompleted ->
-//            navController.navigate(paymentCompleted)
-//            intentHandler.resetNavigation()
-//        }
-//    }
-
-//  val preferencesData by PreferencesRepository.readPayPalDataFlow()
-//    .collectAsState(initial = null)
-
-//  LaunchedEffect(preferencesData) {
-//    preferencesData?.let { paymentCompleted ->
-//      if(paymentCompleted.token != null) {
-//        navController.navigate(paymentCompleted)
-//        PreferencesRepository.reset()
-//      }
-//    }
-//  }
 
   NavHost(
     navController = navController,

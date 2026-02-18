@@ -4,7 +4,6 @@ import Firebase
 import FirebaseCore
 import FirebaseAuth
 import FirebaseMessaging
-import NSObject
 import ComposeApp
 
 @main

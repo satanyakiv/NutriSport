@@ -2,8 +2,6 @@ Read .claude/rules/architecture.md, .claude/rules/conventions.md
 
 ## Dependency / Build Crash Debugger
 
-Diagnose and fix dependency conflicts, build crashes, and plugin incompatibilities.
-
 $ARGUMENTS
 
 ## Process
@@ -13,48 +11,62 @@ $ARGUMENTS
    - Extract: library name, version, plugin ID, Gradle task that fails
    - Identify the module and build phase (configuration, compilation, execution)
 
-2. **SEARCH GITHUB ISSUES** — this is the most critical step:
-   - Use `gh issue list --repo {org}/{repo} --search "{error keywords}" --state all --limit 10`
-   - For the top relevant issues: `gh issue view {number} --repo {org}/{repo} --json body,comments,state,title`
-   - Look for: workarounds, version fixes, plugin order issues, configuration changes
-   - Common repos to search:
-     - `Kotlin/kotlinx-kover` — coverage issues
-     - `JetBrains/compose-multiplatform` — Compose KMP issues
-     - `GitLiveApp/firebase-kotlin-sdk` — Firebase KMP issues
-     - `InsertKoinIO/koin` — DI issues
-     - `coil-kt/coil` — image loading issues
-     - `ArkiveDev/Mokkery` — mocking issues
-     - `cashapp/turbine` — Flow testing issues
+2. **CHECK OFFICIAL DOCUMENTATION** — before any fix attempt:
+   - Search for "set up {subject} for KMP" on the official docs site
+   - Use `WebFetch` to read the relevant documentation page
+   - Compare current setup with the official recommended pattern
+   - Key docs:
+     - Room KMP: https://developer.android.com/kotlin/multiplatform/room
+     - Compose: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-getting-started.html
+     - Kotlin: https://kotlinlang.org/docs/multiplatform.html
+     - Navigation: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation-routing.html
+
+3. **SEARCH GITHUB ISSUES**:
+   - `gh issue list --repo {org}/{repo} --search "{error keywords}" --state all --limit 10`
+   - `gh issue view {number} --repo {org}/{repo} --json body,comments,state,title`
+   - Common repos:
+     - `JetBrains/compose-multiplatform` — CMP issues
+     - `Kotlin/kotlinx-kover` — coverage
+     - `GitLiveApp/firebase-kotlin-sdk` — Firebase KMP
+     - `InsertKoinIO/koin` — DI
+     - `coil-kt/coil` — image loading
+     - `ArkiveDev/Mokkery` — mocking
+     - `cashapp/turbine` — Flow testing
      - `gradle/gradle` — Gradle itself
-     - For AGP issues, search Android issue tracker via web
+     - `google/ksp` — KSP issues
 
-3. **CHECK VERSIONS** — use Maven deps server to verify:
-   - Is the version real? `check_maven_version_exists`
-   - Is there a newer version with a fix? `get_latest_release`
-   - Are there incompatible version combinations?
+4. **CHECK VERSIONS** — use Maven deps server:
+   - `check_maven_version_exists` — is the version real?
+   - `get_latest_release` — is there a newer version with a fix?
+   - Cross-reference with `gradle/libs.versions.toml`
 
-4. **DIAGNOSE** and present findings:
-   - Root cause (with link to GitHub issue if found)
-   - Available workarounds from issue comments
+5. **DIAGNOSE** and present findings:
+   - Root cause (with GitHub issue link if found)
+   - Official docs reference if pattern changed
+   - Available workarounds
    - Recommended fix
    **Wait for "go".**
 
-5. **FIX** — apply the solution:
-   - If version bump: update `gradle/libs.versions.toml`
-   - If plugin order: fix in convention plugin or module build.gradle.kts
-   - If workaround: apply minimal change, add comment with issue link
-   - If incompatibility: propose alternative library or approach
+6. **FIX**:
+   - Version bump → `gradle/libs.versions.toml`
+   - Plugin order → convention plugin or module `build.gradle.kts`
+   - Workaround → minimal change + comment with issue URL
+   - Incompatibility → propose alternative (check https://github.com/terrakok/kmp-awesome)
 
-6. **VERIFY**:
-   - `./gradlew :{module}:tasks` — configuration succeeds
+7. **VERIFY**:
+   - `./gradlew :{module}:compileCommonMainKotlinMetadata` — compiles
    - `./gradlew :{module}:allTests` — tests pass (if applicable)
    - `./gradlew assembleDebug` — full build succeeds
 
+8. **UPDATE** memory and rules:
+   - Add gotcha to CLAUDE.md Build Gotchas if pattern is non-obvious
+   - Update `.claude/rules/conventions.md` if build config changed
+
 ## Rules
 
-- **ALWAYS search GitHub issues first** — most KMP build issues have known solutions
-- **Check plugin application order** — many issues are timing-related (e.g., Kover #772)
+- **ALWAYS check official docs first** — many issues are outdated patterns
+- **Then search GitHub issues** — most KMP build issues have known solutions
+- **Check plugin application order** — many issues are timing-related
 - **Never blindly bump versions** — check changelogs and compatibility
-- **Minimal fix** — don't refactor surrounding code while debugging
-- **Document workarounds** — add comment with issue URL if applying a non-obvious fix
-- When searching for KMP libraries → check https://github.com/terrakok/kmp-awesome
+- **Minimal fix** — don't refactor while debugging
+- **Document workarounds** — comment with issue URL for non-obvious fixes

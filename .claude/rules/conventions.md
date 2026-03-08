@@ -48,7 +48,7 @@
 - Always use convention plugin — no manual plugin application
 - Only declare module-specific dependencies
 - compileSdk/minSdk stay in each module (AGP limitation in precompiled plugins)
-- Modules with `composeResources/` need `androidLibrary { androidResources.enable = true }` (CMP-9547)
+- Modules with `composeResources/` need `android { androidResources.enable = true }` (CMP-9547; `androidLibrary {}` deprecated in AGP 9.1+)
 
 ## Error Handling
 

@@ -33,5 +33,7 @@ abstract class NutriSportDatabase : RoomDatabase() {
     abstract fun orderDao(): OrderDao
 }
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object NutriSportDatabaseConstructor : RoomDatabaseConstructor<NutriSportDatabase>
+@Suppress("KotlinNoActualForExpect")
+expect object NutriSportDatabaseConstructor : RoomDatabaseConstructor<NutriSportDatabase> {
+    override fun initialize(): NutriSportDatabase
+}

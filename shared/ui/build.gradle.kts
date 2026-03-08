@@ -10,7 +10,7 @@ kotlin {
         withHostTest {}
     }
     // CMP-9547: enable androidResources for Compose Resources with AGP 9.x
-    androidLibrary {
+    android {
         androidResources.enable = true
     }
     sourceSets {

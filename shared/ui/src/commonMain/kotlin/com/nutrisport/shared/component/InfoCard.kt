@@ -54,7 +54,7 @@ fun InfoCard(
   }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun InfoCardPreview() {
   InfoCard(

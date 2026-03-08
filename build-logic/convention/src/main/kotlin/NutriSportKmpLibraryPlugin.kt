@@ -7,6 +7,7 @@ import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class NutriSportKmpLibraryPlugin : Plugin<Project> {
+    @Suppress("DEPRECATION")
     override fun apply(target: Project) = with(target) {
         with(pluginManager) {
             apply("org.jetbrains.kotlin.multiplatform")
@@ -22,6 +23,16 @@ class NutriSportKmpLibraryPlugin : Plugin<Project> {
 
         extensions.configure<KotlinMultiplatformExtension> {
             jvmToolchain(21)
+
+            targets.configureEach {
+                compilations.configureEach {
+                    compileTaskProvider.configure {
+                        compilerOptions {
+                            freeCompilerArgs.add("-Xexpect-actual-classes")
+                        }
+                    }
+                }
+            }
 
             listOf(
                 iosArm64(),

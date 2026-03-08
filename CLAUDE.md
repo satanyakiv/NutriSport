@@ -16,7 +16,12 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/fix <bug>` — TDD bug fixing (Red-Green-Refactor)
 - `/refactor <scope>` — safe refactoring with test-first approach
 - `/clean-arch <module>` — Clean Architecture compliance check
-- `/debug-deps <error>` — dependency/build crash debugger (GitHub issues first!)
+- `/debug-deps <error>` — dependency/build crash debugger (**USE THIS for any build/compile error**)
+
+## Skills
+
+- `/gen-test <class>` — generate tests following AAA/Turbine/Mokkery conventions
+- `/new-feature <name>` — scaffold feature module with full boilerplate
 
 ## Quick Reference
 
@@ -34,11 +39,22 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ### Key Commands
 ```bash
 ./gradlew :{module}:allTests --tests "*TestClass"  # run specific test
+./gradlew :{module}:compileCommonMainKotlinMetadata # quick compile check (common)
+./gradlew assembleDebug                             # full Android debug build
+./gradlew :composeApp:compileIosMainKotlinMetadata  # iOS compile check
 ./gradlew koverHtmlReport                           # coverage report
 ./gradlew koverVerify                               # check thresholds
+./gradlew detektCheck                                # code style check (also runs pre-commit)
 ```
 
 ### Convention Plugins
 - `nutrisport.kmp.library` — base KMP + Compose
 - `nutrisport.kmp.feature` — + Koin + messagebar
 - `nutrisport.kmp.feature.full` — + Coil + navigation + Ktor
+
+### Build Gotchas
+- CMP Compose deps: use `ComposeExtension.dependencies` accessor, NOT direct Maven coordinates
+- Room KMP: `expect object` must declare `override fun initialize()` + `@Suppress("KotlinNoActualForExpect")`
+- `androidLibrary {}` deprecated in AGP 9.1+ → use `android {}` inside `kotlin {}`
+- KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
+- Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`

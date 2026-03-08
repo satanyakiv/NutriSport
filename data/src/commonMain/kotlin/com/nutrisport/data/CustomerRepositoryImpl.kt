@@ -1,11 +1,10 @@
 package com.nutrisport.data
 
-import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Customer
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.util.RequestState
 import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.flow.Flow
@@ -20,24 +19,26 @@ class CustomerRepositoryImpl : CustomerRepository {
   override fun getCurrentUserId(): String? = currentUserId()
 
   override suspend fun createCustomer(
-    user: FirebaseUser?,
+    uid: String,
+    displayName: String?,
+    email: String?,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
     try {
-      if (user == null) { onError("User is null"); return }
+      if (uid.isBlank()) { onError("User is null"); return }
 
-      val customerExists = customerCollection.document(user.uid).get().exists
+      val customerExists = customerCollection.document(uid).get().exists
       if (customerExists) { onSuccess(); return }
 
       val customer = Customer(
-        id = user.uid,
-        firstName = user.displayName?.split(" ")?.firstOrNull() ?: "Unknown",
-        lastName = user.displayName?.split(" ")?.lastOrNull() ?: "Unknown",
-        email = user.email ?: "Unknown",
+        id = uid,
+        firstName = displayName?.split(" ")?.firstOrNull() ?: "Unknown",
+        lastName = displayName?.split(" ")?.lastOrNull() ?: "Unknown",
+        email = email ?: "Unknown",
       )
-      customerCollection.document(user.uid).set(customer)
-      customerCollection.document(user.uid)
+      customerCollection.document(uid).set(customer)
+      customerCollection.document(uid)
         .collection("privateData")
         .document("role")
         .set(mapOf("isAdmin" to false))
@@ -109,7 +110,7 @@ class CustomerRepositoryImpl : CustomerRepository {
     }
   }
 
-  override suspend fun addItemToCard(
+  override suspend fun addItemToCart(
     cartItem: CartItem,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,

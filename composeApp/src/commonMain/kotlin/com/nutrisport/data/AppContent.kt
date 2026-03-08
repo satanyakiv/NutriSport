@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
-import com.nutrisport.data.domain.CustomerRepository
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.navigation.SetupNavGraph
 import com.nutrisport.shared.Constants

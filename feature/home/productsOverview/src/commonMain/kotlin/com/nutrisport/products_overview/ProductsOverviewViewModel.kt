@@ -2,7 +2,7 @@ package com.nutrisport.products_overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

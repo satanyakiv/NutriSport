@@ -15,7 +15,9 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class AdminRepositoryImpl : AdminRepository {
+class AdminRepositoryImpl(
+  private val productMapper: ProductMapper = ProductMapper(),
+) : AdminRepository {
   private val productCollection = Firebase.firestore.collection(collectionPath = "product")
 
   override fun getCurrentUserId(): String? = currentUserId()
@@ -69,7 +71,7 @@ class AdminRepositoryImpl : AdminRepository {
   }
 
   override fun readLastTenProducts(): Flow<RequestState<List<Product>>> =
-    authenticatedProductListFlow(errorMessage = "Error while retrieving products") {
+    authenticatedProductListFlow(productMapper, errorMessage = "Error while retrieving products") {
       productCollection.orderBy("createdAt", Direction.DESCENDING).limit(10)
     }
 
@@ -78,7 +80,7 @@ class AdminRepositoryImpl : AdminRepository {
       if (currentUserId() == null) return RequestState.Error("User is not available")
       val document = productCollection.document(id).get()
       if (document.exists) {
-        RequestState.Success(document.toProduct())
+        RequestState.Success(productMapper.map(document))
       } else {
         RequestState.Error("Product is not available")
       }
@@ -160,7 +162,7 @@ class AdminRepositoryImpl : AdminRepository {
       .orderBy("title")
       .startAt(queryText)
       .endAt(queryText + "\uf8ff")
-      .toProductListFlow(errorMessage = "Error while searching products")
+      .toProductListFlow(productMapper, errorMessage = "Error while searching products")
   }
 
   private fun extractFirebaseStoragePath(downloadUrl: String): String? {

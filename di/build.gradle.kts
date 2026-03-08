@@ -3,7 +3,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.nutrisport.di"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -30,6 +30,7 @@ kotlin {
             implementation(project(":feature:adminPanel"))
             implementation(project(":feature:adminPanel:manageProduct"))
             implementation(project(":data"))
+            implementation(project(":shared"))
         }
     }
 }

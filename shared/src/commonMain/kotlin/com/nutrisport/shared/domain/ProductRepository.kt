@@ -1,7 +1,5 @@
-package com.nutrisport.data.domain
+package com.nutrisport.shared.domain
 
-import com.nutrisport.shared.domain.Product
-import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.flow.Flow
 

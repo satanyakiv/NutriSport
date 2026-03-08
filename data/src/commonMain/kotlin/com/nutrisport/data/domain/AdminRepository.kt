@@ -1,5 +1,8 @@
 package com.nutrisport.data.domain
 
+// AdminRepository stays in data layer because it depends on Firebase Storage File type.
+// Moving to shared/domain would require abstracting File, which adds complexity without benefit.
+
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.util.RequestState
 import dev.gitlive.firebase.storage.File

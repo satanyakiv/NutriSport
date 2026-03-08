@@ -4,11 +4,14 @@ import android.app.Application
 import com.google.firebase.Firebase
 import com.google.firebase.initialize
 import com.nutrisport.di.initializeKoin
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import org.koin.android.ext.koin.androidContext
 
 class NutrisportApplication : Application() {
   override fun onCreate() {
     super.onCreate()
+    Napier.base(DebugAntilog())
     initializeKoin(
       config = { androidContext(this@NutrisportApplication) }
     )

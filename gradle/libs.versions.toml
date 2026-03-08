@@ -16,6 +16,11 @@ serialization = "1.10.0"
 coil3 = "3.4.0"
 ktor = "3.4.1"
 coroutines = "1.10.2"
+napier = "2.7.1"
+turbine = "1.2.0"
+mokkery = "3.1.1"
+assertk = "0.28.1"
+kover = "0.9.1"
 messagebar = "1.0.9"
 google = "4.4.4"
 splash = "1.2.0"
@@ -26,6 +31,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
+google-firebase-common = { module = "com.google.firebase:firebase-common" }
 splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "splash" }
 compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
 
@@ -58,6 +64,11 @@ ktor-darwin-client = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-android-client = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 
 messagebar-kmp = { module = "com.stevdza-san:messagebarkmp", version.ref = "messagebar" }
 
@@ -75,3 +86,5 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google" }
+mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

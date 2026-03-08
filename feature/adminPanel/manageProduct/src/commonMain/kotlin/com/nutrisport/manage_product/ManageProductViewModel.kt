@@ -32,7 +32,7 @@ data class ManageProductState(
   val isDiscounted: Boolean = false,
 )
 
-class ManageProductViewModule(
+class ManageProductViewModel(
   private val adminRepository: AdminRepository,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

@@ -7,13 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.CustomerRepository
-import com.nutrisport.data.domain.OrderRepository
-import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.OrderRepository
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Order
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.util.RequestState
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
@@ -118,7 +119,7 @@ class PaymentViewModel(
             totalAmount = totalAmount,
             token = token
           ),
-          onSuccess = { println("ORDER SUCCESSFULLY CREATED!") },
+          onSuccess = { Napier.d("ORDER SUCCESSFULLY CREATED!") },
           onError = { message -> onError(message) }
         )
       }

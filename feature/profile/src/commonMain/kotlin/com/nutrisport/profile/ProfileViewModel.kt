@@ -5,10 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.CustomerRepository
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.PhoneNumber
+import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
+import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,6 +29,8 @@ data class ProfileScreenState(
 
 class ProfileViewModel(
   private val customerRepository: CustomerRepository,
+  private val updateCustomerUseCase: UpdateCustomerUseCase,
+  private val validateProfileFormUseCase: ValidateProfileFormUseCase,
 ) : ViewModel() {
   var screenReady: RequestState<Unit> by mutableStateOf(RequestState.Loading)
   var screenState: ProfileScreenState by mutableStateOf(ProfileScreenState())
@@ -34,12 +38,14 @@ class ProfileViewModel(
 
   val isFormValid: Boolean
     get() = with(screenState) {
-      firstName.length in 3..50 &&
-          lastName.length in 3..50 &&
-          city?.length in 3..50 &&
-          postalCode != null || postalCode?.toString()?.length in 3..8 &&
-          address?.length in 3..50 &&
-          phoneNumber?.number?.length in 5..30
+      validateProfileFormUseCase(
+        firstName = firstName,
+        lastName = lastName,
+        city = city,
+        postalCode = postalCode,
+        address = address,
+        phoneNumber = phoneNumber,
+      )
     }
 
   init {
@@ -110,7 +116,7 @@ class ProfileViewModel(
     onError: (String) -> Unit,
   ) {
     viewModelScope.launch {
-      customerRepository.updateCustomer(
+      updateCustomerUseCase(
         customer = Customer(
           id = screenState.id,
           firstName = screenState.firstName,

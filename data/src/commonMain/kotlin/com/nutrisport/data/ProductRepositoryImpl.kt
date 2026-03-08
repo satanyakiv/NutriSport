@@ -1,6 +1,6 @@
 package com.nutrisport.data
 
-import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.RequestState
@@ -13,18 +13,20 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
-class ProductRepositoryImpl : ProductRepository {
+class ProductRepositoryImpl(
+  private val mapper: ProductMapper = ProductMapper(),
+) : ProductRepository {
   private val productCollection = Firebase.firestore.collection(collectionPath = "product")
 
   override fun getCurrentUserId(): String? = currentUserId()
 
   override fun readDiscountedProducts(): Flow<RequestState<List<Product>>> =
-    authenticatedProductListFlow(errorMessage = "Error while retrieving products") {
+    authenticatedProductListFlow(mapper, errorMessage = "Error while retrieving products") {
       productCollection.where { "isDiscounted" equalTo true }
     }
 
   override fun readNewProducts(): Flow<RequestState<List<Product>>> =
-    authenticatedProductListFlow(errorMessage = "Error while retrieving products") {
+    authenticatedProductListFlow(mapper, errorMessage = "Error while retrieving products") {
       productCollection.where { "isNew" equalTo true }
     }
 
@@ -33,7 +35,7 @@ class ProductRepositoryImpl : ProductRepository {
     return productCollection.document(id).snapshots
       .map<_, RequestState<Product>> { document ->
         if (document.exists) {
-          RequestState.Success(document.toProduct())
+          RequestState.Success(mapper.map(document))
         } else {
           RequestState.Error("Document $id doesn't exist")
         }
@@ -50,7 +52,7 @@ class ProductRepositoryImpl : ProductRepository {
       productCollection
         .where { "id" inArray chunk }
         .snapshots
-        .map { query -> query.documents.map { it.toProduct() } }
+        .map { query -> query.documents.map { mapper.map(it) } }
     }
 
     return combine(chunkFlows) { arrays -> arrays.toList().flatten() }
@@ -60,7 +62,7 @@ class ProductRepositoryImpl : ProductRepository {
   }
 
   override fun readProductsByCategoryFlow(category: ProductCategory): Flow<RequestState<List<Product>>> =
-    authenticatedProductListFlow(errorMessage = "Error while reading products") {
+    authenticatedProductListFlow(mapper, errorMessage = "Error while reading products") {
       productCollection.where { "category" equalTo category.name }
     }
 }

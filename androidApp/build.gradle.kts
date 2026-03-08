@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.splash.screen)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
+    implementation(libs.napier)
     implementation(compose.components.uiToolingPreview)
     debugImplementation(compose.uiTooling)
 }

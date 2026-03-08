@@ -3,14 +3,15 @@ package com.nutrisport.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.CustomerRepository
-import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.usecase.CalculateCartTotalUseCase
+import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
+import com.nutrisport.shared.domain.usecase.SignOutUseCase
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
@@ -19,7 +20,9 @@ import kotlinx.coroutines.withContext
 
 class HomeGraphViewModel(
   private val customerRepository: CustomerRepository,
-  private val productRepository: ProductRepository
+  private val observeEnrichedCartUseCase: ObserveEnrichedCartUseCase,
+  private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
+  private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
   val customer = customerRepository.readCustomerFlow()
     .stateIn(
@@ -28,40 +31,7 @@ class HomeGraphViewModel(
       initialValue = RequestState.Loading
     )
 
-  @OptIn(ExperimentalCoroutinesApi::class)
-  private val products = customer
-    .flatMapLatest { customerState ->
-      if (customerState.isSuccess()) {
-        val productIds = customerState.getSuccessData().cart.map { it.productId }.toSet()
-        if (productIds.isNotEmpty()) {
-          productRepository.readProductsByIdsFlow(productIds.toList())
-        } else flowOf(RequestState.Success(emptyList()))
-      } else if (customerState.isError()) {
-        flowOf(RequestState.Error(customerState.getErrorMessage()))
-      } else flowOf(RequestState.Loading)
-    }
-
-  @OptIn(ExperimentalCoroutinesApi::class)
-  val cartItemsWithProducts = combine(customer, products) { customerState, productsState ->
-    when {
-      customerState.isSuccess() && productsState.isSuccess() -> {
-        val cart = customerState.getSuccessData().cart
-        val products = productsState.getSuccessData()
-
-        val result = cart.mapNotNull { cartItem ->
-          val product = products.find { it.id == cartItem.productId }
-          product?.let { cartItem to it }
-        }
-
-        RequestState.Success(result)
-      }
-
-      customerState.isError() -> RequestState.Error(customerState.getErrorMessage())
-      productsState.isError() -> RequestState.Error(productsState.getErrorMessage())
-
-      else -> RequestState.Loading
-    }
-  }
+  val cartItemsWithProducts = observeEnrichedCartUseCase()
 
   @OptIn(ExperimentalCoroutinesApi::class)
   val totalAmountFlow = cartItemsWithProducts
@@ -69,14 +39,8 @@ class HomeGraphViewModel(
       if (data.isSuccess()) {
         val items = data.getSuccessData()
         val cartItems = items.map { it.first }
-        val products = items.map { it.second }.associateBy { it.id }
-
-        val totalPrice = cartItems.sumOf { cartItem ->
-          val productPrice = products[cartItem.productId]?.price ?: 0.0
-          productPrice * cartItem.quantity
-        }
-
-        flowOf(RequestState.Success(totalPrice))
+        val products = items.map { it.second }
+        flowOf(RequestState.Success(calculateCartTotalUseCase(cartItems, products)))
       } else if (data.isError()) flowOf(RequestState.Error(data.getErrorMessage()))
       else flowOf(RequestState.Loading)
     }
@@ -87,7 +51,7 @@ class HomeGraphViewModel(
   ) {
     viewModelScope.launch {
       val result = withContext(Dispatchers.IO) {
-        customerRepository.signOut()
+        signOutUseCase()
       }
       if (result.isSuccess()) {
         onSuccess()

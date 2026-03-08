@@ -1,6 +1,4 @@
-package com.nutrisport.data.domain
-
-import com.nutrisport.shared.domain.Order
+package com.nutrisport.shared.domain
 
 interface OrderRepository {
   fun getCurrentUserId(): String?

@@ -51,7 +51,7 @@ fun AdminPanelScreen(
   goToManageProduct: (String?) -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
-  val viewModel = koinViewModel<AdminPanelVewModel>()
+  val viewModel = koinViewModel<AdminPanelViewModel>()
   val products by viewModel.filteredProducts.collectAsState()
   val searchQuery by viewModel.searchQuery.collectAsState()
   var searchBarVisible by rememberSaveable { mutableStateOf(false) }

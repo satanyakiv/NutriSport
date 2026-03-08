@@ -3,7 +3,7 @@ package com.portfolio.categories_search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.ExperimentalCoroutinesApi

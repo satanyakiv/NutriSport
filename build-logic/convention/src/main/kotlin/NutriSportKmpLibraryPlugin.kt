@@ -13,9 +13,11 @@ class NutriSportKmpLibraryPlugin : Plugin<Project> {
             apply("com.android.kotlin.multiplatform.library")
             apply("org.jetbrains.compose")
             apply("org.jetbrains.kotlin.plugin.compose")
+            apply("dev.mokkery")
         }
 
         val compose = extensions.getByType<ComposeExtension>().dependencies
+        val libs = extensions.getByType<org.gradle.api.artifacts.VersionCatalogsExtension>().named("libs")
 
         extensions.configure<KotlinMultiplatformExtension> {
             jvmToolchain(21)
@@ -38,6 +40,14 @@ class NutriSportKmpLibraryPlugin : Plugin<Project> {
                 implementation(compose.ui)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
+                implementation(libs.findLibrary("napier").get())
+            }
+
+            sourceSets.getByName("commonTest").dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.findLibrary("kotlinx-coroutines-test").get())
+                implementation(libs.findLibrary("turbine").get())
+                implementation(libs.findLibrary("assertk").get())
             }
         }
     }

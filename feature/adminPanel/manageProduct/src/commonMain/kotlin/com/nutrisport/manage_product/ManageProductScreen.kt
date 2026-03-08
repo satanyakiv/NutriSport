@@ -77,7 +77,7 @@ fun ManageProductScreen(
   var category by remember { mutableStateOf(ProductCategory.Protein) }
   var showCategoriesDialog by remember { mutableStateOf(false) }
   var dropDownMenuOpen by remember { mutableStateOf(false) }
-  val viewModel = koinViewModel<ManageProductViewModule>()
+  val viewModel = koinViewModel<ManageProductViewModel>()
   val screenState = viewModel.screenState
   val isFormValid = viewModel.isFormValid
   val thumbnailUploaderState = viewModel.thumbnailUploaderState

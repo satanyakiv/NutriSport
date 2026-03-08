@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.CustomerRepository
-import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,7 +48,7 @@ class DetailsViewModel(
     viewModelScope.launch {
       val productId = savedStateHandle.get<String>("id")
       if (productId != null) {
-        customerRepository.addItemToCard(
+        customerRepository.addItemToCart(
           cartItem = CartItem(
             productId = productId,
             flavor = selectedFlavor,

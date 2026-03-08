@@ -1,7 +1,7 @@
 package com.nutrisport.data
 
-import com.nutrisport.data.domain.CustomerRepository
-import com.nutrisport.data.domain.OrderRepository
+import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.Order
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore

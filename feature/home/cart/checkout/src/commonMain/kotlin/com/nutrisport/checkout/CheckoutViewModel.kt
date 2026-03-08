@@ -7,15 +7,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.CustomerRepository
-import com.nutrisport.data.domain.OrderRepository
-import com.nutrisport.shared.domain.CartItem
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.domain.Customer
-import com.nutrisport.shared.domain.Order
 import com.nutrisport.shared.domain.PhoneNumber
+import com.nutrisport.shared.domain.usecase.CreateOrderUseCase
+import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
+import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
 import com.nutrisport.shared.util.RequestState
-import com.nutrisport.shared.util.identityHash
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,12 +29,14 @@ data class CheckoutScreenState(
   val address: String? = null,
   val country: Country = Country.Serbia,
   val phoneNumber: PhoneNumber? = null,
-  val cart: List<CartItem> = emptyList(),
+  val cart: List<com.nutrisport.shared.domain.CartItem> = emptyList(),
 )
 
 class CheckoutViewModel(
   private val customerRepository: CustomerRepository,
-  private val orderRepository: OrderRepository,
+  private val createOrderUseCase: CreateOrderUseCase,
+  private val updateCustomerUseCase: UpdateCustomerUseCase,
+  private val validateProfileFormUseCase: ValidateProfileFormUseCase,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   var screenReady: RequestState<Unit> by mutableStateOf(RequestState.Loading)
@@ -43,12 +45,14 @@ class CheckoutViewModel(
 
   val isFormValid: Boolean
     get() = with(screenState) {
-      firstName.length in 3..50 &&
-          lastName.length in 3..50 &&
-          city?.length in 3..50 &&
-          postalCode != null || postalCode?.toString()?.length in 3..8 &&
-          address?.length in 3..50 &&
-          phoneNumber?.number?.length in 5..30
+      validateProfileFormUseCase(
+        firstName = firstName,
+        lastName = lastName,
+        city = city,
+        postalCode = postalCode,
+        address = address,
+        phoneNumber = phoneNumber,
+      )
     }
 
   init {
@@ -135,7 +139,7 @@ class CheckoutViewModel(
     onError: (String) -> Unit,
   ) {
     viewModelScope.launch {
-      customerRepository.updateCustomer(
+      updateCustomerUseCase(
         customer = Customer(
           id = screenState.id,
           firstName = screenState.firstName,
@@ -156,20 +160,14 @@ class CheckoutViewModel(
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
-    println("cart id=${identityHash(screenState.cart)} size=${screenState.cart.size}")
-
-    val order = Order(
-      customerId = screenState.id,
-      items = screenState.cart.map { item -> item.copy() },
-      totalAmount = savedStateHandle.get<Double>("totalAmount") ?: 0.0
-    )
-
-    println("order.items id=${identityHash(order.items)} size=${order.items.size}")
+    Napier.d("Creating order for customer=${screenState.id} cartSize=${screenState.cart.size}")
     viewModelScope.launch {
-      orderRepository.createTheOrder(
-        order = order,
+      createOrderUseCase(
+        customerId = screenState.id,
+        cartItems = screenState.cart,
+        totalAmount = savedStateHandle.get<Double>("totalAmount") ?: 0.0,
         onSuccess = onSuccess,
-        onError = onError
+        onError = onError,
       )
     }
   }

@@ -3,7 +3,6 @@ package com.nutrisport.admin_panel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.AdminRepository
-import com.nutrisport.data.AdminRepositoryImpl
 import com.nutrisport.shared.util.RequestState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -14,8 +13,8 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 
-class AdminPanelVewModel(
-  private val adminRepository: AdminRepository = AdminRepositoryImpl(),
+class AdminPanelViewModel(
+  private val adminRepository: AdminRepository,
 ): ViewModel() {
   private val allProducts = adminRepository.readLastTenProducts()
     .stateIn(

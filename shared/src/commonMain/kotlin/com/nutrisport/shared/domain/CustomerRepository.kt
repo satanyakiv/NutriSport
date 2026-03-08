@@ -1,15 +1,14 @@
-package com.nutrisport.data.domain
+package com.nutrisport.shared.domain
 
-import com.nutrisport.shared.domain.CartItem
-import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.util.RequestState
-import dev.gitlive.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 
 interface CustomerRepository {
   fun getCurrentUserId(): String?
   suspend fun createCustomer(
-    user: FirebaseUser?,
+    uid: String,
+    displayName: String?,
+    email: String?,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   )
@@ -19,7 +18,7 @@ interface CustomerRepository {
     onSuccess: () -> Unit,
     onError: (String) -> Unit
   )
-  suspend fun addItemToCard(
+  suspend fun addItemToCart(
     cartItem: CartItem,
     onSuccess: () -> Unit,
     onError: (String) -> Unit

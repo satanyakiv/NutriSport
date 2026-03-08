@@ -5,10 +5,18 @@ import com.nutrisport.auth.component.AuthViewModel
 import com.nutrisport.cart.CartViewModel
 import com.nutrisport.checkout.CheckoutViewModel
 import com.nutrisport.data.AdminRepositoryImpl
+import com.nutrisport.data.CustomerMapper
 import com.nutrisport.data.CustomerRepositoryImpl
 import com.nutrisport.data.OrderRepositoryImpl
+import com.nutrisport.data.ProductMapper
 import com.nutrisport.data.ProductRepositoryImpl
 import com.nutrisport.data.domain.AdminRepository
+import com.nutrisport.data.mapper.CustomerDtoToEntityMapper
+import com.nutrisport.data.mapper.CustomerEntityToDomainMapper
+import com.nutrisport.data.mapper.ProductDtoToDomainMapper
+import com.nutrisport.data.mapper.ProductDtoToEntityMapper
+import com.nutrisport.data.mapper.ProductEntityToDomainMapper
+import com.nutrisport.database.NutriSportDatabase
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.ProductRepository
@@ -33,45 +41,66 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val sharedModule = module {
-  // Repositories
-  single<CustomerRepository> { CustomerRepositoryImpl() }
-  single<AdminRepository> { AdminRepositoryImpl() }
-  single<ProductRepository> { ProductRepositoryImpl() }
-  single<OrderRepository> { OrderRepositoryImpl(get()) }
+    // Database DAOs
+    single { get<NutriSportDatabase>().productDao() }
+    single { get<NutriSportDatabase>().customerDao() }
+    single { get<NutriSportDatabase>().cartItemDao() }
+    single { get<NutriSportDatabase>().orderDao() }
 
-  // UseCases
-  factory { CalculateCartTotalUseCase() }
-  factory { EnrichCartWithProductsUseCase() }
-  factory { ValidateProfileFormUseCase() }
-  factory { SignOutUseCase(get()) }
-  factory { CreateOrderUseCase(get()) }
-  factory { UpdateCustomerUseCase(get()) }
-  factory { ObserveEnrichedCartUseCase(get(), get(), get()) }
+    // Mappers — Firebase
+    factory { ProductMapper() }
+    factory { CustomerMapper() }
 
-  // ViewModels
-  viewModelOf(::AuthViewModel)
-  viewModelOf(::HomeGraphViewModel)
-  viewModelOf(::ProfileViewModel)
-  viewModelOf(::ManageProductViewModel)
-  viewModelOf(::AdminPanelViewModel)
-  viewModelOf(::ProductsOverviewViewModel)
-  viewModelOf(::DetailsViewModel)
-  viewModelOf(::CartViewModel)
-  viewModelOf(::CategorySearchViewModel)
-  viewModelOf(::CheckoutViewModel)
-  viewModelOf(::PaymentViewModel)
+    // Mappers — DTO ↔ Entity ↔ Domain
+    factory { ProductDtoToEntityMapper() }
+    factory { ProductEntityToDomainMapper() }
+    factory { ProductDtoToDomainMapper() }
+    factory { CustomerDtoToEntityMapper() }
+    factory { CustomerEntityToDomainMapper() }
+
+    // Repositories
+    single<CustomerRepository> {
+        CustomerRepositoryImpl(get(), get(), get(), get(), get())
+    }
+    single<AdminRepository> { AdminRepositoryImpl(get(), get()) }
+    single<ProductRepository> {
+        ProductRepositoryImpl(get(), get(), get(), get())
+    }
+    single<OrderRepository> { OrderRepositoryImpl(get()) }
+
+    // UseCases
+    factory { CalculateCartTotalUseCase() }
+    factory { EnrichCartWithProductsUseCase() }
+    factory { ValidateProfileFormUseCase() }
+    factory { SignOutUseCase(get()) }
+    factory { CreateOrderUseCase(get()) }
+    factory { UpdateCustomerUseCase(get()) }
+    factory { ObserveEnrichedCartUseCase(get(), get(), get()) }
+
+    // ViewModels
+    viewModelOf(::AuthViewModel)
+    viewModelOf(::HomeGraphViewModel)
+    viewModelOf(::ProfileViewModel)
+    viewModelOf(::ManageProductViewModel)
+    viewModelOf(::AdminPanelViewModel)
+    viewModelOf(::ProductsOverviewViewModel)
+    viewModelOf(::DetailsViewModel)
+    viewModelOf(::CartViewModel)
+    viewModelOf(::CategorySearchViewModel)
+    viewModelOf(::CheckoutViewModel)
+    viewModelOf(::PaymentViewModel)
 }
 
 expect val targetModule: Module
 
 fun initializeKoin(
-  config: (KoinApplication.() -> Unit)? = null,
+    config: (KoinApplication.() -> Unit)? = null,
 ) {
-  startKoin {
-    config?.invoke(this)
-    modules(
-      sharedModule,
-      targetModule
-    )
-  }
+    startKoin {
+        config?.invoke(this)
+        modules(
+            sharedModule,
+            targetModule,
+        )
+    }
 }

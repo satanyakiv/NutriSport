@@ -21,8 +21,9 @@ class AuthViewModel(
         uid = user?.uid ?: "",
         displayName = user?.displayName,
         email = user?.email,
-        onSuccess = onSuccess,
-        onError = onError,
+      ).fold(
+        ifLeft = { error -> onError(error.message) },
+        ifRight = { onSuccess() }
       )
     }
   }

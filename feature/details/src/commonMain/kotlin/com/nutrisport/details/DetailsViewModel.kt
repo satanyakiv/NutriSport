@@ -9,8 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.CartItem
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -21,11 +23,13 @@ class DetailsViewModel(
 ) : ViewModel() {
   val product = productRepository.readProductByIdFlow(
     savedStateHandle.get<String>("id") ?: ""
-  ).stateIn(
-    scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5000),
-    initialValue = RequestState.Loading
-  )
+  ).map { UiState.Content(it) }
+    .onStart<UiState<com.nutrisport.shared.domain.Product>> { emit(UiState.Loading) }
+    .stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.WhileSubscribed(5000),
+      initialValue = UiState.Loading
+    )
 
   var quantity by mutableStateOf(1)
     private set
@@ -54,8 +58,9 @@ class DetailsViewModel(
             flavor = selectedFlavor,
             quantity = quantity
           ),
-          onSuccess = onSuccess,
-          onError = onError
+        ).fold(
+          ifLeft = { error -> onError(error.message) },
+          ifRight = { onSuccess() }
         )
       } else {
         onError("Product id is not found.")

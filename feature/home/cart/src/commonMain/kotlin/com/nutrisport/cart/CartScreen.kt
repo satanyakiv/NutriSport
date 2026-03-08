@@ -24,7 +24,7 @@ import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.util.DisplayResult
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.UiState
 import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
@@ -32,7 +32,7 @@ import rememberMessageBarState
 fun CartScreen() {
   val messageBarState = rememberMessageBarState()
   val viewModel = koinViewModel<CartViewModel>()
-  val cartItemsWithProducts by viewModel.cartItemsWithProducts.collectAsState(RequestState.Loading)
+  val cartItemsWithProducts by viewModel.cartItemsWithProducts.collectAsState(UiState.Loading)
 
   ContentWithMessageBar(
     contentBackgroundColor = Surface,

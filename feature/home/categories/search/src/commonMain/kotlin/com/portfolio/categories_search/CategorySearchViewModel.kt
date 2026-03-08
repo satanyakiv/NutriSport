@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.ProductCategory
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
 class CategorySearchViewModel(
@@ -24,11 +27,13 @@ class CategorySearchViewModel(
     category = ProductCategory.valueOf(
       savedStateHandle.get<String>("category") ?: ProductCategory.Protein.name
     )
-  ).stateIn(
-    scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5000),
-    initialValue = RequestState.Loading
-  )
+  ).map { UiState.Content(it) }
+    .onStart<UiState<List<com.nutrisport.shared.domain.Product>>> { emit(UiState.Loading) }
+    .stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.WhileSubscribed(5000),
+      initialValue = UiState.Loading
+    )
 
   private var _searchQuery = MutableStateFlow("")
   val searchQuery: StateFlow<String> = _searchQuery
@@ -43,13 +48,15 @@ class CategorySearchViewModel(
     .flatMapLatest { query ->
       if (query.isBlank()) products
       else {
-        if (products.value.isSuccess()) {
+        val currentData = products.value.getSuccessDataOrNull()
+        if (currentData != null) {
           flowOf(
-            RequestState.Success(
-              products.value.getSuccessData()
-                .filter {
+            UiState.Content(
+              Either.Right(
+                currentData.filter {
                   it.title.lowercase().contains(query.lowercase())
                 }
+              )
             )
           )
         } else products
@@ -58,6 +65,6 @@ class CategorySearchViewModel(
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),
-      initialValue = RequestState.Loading
+      initialValue = UiState.Loading
     )
 }

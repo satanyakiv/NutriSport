@@ -33,7 +33,7 @@
 ## Firebase
 
 - All Firebase calls in `data` module only
-- Wrap Firebase exceptions into `RequestState.Error`
+- Wrap Firebase exceptions into `Either.Left(AppError.Network(...))`
 - Collection names as constants in companion objects
 - Never expose Firebase models outside `data` — map to domain models
 
@@ -48,10 +48,15 @@
 - Always use convention plugin — no manual plugin application
 - Only declare module-specific dependencies
 - compileSdk/minSdk stay in each module (AGP limitation in precompiled plugins)
+- Modules with `composeResources/` need `androidLibrary { androidResources.enable = true }` (CMP-9547)
 
 ## Error Handling
 
-- Use `RequestState<T>` for async operations exposed to UI
-- Use `runCatching` + `.fold()` in repositories
+- Use `DomainResult<T>` (`Either<AppError, T>`) in domain/data layers
+- Use `UiState<T>` for async operations exposed to UI
+- Use `Either.fold()` for branching on success/error
 - Never swallow exceptions silently
-- Log errors before wrapping into RequestState.Error
+- Log errors before wrapping into `Either.Left(AppError.*)`
+- No callbacks (`onSuccess`/`onError`) in repository interfaces — return `DomainResult`
+- When searching for third-party KMP libraries → first check https://github.com/terrakok/kmp-awesome
+- Every refactoring must update `.claude/rules/` files if architecture changes

@@ -7,6 +7,7 @@ kotlin {
         namespace = "com.nutrisport.data"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        withHostTest {}
     }
     compilerOptions {
         freeCompilerArgs.add("-Xreturn-value-checker=full")
@@ -19,7 +20,9 @@ kotlin {
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.storage)
             implementation(libs.auth.firebase.kmp)
-            implementation(project(":shared"))
+            implementation(libs.kotlinx.serialization)
+            implementation(project(":shared:utils"))
+            implementation(project(":database"))
         }
     }
 }

@@ -8,6 +8,7 @@ dependencies {
     compileOnly("org.jetbrains.compose:org.jetbrains.compose.gradle.plugin:${libs.versions.compose.multiplatform.get()}")
     compileOnly("org.jetbrains.kotlin:compose-compiler-gradle-plugin:${libs.versions.kotlin.get()}")
     compileOnly("dev.mokkery:mokkery-gradle:${libs.versions.mokkery.get()}")
+    compileOnly("org.jetbrains.kotlinx:kover-gradle-plugin:${libs.versions.kover.get()}")
 }
 
 gradlePlugin {

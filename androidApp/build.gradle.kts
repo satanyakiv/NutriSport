@@ -27,9 +27,23 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+            buildConfigField("Boolean", "ENABLE_LOGGING", "false")
         }
     }
     compileOptions {
@@ -41,6 +55,7 @@ android {
 dependencies {
     implementation(project(":composeApp"))
     implementation(project(":di"))
+    implementation(project(":shared:utils"))
     implementation(platform(libs.firebase.bom))
     implementation("com.google.firebase:firebase-common")
     implementation(libs.androidx.activity.compose)

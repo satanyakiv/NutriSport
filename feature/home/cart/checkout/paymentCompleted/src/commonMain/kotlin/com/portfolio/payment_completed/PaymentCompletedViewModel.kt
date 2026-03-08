@@ -13,7 +13,9 @@ import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Order
 import com.nutrisport.shared.domain.Product
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.AppError
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -32,73 +35,87 @@ class PaymentViewModel(
   private val orderRepository: OrderRepository,
   private val productRepository: ProductRepository,
 ) : ViewModel() {
-  var screenState: RequestState<Unit> by mutableStateOf(RequestState.Loading)
+  var screenState: UiState<Unit> by mutableStateOf(UiState.Loading)
 
   private val customer = customerRepository.readCustomerFlow()
+    .map { UiState.Content(it) }
+    .onStart<UiState<com.nutrisport.shared.domain.Customer>> { emit(UiState.Loading) }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),
-      initialValue = RequestState.Loading
+      initialValue = UiState.Loading
     )
 
   @OptIn(ExperimentalCoroutinesApi::class)
   private val totalAmount = customer.flatMapLatest { customerState ->
+    val customerData = customerState.getSuccessDataOrNull()
     when {
-      customerState.isSuccess() -> {
-        val cartItems = customerState.getSuccessData().cart
+      customerData != null -> {
+        val cartItems = customerData.cart
         val productIds = cartItems.map { it.productId }
 
         if (productIds.isEmpty()) {
-          flowOf(RequestState.Success(0.0))
+          flowOf(UiState.Content(Either.Right(0.0)))
         } else {
           productRepository.readProductsByIdsFlow(productIds)
-            .map { products ->
-              if (products.isSuccess()) {
-                RequestState.Success(
-                  calculateTotalPrice(
-                    cartItems = cartItems,
-                    products = products.getSuccessData()
+            .map { productsResult ->
+              productsResult.fold(
+                ifLeft = { error ->
+                  UiState.Content(Either.Left(error))
+                },
+                ifRight = { products ->
+                  UiState.Content(
+                    Either.Right(
+                      calculateTotalPrice(
+                        cartItems = cartItems,
+                        products = products
+                      )
+                    )
                   )
-                )
-              } else {
-                RequestState.Error(products.getErrorMessage())
-              }
+                }
+              )
             }
         }
       }
 
-      customerState.isError() -> flowOf(RequestState.Error(customerState.getErrorMessage()))
-      else -> flowOf(RequestState.Loading)
+      customerState.getErrorMessageOrNull() != null -> {
+        flowOf(UiState.Content(Either.Left(AppError.Unknown(customerState.getErrorMessageOrNull()!!))))
+      }
+
+      else -> flowOf(UiState.Loading)
     }
   }
 
   init {
     viewModelScope.launch {
       totalAmount.collectLatest { amount ->
-        if (amount.isSuccess()) {
+        val amountData = amount.getSuccessDataOrNull()
+        val amountError = amount.getErrorMessageOrNull()
+        if (amountData != null) {
           val isSuccess = savedStateHandle.get<Boolean>("isSuccess")
           val error = savedStateHandle.get<String>("error")
           val token = savedStateHandle.get<String>("token")
 
           if (isSuccess != null) {
-            screenState = RequestState.Success(Unit)
+            screenState = UiState.Content(Either.Right(Unit))
             if (token != null) {
               createTheOrder(
-                totalAmount = amount.getSuccessData(),
+                totalAmount = amountData,
                 token = token,
                 onError = { message ->
-                  screenState = RequestState.Error(message)
+                  screenState = UiState.Content(Either.Left(AppError.Unknown(message)))
                 }
               )
             }
           } else if (error != null) {
-            screenState = RequestState.Error(error)
+            screenState = UiState.Content(Either.Left(AppError.Unknown(error)))
           } else {
-            screenState =
-              RequestState.Error("Unknown error. Contact us at: example@gmail.com")
+            screenState = UiState.Content(
+              Either.Left(AppError.Unknown("Unknown error. Contact us at: example@gmail.com"))
+            )
           }
-        } else if (amount.isError()) {
-          screenState = RequestState.Error(amount.getErrorMessage())
+        } else if (amountError != null) {
+          screenState = UiState.Content(Either.Left(AppError.Unknown(amountError)))
         }
       }
     }
@@ -109,21 +126,26 @@ class PaymentViewModel(
     token: String,
     onError: (String) -> Unit,
   ) {
-    if (customer.value.isSuccess()) {
-      val customerId = customer.value.getSuccessData().id
+    val customerData = customer.value.getSuccessDataOrNull()
+    if (customerData != null) {
+      val customerId = customerData.id
       viewModelScope.launch(Dispatchers.IO) {
         orderRepository.createTheOrder(
           order = Order(
             customerId = customerId,
-            items = customer.value.getSuccessData().cart,
+            items = customerData.cart,
             totalAmount = totalAmount,
             token = token
           ),
-          onSuccess = { Napier.d("ORDER SUCCESSFULLY CREATED!") },
-          onError = { message -> onError(message) }
+        ).fold(
+          ifLeft = { error -> onError(error.message) },
+          ifRight = { Napier.d("ORDER SUCCESSFULLY CREATED!") }
         )
       }
-    } else if (customer.value.isError()) onError(customer.value.getErrorMessage())
+    } else {
+      val errorMsg = customer.value.getErrorMessageOrNull()
+      if (errorMsg != null) onError(errorMsg)
+    }
   }
 
   fun calculateTotalPrice(cartItems: List<CartItem>, products: List<Product>): Double {

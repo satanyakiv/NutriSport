@@ -7,11 +7,13 @@ kotlin {
         namespace = "com.nutrisport.home"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        withHostTest {}
     }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.compose.navigation)
-            implementation(project(":shared"))
+            implementation(project(":shared:utils"))
+            implementation(project(":shared:ui"))
             implementation(project(":data"))
             implementation(project(":feature:home:productsOverview"))
             implementation(project(":feature:home:categories"))

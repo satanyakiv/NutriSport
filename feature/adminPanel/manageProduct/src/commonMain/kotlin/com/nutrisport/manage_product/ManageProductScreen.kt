@@ -61,7 +61,7 @@ import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.dialog.CategoriesDialog
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.DisplayResult
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.UiState
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -277,7 +277,7 @@ fun ManageProductScreen(
                   Spacer(Modifier.height(12.dp))
                   TextButton(
                     onClick = {
-                      viewModel.updateThumbnailUploaderState(RequestState.Idle)
+                      viewModel.updateThumbnailUploaderState(UiState.Idle)
                     },
                     colors = ButtonDefaults.textButtonColors(
                       containerColor = Transparent,

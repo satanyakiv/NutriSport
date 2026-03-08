@@ -14,6 +14,7 @@ class NutriSportKmpLibraryPlugin : Plugin<Project> {
             apply("org.jetbrains.compose")
             apply("org.jetbrains.kotlin.plugin.compose")
             apply("dev.mokkery")
+            apply("org.jetbrains.kotlinx.kover")
         }
 
         val compose = extensions.getByType<ComposeExtension>().dependencies

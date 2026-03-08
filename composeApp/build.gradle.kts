@@ -47,7 +47,8 @@ kotlin {
             api(libs.kmp.notifier)
 
             implementation(project(":navigation"))
-            implementation(project(":shared"))
+            implementation(project(":shared:utils"))
+            implementation(project(":shared:ui"))
             implementation(project(":di"))
             implementation(project(":data"))
         }

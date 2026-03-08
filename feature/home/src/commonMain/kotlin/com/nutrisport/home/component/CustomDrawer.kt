@@ -18,11 +18,11 @@ import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
 import com.nutrisport.shared.domain.Customer
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.UiState
 
 @Composable
 fun CustomDrawer(
-  customer: RequestState<Customer>,
+  customer: UiState<Customer>,
   onProfileClick: () -> Unit,
   onContactUsClick: () -> Unit,
   onSignOutClick: () -> Unit,
@@ -68,7 +68,7 @@ fun CustomDrawer(
     AnimatedContent(
       targetState = customer
     ) {
-      if (customer.isSuccess() && customer.getSuccessData().isAdmin) {
+      if (customer.getSuccessDataOrNull()?.isAdmin == true) {
         DrawerItemCard(
           drawerItem = DrawerItem.Admin,
           onClick = onAdminPanelClick,

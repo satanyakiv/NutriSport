@@ -3,7 +3,8 @@ package com.nutrisport.products_overview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.ProductRepository
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -17,15 +18,15 @@ class ProductsOverviewViewModel(
     productRepository.readDiscountedProducts(),
   ) { new, discounted ->
     when {
-      new.isSuccess() && discounted.isSuccess() -> {
-        val finalList = (new.getSuccessData() + discounted.getSuccessData()).distinctBy { it.id }
-        RequestState.Success(finalList)
+      new.isRight && discounted.isRight -> {
+        val newList = (new as Either.Right).value
+        val discountedList = (discounted as Either.Right).value
+        val finalList = (newList + discountedList).distinctBy { it.id }
+        UiState.Content(Either.Right(finalList))
       }
-      new.isError() -> new
-      discounted.isError() -> discounted
-      else -> {
-        RequestState.Loading
-      }
+      new.isLeft -> UiState.Content(new)
+      discounted.isLeft -> UiState.Content(discounted)
+      else -> UiState.Loading
     }
-  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), RequestState.Loading)
+  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UiState.Loading)
 }

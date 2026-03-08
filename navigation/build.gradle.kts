@@ -8,6 +8,7 @@ kotlin {
         namespace = "com.nutrisport.navigation"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        withHostTest {}
     }
     sourceSets {
         commonMain.dependencies {
@@ -24,7 +25,7 @@ kotlin {
             implementation(project(":feature:home:cart:checkout"))
             implementation(project(":feature:home:cart:checkout:paymentCompleted"))
             implementation(project(":feature:adminPanel:manageProduct"))
-            implementation(project(":shared"))
+            implementation(project(":shared:utils"))
         }
     }
 }

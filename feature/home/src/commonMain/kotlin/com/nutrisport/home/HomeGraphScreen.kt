@@ -54,7 +54,7 @@ import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.navigation.Screen
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.UiState
 import com.nutrisport.shared.util.getScreenWidth
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -106,7 +106,7 @@ fun HomeGraphScreen(
 
   val viewModel = koinViewModel<HomeGraphViewModel>()
   val customer by viewModel.customer.collectAsState()
-  val totalAmount by viewModel.totalAmountFlow.collectAsState(RequestState.Loading)
+  val totalAmount by viewModel.totalAmountFlow.collectAsState(UiState.Loading)
   val messageBarState = rememberMessageBarState()
 
   Box(
@@ -160,14 +160,14 @@ fun HomeGraphScreen(
               AnimatedVisibility(
                 visible = selectedDestination == BottomBarDestination.Cart
               ) {
-                if (customer.isSuccess() && customer.getSuccessData().cart.isNotEmpty()) {
+                if (customer.getSuccessDataOrNull()?.cart?.isNotEmpty() == true) {
                   IconButton(onClick = {
-                    if (totalAmount.isSuccess()) {
-                      navigateToCheckout(
-                        totalAmount.getSuccessData()
-                      )
-                    } else if (totalAmount.isError()) {
-                      messageBarState.addError("Error while calculating a total amount: ${totalAmount.getErrorMessage()}")
+                    val total = totalAmount.getSuccessDataOrNull()
+                    val error = totalAmount.getErrorMessageOrNull()
+                    if (total != null) {
+                      navigateToCheckout(total)
+                    } else if (error != null) {
+                      messageBarState.addError("Error while calculating a total amount: $error")
                     }
                   }) {
                     Icon(

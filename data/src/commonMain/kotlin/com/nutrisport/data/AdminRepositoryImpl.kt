@@ -1,8 +1,11 @@
 package com.nutrisport.data
 
 import com.nutrisport.data.domain.AdminRepository
+import com.nutrisport.data.mapper.ProductDtoToDomainMapper
 import com.nutrisport.shared.domain.Product
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.AppError
+import com.nutrisport.shared.util.DomainResult
+import com.nutrisport.shared.util.Either
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.firestore
@@ -10,170 +13,166 @@ import dev.gitlive.firebase.storage.File
 import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class AdminRepositoryImpl(
-  private val productMapper: ProductMapper = ProductMapper(),
+    private val productMapper: ProductMapper,
+    private val dtoToDomain: ProductDtoToDomainMapper,
 ) : AdminRepository {
-  private val productCollection = Firebase.firestore.collection(collectionPath = "product")
+    private val productCollection = Firebase.firestore.collection(collectionPath = "product")
 
-  override fun getCurrentUserId(): String? = currentUserId()
+    override fun getCurrentUserId(): String? = currentUserId()
 
-  override suspend fun createNewProduct(
-    product: Product,
-    onSuccess: () -> Unit,
-    onError: (String) -> Unit,
-  ) {
-    try {
-      withAuth(onError) {
-        productCollection.document(product.id).set(
-          product.copy(
-            title = product.title.lowercase(),
-            category = product.category.filter { it.isLetter() },
-          ),
-        )
-        onSuccess()
-      }
-    } catch (e: Exception) {
-      onError("Error while creating a product: ${e.message}")
-    }
-  }
-
-  override suspend fun uploadImageToStorage(file: File): String? {
-    if (currentUserId() == null) return null
-    val path = Firebase.storage.reference.child("images/${Uuid.random().toHexString()}")
-    return try {
-      withTimeout(20000) {
-        path.putFile(file)
-        path.getDownloadUrl()
-      }
-    } catch (e: Exception) {
-      null
-    }
-  }
-
-  override suspend fun deleteImageFromStorage(
-    downloadUrl: String,
-    onSuccess: () -> Unit,
-    onError: (String) -> Unit,
-  ) {
-    try {
-      extractFirebaseStoragePath(downloadUrl)?.let {
-        Firebase.storage.reference(it).delete()
-        onSuccess()
-      } ?: onError("Error while extracting the path")
-    } catch (e: Exception) {
-      onError("Error while deleting the image: ${e.message}")
-    }
-  }
-
-  override fun readLastTenProducts(): Flow<RequestState<List<Product>>> =
-    authenticatedProductListFlow(productMapper, errorMessage = "Error while retrieving products") {
-      productCollection.orderBy("createdAt", Direction.DESCENDING).limit(10)
-    }
-
-  override suspend fun readProductById(id: String): RequestState<Product> {
-    return try {
-      if (currentUserId() == null) return RequestState.Error("User is not available")
-      val document = productCollection.document(id).get()
-      if (document.exists) {
-        RequestState.Success(productMapper.map(document))
-      } else {
-        RequestState.Error("Product is not available")
-      }
-    } catch (e: Exception) {
-      RequestState.Error("Error while reading selected product: ${e.message}")
-    }
-  }
-
-  override suspend fun updateProductThumbnail(
-    productId: String,
-    downloadUrl: String,
-    onSuccess: () -> Unit,
-    onError: (String) -> Unit,
-  ) {
-    try {
-      withAuth(onError) {
-        val document = productCollection.document(productId).get()
-        if (document.exists) {
-          productCollection.document(productId).updateFields { "thumbnail" to downloadUrl }
-          onSuccess()
-        } else {
-          onError("Product is not available")
+    override suspend fun createNewProduct(product: Product): DomainResult<Unit> {
+        return try {
+            withAuth {
+                productCollection.document(product.id).set(
+                    product.copy(
+                        title = product.title.lowercase(),
+                        category = product.category.filter { it.isLetter() },
+                    ),
+                )
+                Either.Right(Unit)
+            }
+        } catch (e: Exception) {
+            Either.Left(AppError.Network("Error while creating a product: ${e.message}"))
         }
-      }
-    } catch (e: Exception) {
-      onError("Error while updating image thumbnail: ${e.message}")
     }
-  }
 
-  override suspend fun updateProduct(
-    product: Product,
-    onSuccess: () -> Unit,
-    onError: (String) -> Unit,
-  ) {
-    try {
-      withAuth(onError) {
-        val document = productCollection.document(product.id).get()
-        if (document.exists) {
-          productCollection.document(product.id).update(
-            product.copy(
-              title = product.title.lowercase(),
-              category = product.category.filter { it.isLetter() },
-            ),
-          )
-          onSuccess()
-        } else {
-          onError("Product is not available")
+    override suspend fun uploadImageToStorage(file: File): String? {
+        if (currentUserId() == null) return null
+        val path = Firebase.storage.reference.child("images/${Uuid.random().toHexString()}")
+        return try {
+            withTimeout(20000) {
+                path.putFile(file)
+                path.getDownloadUrl()
+            }
+        } catch (e: Exception) {
+            null
         }
-      }
-    } catch (e: Exception) {
-      onError("Error while updating product: ${e.message}")
     }
-  }
 
-  override suspend fun deleteProduct(
-    productId: String,
-    onSuccess: () -> Unit,
-    onError: (String) -> Unit,
-  ) {
-    try {
-      withAuth(onError) {
-        val document = productCollection.document(productId).get()
-        if (document.exists) {
-          productCollection.document(productId).delete()
-          onSuccess()
-        } else {
-          onError("Product is not available")
+    override suspend fun deleteImageFromStorage(downloadUrl: String): DomainResult<Unit> {
+        return try {
+            val path = extractFirebaseStoragePath(downloadUrl)
+            if (path != null) {
+                Firebase.storage.reference(path).delete()
+                Either.Right(Unit)
+            } else {
+                Either.Left(AppError.Unknown("Error while extracting the path"))
+            }
+        } catch (e: Exception) {
+            Either.Left(AppError.Network("Error while deleting the image: ${e.message}"))
         }
-      }
-    } catch (e: Exception) {
-      onError("Error while deleting the product: ${e.message}")
     }
-  }
 
-  override fun searchProductByTitle(query: String): Flow<RequestState<List<Product>>> {
-    currentUserId() ?: return flowOf(RequestState.Error("User is not available"))
-    val queryText = query.lowercase().trim()
-    return productCollection
-      .orderBy("title")
-      .startAt(queryText)
-      .endAt(queryText + "\uf8ff")
-      .toProductListFlow(productMapper, errorMessage = "Error while searching products")
-  }
-
-  private fun extractFirebaseStoragePath(downloadUrl: String): String? {
-    val startIndex = downloadUrl.indexOf("/o/") + 3
-    if (startIndex < 3) return null
-    val endIndex = downloadUrl.indexOf("?", startIndex)
-    val encodedPath = if (endIndex != -1) {
-      downloadUrl.substring(startIndex, endIndex)
-    } else {
-      downloadUrl.substring(startIndex)
+    override fun readLastTenProducts(): Flow<DomainResult<List<Product>>> {
+        return authenticatedProductDtoListFlow(
+            productMapper,
+            errorMessage = "Error while retrieving products",
+        ) {
+            productCollection.orderBy("createdAt", Direction.DESCENDING).limit(10)
+        }.map { result ->
+            result.map { dtos -> dtoToDomain.map(dtos) }
+        }
     }
-    return encodedPath.replace("%2F", "/").replace("%20", " ")
-  }
+
+    override suspend fun readProductById(id: String): DomainResult<Product> {
+        return try {
+            if (currentUserId() == null) return Either.Left(AppError.Unauthorized())
+            val document = productCollection.document(id).get()
+            if (document.exists) {
+                Either.Right(dtoToDomain.map(productMapper.map(document)))
+            } else {
+                Either.Left(AppError.NotFound("Product is not available"))
+            }
+        } catch (e: Exception) {
+            Either.Left(AppError.Network("Error while reading selected product: ${e.message}"))
+        }
+    }
+
+    override suspend fun updateProductThumbnail(
+        productId: String,
+        downloadUrl: String,
+    ): DomainResult<Unit> {
+        return try {
+            withAuth {
+                val document = productCollection.document(productId).get()
+                if (document.exists) {
+                    productCollection.document(productId).updateFields { "thumbnail" to downloadUrl }
+                    Either.Right(Unit)
+                } else {
+                    Either.Left(AppError.NotFound("Product is not available"))
+                }
+            }
+        } catch (e: Exception) {
+            Either.Left(AppError.Network("Error while updating image thumbnail: ${e.message}"))
+        }
+    }
+
+    override suspend fun updateProduct(product: Product): DomainResult<Unit> {
+        return try {
+            withAuth {
+                val document = productCollection.document(product.id).get()
+                if (document.exists) {
+                    productCollection.document(product.id).update(
+                        product.copy(
+                            title = product.title.lowercase(),
+                            category = product.category.filter { it.isLetter() },
+                        ),
+                    )
+                    Either.Right(Unit)
+                } else {
+                    Either.Left(AppError.NotFound("Product is not available"))
+                }
+            }
+        } catch (e: Exception) {
+            Either.Left(AppError.Network("Error while updating product: ${e.message}"))
+        }
+    }
+
+    override suspend fun deleteProduct(productId: String): DomainResult<Unit> {
+        return try {
+            withAuth {
+                val document = productCollection.document(productId).get()
+                if (document.exists) {
+                    productCollection.document(productId).delete()
+                    Either.Right(Unit)
+                } else {
+                    Either.Left(AppError.NotFound("Product is not available"))
+                }
+            }
+        } catch (e: Exception) {
+            Either.Left(AppError.Network("Error while deleting the product: ${e.message}"))
+        }
+    }
+
+    override fun searchProductByTitle(query: String): Flow<DomainResult<List<Product>>> {
+        currentUserId() ?: return flowOf(Either.Left(AppError.Unauthorized()))
+        val queryText = query.lowercase().trim()
+        return productCollection
+            .orderBy("title")
+            .startAt(queryText)
+            .endAt(queryText + "\uf8ff")
+            .toProductDtoListFlow(productMapper, errorMessage = "Error while searching products")
+            .map { result ->
+                result.map { dtos -> dtoToDomain.map(dtos) }
+            }
+    }
+
+    private fun extractFirebaseStoragePath(downloadUrl: String): String? {
+        val startIndex = downloadUrl.indexOf("/o/") + 3
+        if (startIndex < 3) return null
+        val endIndex = downloadUrl.indexOf("?", startIndex)
+        val encodedPath = if (endIndex != -1) {
+            downloadUrl.substring(startIndex, endIndex)
+        } else {
+            downloadUrl.substring(startIndex)
+        }
+        return encodedPath.replace("%2F", "/").replace("%20", " ")
+    }
 }

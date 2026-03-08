@@ -7,16 +7,16 @@ import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.usecase.CalculateCartTotalUseCase
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
 import com.nutrisport.shared.domain.usecase.SignOutUseCase
-import com.nutrisport.shared.util.RequestState
-import kotlinx.coroutines.Dispatchers
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeGraphViewModel(
   private val customerRepository: CustomerRepository,
@@ -25,24 +25,29 @@ class HomeGraphViewModel(
   private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
   val customer = customerRepository.readCustomerFlow()
+    .map { UiState.Content(it) }
+    .onStart<UiState<com.nutrisport.shared.domain.Customer>> { emit(UiState.Loading) }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),
-      initialValue = RequestState.Loading
+      initialValue = UiState.Loading
     )
 
   val cartItemsWithProducts = observeEnrichedCartUseCase()
 
   @OptIn(ExperimentalCoroutinesApi::class)
   val totalAmountFlow = cartItemsWithProducts
-    .flatMapLatest { data ->
-      if (data.isSuccess()) {
-        val items = data.getSuccessData()
-        val cartItems = items.map { it.first }
-        val products = items.map { it.second }
-        flowOf(RequestState.Success(calculateCartTotalUseCase(cartItems, products)))
-      } else if (data.isError()) flowOf(RequestState.Error(data.getErrorMessage()))
-      else flowOf(RequestState.Loading)
+    .flatMapLatest { result ->
+      result.fold(
+        ifLeft = { error ->
+          flowOf(UiState.Content(Either.Left(error)))
+        },
+        ifRight = { items ->
+          val cartItems = items.map { it.first }
+          val products = items.map { it.second }
+          flowOf(UiState.Content(Either.Right(calculateCartTotalUseCase(cartItems, products))))
+        }
+      )
     }
 
   fun signOut(
@@ -50,14 +55,11 @@ class HomeGraphViewModel(
     onError: (String) -> Unit,
   ) {
     viewModelScope.launch {
-      val result = withContext(Dispatchers.IO) {
-        signOutUseCase()
-      }
-      if (result.isSuccess()) {
-        onSuccess()
-      } else if (result.isError()) {
-        onError(result.getErrorMessage())
-      }
+      val result = signOutUseCase()
+      result.fold(
+        ifLeft = { error -> onError(error.message) },
+        ifRight = { onSuccess() }
+      )
     }
   }
 }

@@ -8,7 +8,7 @@
 - **Assertions:** `com.willowtreeapps.assertk:assertk`
 - **Coroutines:** `kotlinx-coroutines-test` (runTest, TestDispatcher)
 - **UI tests:** `compose.uiTest` (Compose Multiplatform, commonTest)
-- **Coverage:** `org.jetbrains.kotlinx.kover` (JVM/Android only)
+- **Coverage:** `org.jetbrains.kotlinx.kover:0.9.7` (JVM/Android only)
 
 ## Test Pyramid
 
@@ -27,14 +27,16 @@
 fun `should return products when repository succeeds`() = runTest {
     // Arrange
     val products = listOf(fakeProduct())
-    every { repository.getProducts() } returns flowOf(products)
+    every { repository.getProducts() } returns flowOf(Either.Right(products))
 
     // Act
     viewModel.loadProducts()
 
     // Assert
     viewModel.state.test {
-        assertThat(awaitItem()).isEqualTo(RequestState.Success(products))
+        assertThat(awaitItem()).isInstanceOf<UiState.Loading>()
+        val content = awaitItem() as UiState.Content
+        assertThat(content.result.getOrNull()).isEqualTo(products)
     }
 }
 ```
@@ -118,7 +120,9 @@ data/src/commonTest/kotlin/com/nutrisport/data/
 
 ## Coverage (Kover)
 
-- Applied via root `build.gradle.kts` with `merge { allProjects() }`
+- Applied in convention plugin (after android) — NOT via `merge { allProjects() }` (causes Kover #772)
+- Root merges via `dependencies { kover(project(...)) }` for each module
+- All modules have `withHostTest {}` — runs commonTest on JVM for coverage
 - Measures JVM/Android only (iOS/Native not supported)
 - Excludes: Compose-generated code, DI modules, BuildConfig
 

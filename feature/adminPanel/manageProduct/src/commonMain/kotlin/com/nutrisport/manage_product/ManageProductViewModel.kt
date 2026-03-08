@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.AppError
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import dev.gitlive.firebase.storage.File
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
@@ -46,29 +48,31 @@ class ManageProductViewModel(
         && screenState.thumbnail.isNotEmpty()
         && screenState.price != 0.0
 
-  var thumbnailUploaderState: RequestState<Unit> by mutableStateOf(RequestState.Idle)
+  var thumbnailUploaderState: UiState<Unit> by mutableStateOf(UiState.Idle)
     private set
 
   init {
     productId.takeIf { it.isNotEmpty() }?.let {
       viewModelScope.launch {
         val selectedProduct = adminRepository.readProductById(productId)
-        if (selectedProduct.isSuccess()) {
-          val product = selectedProduct.getSuccessData()
-          updateId(product.id)
-          updateCreatedAt(product.createdAt)
-          updateTitle(product.title)
-          updateDescription(product.description)
-          updateThumbnail(product.thumbnail)
-          updateThumbnailUploaderState(RequestState.Success(Unit))
-          updateCategory(ProductCategory.valueOf(product.category))
-          updateFlavors(product.flavors?.joinToString(",").orEmpty())
-          updateWeight(product.weight)
-          updatePrice(product.price)
-          updateIsNew(product.isNew)
-          updateIsPopular(product.isPopular)
-          updateIsDiscounted(product.isDiscounted)
-        }
+        selectedProduct.fold(
+          ifLeft = { /* ignore load error for edit screen */ },
+          ifRight = { product ->
+            updateId(product.id)
+            updateCreatedAt(product.createdAt)
+            updateTitle(product.title)
+            updateDescription(product.description)
+            updateThumbnail(product.thumbnail)
+            updateThumbnailUploaderState(UiState.Content(Either.Right(Unit)))
+            updateCategory(ProductCategory.valueOf(product.category))
+            updateFlavors(product.flavors?.joinToString(",").orEmpty())
+            updateWeight(product.weight)
+            updatePrice(product.price)
+            updateIsNew(product.isNew)
+            updateIsPopular(product.isPopular)
+            updateIsDiscounted(product.isDiscounted)
+          }
+        )
       }
     }
   }
@@ -93,7 +97,7 @@ class ManageProductViewModel(
     screenState = screenState.copy(thumbnail = thumbnail)
   }
 
-  fun updateThumbnailUploaderState(value: RequestState<Unit>) {
+  fun updateThumbnailUploaderState(value: UiState<Unit>) {
     thumbnailUploaderState = value
   }
 
@@ -132,8 +136,9 @@ class ManageProductViewModel(
           isPopular = screenState.isPopular,
           isDiscounted = screenState.isDiscounted,
         ),
-        onSuccess = onSuccess,
-        onError = onError,
+      ).fold(
+        ifLeft = { error -> onError(error.message) },
+        ifRight = { onSuccess() }
       )
     }
   }
@@ -143,38 +148,45 @@ class ManageProductViewModel(
     onSuccess: () -> Unit
   ) {
     if (file == null) {
-      updateThumbnailUploaderState(RequestState.Error("File is null. Error while selecting an image"))
+      updateThumbnailUploaderState(
+        UiState.Content(Either.Left(AppError.Unknown("File is null. Error while selecting an image")))
+      )
       return
     }
 
     viewModelScope.launch {
-      updateThumbnailUploaderState(RequestState.Loading)
+      updateThumbnailUploaderState(UiState.Loading)
       val downloadUrl = adminRepository.uploadImageToStorage(file)
       try {
         if (downloadUrl.isNullOrEmpty()) {
           throw Exception("Error while uploading image to storage")
         }
 
-        productId.takeIf { it.isNotEmpty() }?.let { id ->
+        productId.takeIf { it.isNotEmpty() }?.let { _ ->
           adminRepository.updateProductThumbnail(
             productId = productId,
             downloadUrl = downloadUrl,
-            onSuccess = {
-              updateThumbnail(downloadUrl)
-              updateThumbnailUploaderState(RequestState.Success(Unit))
-              onSuccess()
+          ).fold(
+            ifLeft = { error ->
+              updateThumbnailUploaderState(
+                UiState.Content(Either.Left(AppError.Unknown(error.message)))
+              )
             },
-            onError = {
-              updateThumbnailUploaderState(RequestState.Error(it))
+            ifRight = {
+              updateThumbnail(downloadUrl)
+              updateThumbnailUploaderState(UiState.Content(Either.Right(Unit)))
+              onSuccess()
             }
           )
         } ?: run {
           updateThumbnail(downloadUrl)
-          updateThumbnailUploaderState(RequestState.Success(Unit))
+          updateThumbnailUploaderState(UiState.Content(Either.Right(Unit)))
           onSuccess()
         }
       } catch (e: Exception) {
-        updateThumbnailUploaderState(RequestState.Error(e.message.orEmpty()))
+        updateThumbnailUploaderState(
+          UiState.Content(Either.Left(AppError.Unknown(e.message.orEmpty())))
+        )
       }
     }
   }
@@ -203,8 +215,9 @@ class ManageProductViewModel(
             isPopular = screenState.isPopular,
             isDiscounted = screenState.isDiscounted,
           ),
-          onSuccess = onSuccess,
-          onError = onError,
+        ).fold(
+          ifLeft = { error -> onError(error.message) },
+          ifRight = { onSuccess() }
         )
       }
     } else {
@@ -219,30 +232,27 @@ class ManageProductViewModel(
     viewModelScope.launch {
       adminRepository.deleteImageFromStorage(
         downloadUrl = screenState.thumbnail,
-        onSuccess = {
-          productId.takeIf { it.isNotEmpty() }?.let { id ->
-            viewModelScope.launch {
-              adminRepository.updateProductThumbnail(
-                productId = productId,
-                downloadUrl = "",
-                onSuccess = {
-                  updateThumbnail("")
-                  updateThumbnailUploaderState(RequestState.Idle)
-                  onSuccess()
-                },
-                onError = onError,
-              )
-            }
+      ).fold(
+        ifLeft = { error -> onError(error.message) },
+        ifRight = {
+          productId.takeIf { it.isNotEmpty() }?.let { _ ->
+            adminRepository.updateProductThumbnail(
+              productId = productId,
+              downloadUrl = "",
+            ).fold(
+              ifLeft = { error -> onError(error.message) },
+              ifRight = {
+                updateThumbnail("")
+                updateThumbnailUploaderState(UiState.Idle)
+                onSuccess()
+              }
+            )
           } ?: run {
             updateThumbnail("")
-            updateThumbnailUploaderState(RequestState.Idle)
+            updateThumbnailUploaderState(UiState.Idle)
             onSuccess()
           }
-          updateThumbnail("")
-          updateThumbnailUploaderState(RequestState.Idle)
-          onSuccess()
-        },
-        onError = onError,
+        }
       )
     }
   }
@@ -251,18 +261,19 @@ class ManageProductViewModel(
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
-    productId.takeIf { it.isNotEmpty() }?.let { id ->
+    productId.takeIf { it.isNotEmpty() }?.let { _ ->
       viewModelScope.launch {
         adminRepository.deleteProduct(
           productId = productId,
-          onSuccess = {
+        ).fold(
+          ifLeft = { error -> onError(error.message) },
+          ifRight = {
             deleteThumbnail(
               onSuccess = { },
               onError = { },
             )
             onSuccess()
-          },
-          onError = onError,
+          }
         )
       }
     }

@@ -11,7 +11,9 @@ import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.AppError
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -32,7 +34,7 @@ class ProfileViewModel(
   private val updateCustomerUseCase: UpdateCustomerUseCase,
   private val validateProfileFormUseCase: ValidateProfileFormUseCase,
 ) : ViewModel() {
-  var screenReady: RequestState<Unit> by mutableStateOf(RequestState.Loading)
+  var screenReady: UiState<Unit> by mutableStateOf(UiState.Loading)
   var screenState: ProfileScreenState by mutableStateOf(ProfileScreenState())
     private set
 
@@ -51,24 +53,26 @@ class ProfileViewModel(
   init {
     viewModelScope.launch {
       customerRepository.readCustomerFlow().collectLatest { data ->
-        if (data.isSuccess()) {
-          val fetchedCustomer = data.getSuccessData()
-          screenState = ProfileScreenState(
-            id = fetchedCustomer.id,
-            firstName = fetchedCustomer.firstName,
-            lastName = fetchedCustomer.lastName,
-            email = fetchedCustomer.email,
-            city = fetchedCustomer.city,
-            postalCode = fetchedCustomer.postalCode,
-            address = fetchedCustomer.address,
-            phoneNumber = fetchedCustomer.phoneNumber,
-            country = Country.entries.firstOrNull { it.dialCode == fetchedCustomer.phoneNumber?.dialCode }
-              ?: Country.Serbia
-          )
-          screenReady = RequestState.Success(Unit)
-        } else if (data.isError()) {
-          screenReady = RequestState.Error(data.getErrorMessage())
-        }
+        data.fold(
+          ifLeft = { error ->
+            screenReady = UiState.Content(Either.Left(AppError.Unknown(error.message)))
+          },
+          ifRight = { fetchedCustomer ->
+            screenState = ProfileScreenState(
+              id = fetchedCustomer.id,
+              firstName = fetchedCustomer.firstName,
+              lastName = fetchedCustomer.lastName,
+              email = fetchedCustomer.email,
+              city = fetchedCustomer.city,
+              postalCode = fetchedCustomer.postalCode,
+              address = fetchedCustomer.address,
+              phoneNumber = fetchedCustomer.phoneNumber,
+              country = Country.entries.firstOrNull { it.dialCode == fetchedCustomer.phoneNumber?.dialCode }
+                ?: Country.Serbia
+            )
+            screenReady = UiState.Content(Either.Right(Unit))
+          }
+        )
       }
     }
   }
@@ -127,8 +131,9 @@ class ProfileViewModel(
           address = screenState.address,
           phoneNumber = screenState.phoneNumber
         ),
-        onSuccess = onSuccess,
-        onError = onError
+      ).fold(
+        ifLeft = { error -> onError(error.message) },
+        ifRight = { onSuccess() }
       )
     }
   }

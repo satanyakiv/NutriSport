@@ -5,10 +5,14 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotNull
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.domain.ProductRepository
-import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.AppError
+import com.nutrisport.shared.util.DomainResult
+import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -50,12 +54,15 @@ class ProductsOverviewViewModelTest {
         val discountedProducts = listOf(product("2", "DISCOUNTED", isDiscounted = true))
 
         val repo = object : ProductRepository {
-            override fun readDiscountedProducts() = flowOf(RequestState.Success(discountedProducts))
-            override fun readNewProducts() = flowOf(RequestState.Success(newProducts))
+            override fun readDiscountedProducts() = flowOf(Either.Right(discountedProducts))
+            override fun readNewProducts() = flowOf(Either.Right(newProducts))
             override fun getCurrentUserId() = "user-1"
-            override fun readProductByIdFlow(id: String): Flow<RequestState<Product>> = flowOf(RequestState.Loading)
-            override fun readProductsByIdsFlow(ids: List<String>): Flow<RequestState<List<Product>>> = flowOf(RequestState.Loading)
-            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<RequestState<List<Product>>> = flowOf(RequestState.Loading)
+            override fun readProductByIdFlow(id: String): Flow<DomainResult<Product>> =
+                flowOf(Either.Right(product(id, "P")))
+            override fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Right(emptyList()))
+            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Right(emptyList()))
         }
 
         // Act
@@ -63,10 +70,12 @@ class ProductsOverviewViewModelTest {
 
         // Assert
         viewModel.products.test {
-            assertThat(awaitItem()).isInstanceOf<RequestState.Loading>()
+            assertThat(awaitItem()).isInstanceOf<UiState.Loading>()
             val success = awaitItem()
-            assertThat(success).isInstanceOf<RequestState.Success<List<Product>>>()
-            assertThat((success as RequestState.Success).data).hasSize(2)
+            assertThat(success).isInstanceOf<UiState.Content<List<Product>>>()
+            val data = (success as UiState.Content).result.getOrNull()
+            assertThat(data).isNotNull()
+            assertThat(data!!).hasSize(2)
         }
     }
 
@@ -76,12 +85,15 @@ class ProductsOverviewViewModelTest {
         val sharedProduct = product("1", "SHARED", isNew = true, isDiscounted = true)
 
         val repo = object : ProductRepository {
-            override fun readDiscountedProducts() = flowOf(RequestState.Success(listOf(sharedProduct)))
-            override fun readNewProducts() = flowOf(RequestState.Success(listOf(sharedProduct)))
+            override fun readDiscountedProducts() = flowOf(Either.Right(listOf(sharedProduct)))
+            override fun readNewProducts() = flowOf(Either.Right(listOf(sharedProduct)))
             override fun getCurrentUserId() = "user-1"
-            override fun readProductByIdFlow(id: String): Flow<RequestState<Product>> = flowOf(RequestState.Loading)
-            override fun readProductsByIdsFlow(ids: List<String>): Flow<RequestState<List<Product>>> = flowOf(RequestState.Loading)
-            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<RequestState<List<Product>>> = flowOf(RequestState.Loading)
+            override fun readProductByIdFlow(id: String): Flow<DomainResult<Product>> =
+                flowOf(Either.Right(product(id, "P")))
+            override fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Right(emptyList()))
+            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Right(emptyList()))
         }
 
         // Act
@@ -89,10 +101,12 @@ class ProductsOverviewViewModelTest {
 
         // Assert
         viewModel.products.test {
-            assertThat(awaitItem()).isInstanceOf<RequestState.Loading>()
-            val success = awaitItem() as RequestState.Success
-            assertThat(success.data).hasSize(1)
-            assertThat(success.data.first().id).isEqualTo("1")
+            assertThat(awaitItem()).isInstanceOf<UiState.Loading>()
+            val success = awaitItem()
+            val data = (success as UiState.Content).result.getOrNull()
+            assertThat(data).isNotNull()
+            assertThat(data!!).hasSize(1)
+            assertThat(data.first().id).isEqualTo("1")
         }
     }
 
@@ -100,12 +114,16 @@ class ProductsOverviewViewModelTest {
     fun `should propagate error from new products`() = runTest(testDispatcher) {
         // Arrange
         val repo = object : ProductRepository {
-            override fun readDiscountedProducts() = flowOf(RequestState.Success(emptyList<Product>()))
-            override fun readNewProducts(): Flow<RequestState<List<Product>>> = flowOf(RequestState.Error("Network error"))
+            override fun readDiscountedProducts() = flowOf(Either.Right(emptyList<Product>()))
+            override fun readNewProducts(): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Left(AppError.Network("Network error")))
             override fun getCurrentUserId() = "user-1"
-            override fun readProductByIdFlow(id: String): Flow<RequestState<Product>> = flowOf(RequestState.Loading)
-            override fun readProductsByIdsFlow(ids: List<String>): Flow<RequestState<List<Product>>> = flowOf(RequestState.Loading)
-            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<RequestState<List<Product>>> = flowOf(RequestState.Loading)
+            override fun readProductByIdFlow(id: String): Flow<DomainResult<Product>> =
+                flowOf(Either.Right(product(id, "P")))
+            override fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Right(emptyList()))
+            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>> =
+                flowOf(Either.Right(emptyList()))
         }
 
         // Act
@@ -113,9 +131,11 @@ class ProductsOverviewViewModelTest {
 
         // Assert
         viewModel.products.test {
-            assertThat(awaitItem()).isInstanceOf<RequestState.Loading>()
+            assertThat(awaitItem()).isInstanceOf<UiState.Loading>()
             val error = awaitItem()
-            assertThat(error).isInstanceOf<RequestState.Error>()
+            assertThat(error).isInstanceOf<UiState.Content<List<Product>>>()
+            val content = error as UiState.Content<List<Product>>
+            assertThat(content.result).isInstanceOf<Either.Left<AppError>>()
         }
     }
 }

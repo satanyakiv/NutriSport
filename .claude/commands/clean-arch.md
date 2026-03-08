@@ -1,4 +1,4 @@
-Read .claude/rules/architecture.md, .claude/rules/conventions.md
+Read .claude/rules/architecture.md, .claude/rules/models.md, .claude/rules/error-handling.md, .claude/rules/conventions.md
 
 ## Clean Architecture Check
 

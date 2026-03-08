@@ -24,6 +24,7 @@ import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.domain.color
 
 @Composable
 fun CategoryCard(

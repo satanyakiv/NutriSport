@@ -7,6 +7,7 @@ kotlin {
         namespace = "com.nutrisport.di"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        withHostTest {}
     }
     compilerOptions {
         freeCompilerArgs.add("-Xreturn-value-checker=full")
@@ -16,6 +17,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
 
             implementation(project(":feature:auth"))
             implementation(project(":feature:home"))
@@ -30,7 +33,8 @@ kotlin {
             implementation(project(":feature:adminPanel"))
             implementation(project(":feature:adminPanel:manageProduct"))
             implementation(project(":data"))
-            implementation(project(":shared"))
+            implementation(project(":database"))
+            implementation(project(":shared:utils"))
         }
     }
 }

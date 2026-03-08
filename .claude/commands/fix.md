@@ -1,4 +1,4 @@
-Read .claude/rules/architecture.md, .claude/rules/testing.md
+Read .claude/rules/architecture.md, .claude/rules/error-handling.md, .claude/rules/testing.md
 
 ## Project context
 

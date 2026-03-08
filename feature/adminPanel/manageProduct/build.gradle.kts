@@ -7,6 +7,7 @@ kotlin {
         namespace = "com.nutrisport.manage_product"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        withHostTest {}
     }
     sourceSets {
         androidMain.dependencies {
@@ -14,7 +15,8 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.firebase.storage)
-            implementation(project(":shared"))
+            implementation(project(":shared:utils"))
+            implementation(project(":shared:ui"))
             implementation(project(":data"))
         }
     }

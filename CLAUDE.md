@@ -44,7 +44,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ./gradlew :composeApp:compileIosMainKotlinMetadata  # iOS compile check
 ./gradlew koverHtmlReport                           # coverage report
 ./gradlew koverVerify                               # check thresholds
-./gradlew detektCheck                                # code style check (also runs pre-commit)
+./gradlew detekt                                     # code style check (also runs pre-commit)
 ```
 
 ### Convention Plugins

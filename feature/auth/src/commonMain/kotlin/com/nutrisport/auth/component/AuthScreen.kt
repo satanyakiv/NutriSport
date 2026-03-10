@@ -86,7 +86,9 @@ fun AuthScreen(
           onResult = { result ->
             result.onSuccess { user ->
               viewModel.createCustomer(
-                user = user,
+                uid = user?.uid.orEmpty(),
+                displayName = user?.displayName,
+                email = user?.email,
                 onSuccess = {
                   coroutineScope.launch {
                     messageBarState.addSuccess("Auth Successful")

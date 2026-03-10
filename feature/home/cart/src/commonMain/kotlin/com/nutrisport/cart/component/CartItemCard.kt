@@ -37,17 +37,15 @@ import com.nutrisport.shared.Surface
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
+import com.nutrisport.cart.model.CartItemUi
 import com.nutrisport.shared.component.QuantityCounter
-import com.nutrisport.shared.domain.CartItem
-import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.QuantityCounterSize
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CartItemCard(
   modifier: Modifier = Modifier,
-  product: Product,
-  cartItem: CartItem,
+  cartItemUi: CartItemUi,
   onMinusClick: (Int) -> Unit,
   onPlusClick: (Int) -> Unit,
   onDeleteClick: () -> Unit,
@@ -70,7 +68,7 @@ fun CartItemCard(
           shape = RoundedCornerShape(size = 12.dp)
         ),
       model = ImageRequest.Builder(LocalPlatformContext.current)
-        .data(product.thumbnail)
+        .data(cartItemUi.thumbnail)
         .crossfade(enable = true)
         .build(),
       contentDescription = "Product thumbnail image",
@@ -88,7 +86,7 @@ fun CartItemCard(
       ) {
         Text(
           modifier = Modifier.weight(1f),
-          text = product.title,
+          text = cartItemUi.title,
           fontSize = FontSize.MEDIUM,
           color = TextPrimary,
           fontWeight = FontWeight.Medium,
@@ -122,7 +120,7 @@ fun CartItemCard(
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Text(
-          text = "$${product.price}",
+          text = cartItemUi.formattedUnitPrice,
           fontSize = FontSize.EXTRA_REGULAR,
           color = TextSecondary,
           fontWeight = FontWeight.Medium,
@@ -130,7 +128,7 @@ fun CartItemCard(
         )
         QuantityCounter(
           size = QuantityCounterSize.Small,
-          value = cartItem.quantity,
+          value = cartItemUi.quantity,
           onMinusClick = onMinusClick,
           onPlusClick = onPlusClick
         )

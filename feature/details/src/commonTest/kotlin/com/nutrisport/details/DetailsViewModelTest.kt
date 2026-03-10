@@ -6,6 +6,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import androidx.lifecycle.SavedStateHandle
+import com.nutrisport.details.model.ProductUi
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.CustomerRepository
@@ -100,10 +101,11 @@ class DetailsViewModelTest {
         viewModel.product.test {
             assertThat(awaitItem()).isInstanceOf<UiState.Loading>()
             val result = awaitItem()
-            assertThat(result).isInstanceOf<UiState.Content<Product>>()
+            assertThat(result).isInstanceOf<UiState.Content<ProductUi>>()
             val data = (result as UiState.Content).result.getOrNull()
             assertThat(data).isNotNull()
             assertThat(data!!.title).isEqualTo("WHEY PROTEIN")
+            assertThat(data.formattedPrice).isEqualTo("$29.99")
         }
     }
 

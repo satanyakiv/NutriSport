@@ -25,14 +25,12 @@ import com.nutrisport.home.domain.BottomBarDestination
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.IconSecondary
 import com.nutrisport.shared.SurfaceLighter
-import com.nutrisport.shared.domain.Customer
-import com.nutrisport.shared.util.UiState
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun BottomBar(
   modifier: Modifier = Modifier,
-  customer: UiState<Customer>,
+  cartItemCount: Int,
   selected: BottomBarDestination,
   onSelect: (BottomBarDestination) -> Unit,
 ) {
@@ -61,19 +59,17 @@ fun BottomBar(
           tint = animatedTint,
           contentDescription = "BottomBar destination icon",
         )
-        if (destination == BottomBarDestination.Cart && customer.getSuccessDataOrNull() != null) {
+        if (destination == BottomBarDestination.Cart && cartItemCount > 0) {
           AnimatedContent(
-            targetState = customer
-          ) { state ->
-            if (customer.getSuccessDataOrNull()?.cart?.isNotEmpty() == true) {
-              Box(
-                modifier = Modifier
-                  .size(8.dp)
-                  .offset(x = 4.dp, y = -4.dp)
-                  .clip(CircleShape)
-                  .background(IconSecondary),
-              )
-            }
+            targetState = cartItemCount,
+          ) {
+            Box(
+              modifier = Modifier
+                .size(8.dp)
+                .offset(x = 4.dp, y = -4.dp)
+                .clip(CircleShape)
+                .background(IconSecondary),
+            )
           }
         }
       }

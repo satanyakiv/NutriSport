@@ -14,6 +14,7 @@
 - State hoisting: Screen composable receives state + event callbacks
 - Preview functions: `@Preview` + `{Component}Preview` naming
 - No business logic in composables — delegate to ViewModel
+- Domain→UI mapping happens in ViewModel, never in Composables (Screens receive `UiState<XxxUi>`)
 - **Route-Screen separation**: Route handles DI + state collection, Screen is pure UI
 - Route naming: `{Feature}Route`, Screen naming: `{Feature}Screen`
 - Navigation calls Route, never Screen directly

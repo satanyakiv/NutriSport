@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nutrisport.details.mapper.toUi
+import com.nutrisport.details.model.ProductUi
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.CartItem
@@ -23,8 +25,9 @@ class DetailsViewModel(
 ) : ViewModel() {
   val product = productRepository.readProductByIdFlow(
     savedStateHandle.get<String>("id") ?: ""
-  ).map { UiState.Content(it) }
-    .onStart<UiState<com.nutrisport.shared.domain.Product>> { emit(UiState.Loading) }
+  ).map<_, UiState<ProductUi>> { result ->
+    UiState.Content(result.map { it.toUi() })
+  }.onStart { emit(UiState.Loading) }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),

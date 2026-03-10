@@ -32,7 +32,7 @@ import rememberMessageBarState
 fun CartScreen() {
   val messageBarState = rememberMessageBarState()
   val viewModel = koinViewModel<CartViewModel>()
-  val cartItemsWithProducts by viewModel.cartItemsWithProducts.collectAsState(UiState.Loading)
+  val cartItems by viewModel.cartItems.collectAsState(UiState.Loading)
 
   ContentWithMessageBar(
     contentBackgroundColor = Surface,
@@ -43,7 +43,7 @@ fun CartScreen() {
     successContainerColor = SurfaceBrand,
     successContentColor = TextPrimary
   ) {
-    cartItemsWithProducts.DisplayResult(
+    cartItems.DisplayResult(
       onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
       onSuccess = { data ->
         if (data.isNotEmpty()) {
@@ -55,14 +55,13 @@ fun CartScreen() {
           ) {
             items(
               items = data,
-              key = { it.first.id }
-            ) { pair ->
+              key = { it.cartItemId }
+            ) { cartItemUi ->
               CartItemCard(
-                cartItem = pair.first,
-                product = pair.second,
+                cartItemUi = cartItemUi,
                 onMinusClick = { quantity ->
                   viewModel.updateCartItemQuantity(
-                    id = pair.first.id,
+                    id = cartItemUi.cartItemId,
                     quantity = quantity,
                     onSuccess = {},
                     onError = { messageBarState.addError(it) }
@@ -70,7 +69,7 @@ fun CartScreen() {
                 },
                 onPlusClick = { quantity ->
                   viewModel.updateCartItemQuantity(
-                    id = pair.first.id,
+                    id = cartItemUi.cartItemId,
                     quantity = quantity,
                     onSuccess = {},
                     onError = { messageBarState.addError(it) }
@@ -78,7 +77,7 @@ fun CartScreen() {
                 },
                 onDeleteClick = {
                   viewModel.deleteCartItem(
-                    id = pair.first.id,
+                    id = cartItemUi.cartItemId,
                     onSuccess = {},
                     onError = { messageBarState.addError(it) }
                   )

@@ -172,7 +172,7 @@ fun DetailsScreen(
                       )
                       Spacer(modifier = Modifier.width(4.dp))
                       Text(
-                        text = "${selectedProduct.weight}g",
+                        text = selectedProduct.formattedWeight ?: "",
                         fontSize = FontSize.REGULAR,
                         color = TextPrimary
                       )
@@ -180,7 +180,7 @@ fun DetailsScreen(
                   }
                 }
                 Text(
-                  text = "$${selectedProduct.price}",
+                  text = selectedProduct.formattedPrice,
                   fontSize = FontSize.MEDIUM,
                   color = TextSecondary,
                   fontWeight = FontWeight.Medium
@@ -206,18 +206,18 @@ fun DetailsScreen(
             Column(
               modifier = Modifier
                 .background(
-                  if (selectedProduct.flavors?.isNotEmpty() == true) SurfaceLighter
+                  if (selectedProduct.hasFlavors) SurfaceLighter
                   else Surface
                 )
                 .padding(all = 24.dp)
             ) {
-              if (selectedProduct.flavors?.isNotEmpty() == true) {
+              if (selectedProduct.hasFlavors) {
                 FlowRow(
                   modifier = Modifier.fillMaxWidth(),
                   verticalArrangement = Arrangement.spacedBy(8.dp),
                   horizontalArrangement = Arrangement.Center
                 ) {
-                  selectedProduct.flavors?.forEach { flavor ->
+                  selectedProduct.flavors.forEach { flavor ->
                     FlavorChip(
                       flavor = flavor,
                       isSelected = selectedFlavor == flavor,
@@ -231,7 +231,7 @@ fun DetailsScreen(
               PrimaryButton(
                 icon = Resources.Icon.ShoppingCart,
                 text = "Add to Cart",
-                enabled = if (selectedProduct.flavors?.isNotEmpty() == true) selectedFlavor != null
+                enabled = if (selectedProduct.hasFlavors) selectedFlavor != null
                 else true,
                 onClick = {
                   viewModel.addItemToCart(

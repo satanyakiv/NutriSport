@@ -2,9 +2,9 @@ package com.nutrisport.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.shared.domain.CartItem
+import com.nutrisport.cart.mapper.toUi
+import com.nutrisport.cart.model.CartItemUi
 import com.nutrisport.shared.domain.CustomerRepository
-import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,8 +17,10 @@ class CartViewModel(
     private val customerRepository: CustomerRepository,
     private val observeEnrichedCartUseCase: ObserveEnrichedCartUseCase,
 ) : ViewModel() {
-    val cartItemsWithProducts = observeEnrichedCartUseCase()
-        .map<_, UiState<List<Pair<CartItem, Product>>>> { UiState.Content(it) }
+    val cartItems = observeEnrichedCartUseCase()
+        .map<_, UiState<List<CartItemUi>>> { result ->
+            UiState.Content(result.map { pairs -> pairs.map { it.toUi() } })
+        }
         .onStart { emit(UiState.Loading) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UiState.Loading)
 

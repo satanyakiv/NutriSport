@@ -22,6 +22,7 @@
 5. **Data mapper pattern:** `{Entity}Mapper` class with `fun map(source): Target`.
 6. **UI mapper pattern:** `Product.toUi()` extension functions.
 7. **UI-dependent enum extensions** live in `:shared:ui` — `Country.flag`, `ProductCategory.color`.
+8. **Domain→UI mapping in ViewModel only.** `.toUi()` calls happen in ViewModel (inside `.map {}` on flows or in action methods), never in Composable functions. Screens receive `UiState<XxxUi>`, not `UiState<DomainModel>`.
 
 ## Use Cases
 

@@ -1,3 +1,9 @@
+---
+name: orchestrate-features
+description: Orchestrate parallel feature development using worktree agents. Use when user wants to implement multiple features in parallel, check feature status, run a feature group, or says "orchestrate", "run features", "implement features", "feature status". Also triggers on `/orchestrate-features`.
+disable-model-invocation: true
+---
+
 # orchestrate-features
 
 Orchestrate feature implementation using parallel worktree agents.

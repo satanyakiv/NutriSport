@@ -12,6 +12,7 @@ Review all `build.gradle.kts` files and imports for Clean Architecture violation
 6. **Domain models** (no suffix) must not appear in Composable function parameters — use `*Ui` models
 7. **Firebase imports** must only appear in `:data` module
 8. **Max 150 lines per file, max 20 lines per function**
+9. **ViewModel** must NOT be injected inside Screen composable — should be in Route
 
 ## Process
 

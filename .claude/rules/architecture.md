@@ -73,6 +73,7 @@ di, analytics, navigation → shared:utils only
 - ViewModels: `{Feature}ViewModel`
 - Repositories: `{Entity}Repository` (interface) + `{Entity}RepositoryImpl`
 - Screens: `{Feature}Screen`
+- Routes: `{Feature}Route`
 - DTOs: `{Entity}Dto`, UI models: `{Entity}Ui`
 - Mappers: `{Entity}Mapper` or `.toDomain()` / `.toUi()` extensions
 

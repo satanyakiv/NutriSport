@@ -43,7 +43,7 @@ fun `should return products when repository succeeds`() = runTest {
 
 ## Rules
 
-1. **One assertion per test** (or one logical group).
+1. **One assertion per test** (or one logical group). For full test recipes and Fake repository pattern → see [Testing Patterns](../../references/testing-patterns.md)
 2. **Test names describe behavior:** `should X when Y`.
 3. **No test interdependence.** Each test owns its state.
 4. **No real I/O in unit tests.** Mock repos, use TestDispatcher.
@@ -55,14 +55,14 @@ fun `should return products when repository succeeds`() = runTest {
 
 ## What to Test
 
-| Layer        | What                              | How                        |
-|-------------|-----------------------------------|----------------------------|
-| ViewModel   | State transitions, error handling | Turbine + mock repository  |
-| Repository  | DTO→Domain mapping, error wrap    | Mock data source           |
-| UseCases    | Business logic, validation        | Pure unit tests (no mocks) |
-| Mappers     | Field mapping, edge cases         | Pure unit tests            |
-| Navigation  | Route resolution                  | Verify Screen destinations |
-| UI (E2E)    | Critical user journeys            | compose.uiTest             |
+| Layer      | What                              | How                        |
+|------------|-----------------------------------|----------------------------|
+| ViewModel  | State transitions, error handling | Turbine + mock repository  |
+| Repository | DTO→Domain mapping, error wrap    | Mock data source           |
+| UseCases   | Business logic, validation        | Pure unit tests (no mocks) |
+| Mappers    | Field mapping, edge cases         | Pure unit tests            |
+| Navigation | Route resolution                  | Verify Screen destinations |
+| UI (E2E)   | Critical user journeys            | compose.uiTest             |
 
 ## What NOT to Test
 

@@ -10,6 +10,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - [Testing](.claude/rules/testing.md) — test stack, AAA pattern, coverage targets, Kover
 - [Conventions](.claude/rules/conventions.md) — code style, Compose, coroutines, Git
 - [Prompts](.claude/rules/prompts.md) — string resources and constants
+- [Plan Mode](.claude/rules/plan-mode.md) — feature plan files, status markers, orchestration
 
 ## Commands
 

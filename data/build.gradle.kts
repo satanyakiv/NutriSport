@@ -1,5 +1,6 @@
 plugins {
     id("nutrisport.kmp.library")
+    alias(libs.plugins.serialization)
 }
 
 kotlin {

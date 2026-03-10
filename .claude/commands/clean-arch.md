@@ -21,6 +21,7 @@ Scan the specified module/files for these violations:
 - [ ] **God class**: File > 150 lines or function > 20 lines
 - [ ] **Wrong module**: Repository impl not in `:data`, ViewModel not in `:feature`
 - [ ] **Missing suffix**: Model outside domain without Dto/Ui suffix
+- [ ] **ViewModel in Screen**: ViewModel injected inside Screen composable (should be in Route)
 
 ## Process
 

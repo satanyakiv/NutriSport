@@ -24,13 +24,16 @@ This is a KMP project. Tests go in `src/commonTest/kotlin/` mirroring source str
 
 1. Read the source file to understand what to test
 2. Determine the class type (see table above) to pick the right testing approach
-3. Check for existing tests and fake data factories in the module's `commonTest`
-4. Reference [examples/usecase-test.kt](examples/usecase-test.kt) for pure UseCase tests
-5. Reference [examples/viewmodel-test.kt](examples/viewmodel-test.kt) for ViewModel tests with Turbine
-6. Create fake data factories (`fakeProduct()`, `fakeCustomer()`) if not yet present
-7. Write tests covering: happy path, error path, edge cases
-8. Run: `./gradlew :{module}:allTests --tests "*{TestClass}"`
-9. Verify all pass
+3. Check for existing tests, fake data factories, and Fake repositories in the module's `commonTest`
+4. If ViewModel/UseCase test needs a Flow-based repository — create `Fake{Entity}Repository` with `MutableSharedFlow` (see [examples/fake-repository.kt](examples/fake-repository.kt))
+5. Reference [examples/usecase-test.kt](examples/usecase-test.kt) for pure UseCase tests
+6. Reference [examples/viewmodel-test.kt](examples/viewmodel-test.kt) for ViewModel tests with Turbine
+7. Reference [examples/mapper-test.kt](examples/mapper-test.kt) for pure mapper tests
+8. For full recipes and pitfalls → see [references/testing-patterns.md](../../references/testing-patterns.md)
+9. Create fake data factories (`fakeProduct()`, `fakeCustomer()`) if not yet present
+10. Write tests covering: happy path, error path, edge cases
+11. Run: `./gradlew :{module}:allTests --tests "*{TestClass}"`
+12. Verify all pass
 
 ## Conventions
 

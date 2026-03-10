@@ -36,6 +36,7 @@ $ARGUMENTS
    - [ ] All mappers tested
    - [ ] Convention plugins used (no manual plugin config)
    - [ ] Koin registration in `:di` only
+   - [ ] Screen uses Route-Screen separation (ViewModel not injected in Screen)
 
 6. **UPDATE** `.claude/rules/` files if architecture changed
 

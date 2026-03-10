@@ -22,6 +22,8 @@ KMP project (Android + iOS) with Compose Multiplatform.
 
 - `/gen-test <class>` — generate tests following AAA/Turbine/Mokkery conventions
 - `/new-feature <name>` — scaffold feature module with full boilerplate
+- `/kover-analyze [module]` — coverage analysis and prioritized recommendations
+- `/orchestrate-features <cmd>` — parallel feature development orchestration
 
 ## Quick Reference
 
@@ -47,6 +49,11 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ./gradlew detekt                                     # code style check (also runs pre-commit)
 ```
 
+### Screen Pattern (Route-Screen)
+- **Route**: `{Feature}Route` — DI (koinViewModel), collectAsState, passes to Screen
+- **Screen**: `{Feature}Screen` — pure UI, receives state + callbacks, no DI
+- Navigation → Route → Screen
+
 ### Convention Plugins
 - `nutrisport.kmp.library` — base KMP + Compose
 - `nutrisport.kmp.feature` — + Koin + messagebar
@@ -58,3 +65,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `androidLibrary {}` deprecated in AGP 9.1+ → use `android {}` inside `kotlin {}`
 - KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
 - Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`
+
+## References
+
+- [Testing Patterns](.claude/references/testing-patterns.md) — Fake repos, test recipes, pitfalls

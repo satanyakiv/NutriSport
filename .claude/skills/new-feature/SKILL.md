@@ -42,21 +42,33 @@ Read .claude/rules/architecture.md for full rules (section "Adding a New Feature
    - Expose `StateFlow<UiState<T>>` for async data
    - Use `viewModelScope` for coroutines
 
-5. **Create Screen** — `{Name}Screen` composable
-   - State hoisting: receive state + event callbacks as parameters
+5. **Create Route** — `{Name}Route` composable in `feature/{name}/`
+   - Get ViewModel via `koinViewModel<{Name}ViewModel>()`
+   - Collect state: `val state by viewModel.state.collectAsStateWithLifecycle()`
+   - Pass state + callbacks to Screen
+
+6. **Create Screen** — `{Name}Screen` composable
+   - Pure UI: receive state + event callbacks as parameters (no DI, no ViewModel)
    - Navigation callbacks: `goBack: () -> Unit`, `navigateTo{X}: (args) -> Unit`
 
-6. **Create UI models** (if needed) in `feature/{name}/model/`
+7. **Create UI models** (if needed) in `feature/{name}/model/`
    - `{Entity}Ui` data class + `.toUi()` extension mapper
 
-7. **Register in navigation** — `navigation/NavGraph.kt`
+8. **Register in navigation** — `navigation/NavGraph.kt`
    - Add `private fun NavGraphBuilder.{name}Destination(navController: NavController)`
    - Call it from `SetupNavGraph`
+   - Navigation uses `{Name}Route`, NOT `{Name}Screen` directly
 
-8. **Register in DI** — `di/KoinModule.kt`
+9. **Register in DI** — `di/KoinModule.kt`
    - `viewModelOf(::{Name}ViewModel)`
 
-9. **Update Gradle** — `settings.gradle.kts`
-   - `include(":feature:{name}")`
+10. **Update Gradle** — `settings.gradle.kts`
+    - `include(":feature:{name}")`
 
-10. **Verify**: `./gradlew :feature:{name}:compileCommonMainKotlinMetadata`
+11. **Skeleton test** — create `{Name}ViewModelTest` in `commonTest`
+    - Setup: `StandardTestDispatcher` + `setMain`/`resetMain`
+    - Create `Fake{Entity}Repository` with `MutableSharedFlow` if needed
+    - Add one smoke test: verify initial state is `Loading`
+    - Reference: [gen-test examples](../gen-test/examples/)
+
+12. **Verify**: `./gradlew :feature:{name}:compileCommonMainKotlinMetadata`

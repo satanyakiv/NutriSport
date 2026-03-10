@@ -17,7 +17,6 @@ import com.nutrisport.categories.CategoriesScreen
 import com.nutrisport.home.domain.BottomBarDestination
 import com.nutrisport.products_overview.ProductsOverviewRoute
 import com.nutrisport.shared.navigation.Screen
-import com.nutrisport.shared.util.orZero
 
 @Composable
 internal fun HomeNavHost(

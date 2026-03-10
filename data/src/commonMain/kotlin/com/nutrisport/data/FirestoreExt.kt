@@ -15,25 +15,25 @@ import kotlinx.coroutines.flow.map
 internal fun currentUserId(): String? = Firebase.auth.currentUser?.uid
 
 internal inline fun <T> withAuth(action: (userId: String) -> DomainResult<T>): DomainResult<T> {
-    val userId = currentUserId()
-    return if (userId != null) action(userId) else Either.Left(AppError.Unauthorized())
+  val userId = currentUserId()
+  return if (userId != null) action(userId) else Either.Left(AppError.Unauthorized())
 }
 
 internal fun Query.toProductDtoListFlow(
-    mapper: ProductMapper,
-    errorMessage: String = "Error while retrieving products",
+  mapper: ProductMapper,
+  errorMessage: String = "Error while retrieving products",
 ): Flow<DomainResult<List<ProductDto>>> =
-    snapshots
-        .map<_, DomainResult<List<ProductDto>>> { query ->
-            Either.Right(query.documents.map { mapper.map(it) })
-        }
-        .catch { emit(Either.Left(AppError.Network("$errorMessage: ${it.message}"))) }
+  snapshots
+    .map<_, DomainResult<List<ProductDto>>> { query ->
+      Either.Right(query.documents.map { mapper.map(it) })
+    }
+    .catch { emit(Either.Left(AppError.Network("$errorMessage: ${it.message}"))) }
 
 internal fun authenticatedProductDtoListFlow(
-    mapper: ProductMapper,
-    errorMessage: String = "Error while retrieving products",
-    query: () -> Query,
+  mapper: ProductMapper,
+  errorMessage: String = "Error while retrieving products",
+  query: () -> Query,
 ): Flow<DomainResult<List<ProductDto>>> {
-    if (currentUserId() == null) return flowOf(Either.Left(AppError.Unauthorized()))
-    return query().toProductDtoListFlow(mapper, errorMessage)
+  if (currentUserId() == null) return flowOf(Either.Left(AppError.Unauthorized()))
+  return query().toProductDtoListFlow(mapper, errorMessage)
 }

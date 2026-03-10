@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.details.mapper.ProductToUiMapper
 import com.nutrisport.details.model.ProductUi
+import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.ProductRepository
-import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

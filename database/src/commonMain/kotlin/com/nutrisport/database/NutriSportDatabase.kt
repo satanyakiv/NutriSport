@@ -16,24 +16,24 @@ import com.nutrisport.database.entity.OrderEntity
 import com.nutrisport.database.entity.ProductEntity
 
 @Database(
-    entities = [
-        ProductEntity::class,
-        CustomerEntity::class,
-        CartItemEntity::class,
-        OrderEntity::class,
-    ],
-    version = 1,
+  entities = [
+    ProductEntity::class,
+    CustomerEntity::class,
+    CartItemEntity::class,
+    OrderEntity::class,
+  ],
+  version = 1,
 )
 @TypeConverters(Converters::class)
 @ConstructedBy(NutriSportDatabaseConstructor::class)
 abstract class NutriSportDatabase : RoomDatabase() {
-    abstract fun productDao(): ProductDao
-    abstract fun customerDao(): CustomerDao
-    abstract fun cartItemDao(): CartItemDao
-    abstract fun orderDao(): OrderDao
+  abstract fun productDao(): ProductDao
+  abstract fun customerDao(): CustomerDao
+  abstract fun cartItemDao(): CartItemDao
+  abstract fun orderDao(): OrderDao
 }
 
 @Suppress("KotlinNoActualForExpect")
 expect object NutriSportDatabaseConstructor : RoomDatabaseConstructor<NutriSportDatabase> {
-    override fun initialize(): NutriSportDatabase
+  override fun initialize(): NutriSportDatabase
 }

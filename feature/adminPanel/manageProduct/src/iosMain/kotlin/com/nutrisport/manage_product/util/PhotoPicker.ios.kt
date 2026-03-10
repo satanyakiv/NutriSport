@@ -73,8 +73,10 @@ actual class PhotoPicker {
   }
 
   // Delegate class implementing the necessary protocols
-  private class PickerDelegate(private val callback: (File?) -> Unit) : NSObject(),
-    UIImagePickerControllerDelegateProtocol, UINavigationControllerDelegateProtocol {
+  private class PickerDelegate(private val callback: (File?) -> Unit) :
+    NSObject(),
+    UIImagePickerControllerDelegateProtocol,
+    UINavigationControllerDelegateProtocol {
 
     // Override the method to handle the media picked by the user
     override fun imagePickerController(
@@ -83,8 +85,11 @@ actual class PhotoPicker {
     ) {
       // Extract the URL of the picked media
       val url = didFinishPickingMediaWithInfo[UIImagePickerControllerImageURL] as? NSURL
-      if (url != null) callback(File(url))
-      else callback(null)
+      if (url != null) {
+        callback(File(url))
+      } else {
+        callback(null)
+      }
       picker.dismissViewControllerAnimated(true, completion = null)
     }
 

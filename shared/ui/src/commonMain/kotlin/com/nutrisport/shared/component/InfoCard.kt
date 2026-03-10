@@ -28,8 +28,9 @@ fun InfoCard(
   title: String,
   subtitle: String,
 ) {
-  Column(modifier = modifier
-    .fillMaxSize(),
+  Column(
+    modifier = modifier
+      .fillMaxSize(),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
@@ -54,6 +55,7 @@ fun InfoCard(
   }
 }
 
+@Suppress("UnusedPrivateMember")
 @Preview
 @Composable
 private fun InfoCardPreview() {

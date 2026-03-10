@@ -3,8 +3,8 @@ package com.portfolio.categories_search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,8 +46,9 @@ class CategorySearchViewModel(
   val filteredProducts = searchQuery
     .debounce(500)
     .flatMapLatest { query ->
-      if (query.isBlank()) products
-      else {
+      if (query.isBlank()) {
+        products
+      } else {
         val currentData = products.value.getSuccessDataOrNull()
         if (currentData != null) {
           flowOf(
@@ -59,7 +60,9 @@ class CategorySearchViewModel(
               )
             )
           )
-        } else products
+        } else {
+          products
+        }
       }
     }
     .stateIn(

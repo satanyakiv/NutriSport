@@ -1,6 +1,5 @@
 package com.nutrisport.home
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.CustomerRepository

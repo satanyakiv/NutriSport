@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class AdminPanelViewModel(
   private val adminRepository: AdminRepository,
-): ViewModel() {
+) : ViewModel() {
   private val allProducts = adminRepository.readLastTenProducts()
     .map { UiState.Content(it) }
     .onStart<UiState<List<com.nutrisport.shared.domain.Product>>> { emit(UiState.Loading) }
@@ -38,10 +38,13 @@ class AdminPanelViewModel(
   val filteredProducts = searchQuery
     .debounce(1000)
     .flatMapLatest { query ->
-      if (query.isBlank()) allProducts
-      else adminRepository.searchProductByTitle(query)
-        .map { UiState.Content(it) }
-        .onStart<UiState<List<com.nutrisport.shared.domain.Product>>> { emit(UiState.Loading) }
+      if (query.isBlank()) {
+        allProducts
+      } else {
+        adminRepository.searchProductByTitle(query)
+          .map { UiState.Content(it) }
+          .onStart<UiState<List<com.nutrisport.shared.domain.Product>>> { emit(UiState.Loading) }
+      }
     }.stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),

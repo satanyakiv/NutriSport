@@ -87,10 +87,13 @@ fun MainProductCard(
         .fillMaxSize()
         .animateContentSize()
         .then(
-          if (isLarge) Modifier
-            .scale(animatedScale.value)
-            .rotate(animatedRotation.value)
-          else Modifier
+          if (isLarge) {
+            Modifier
+              .scale(animatedScale.value)
+              .rotate(animatedRotation.value)
+          } else {
+            Modifier
+          }
         ),
       model = ImageRequest.Builder(LocalPlatformContext.current)
         .data(product.thumbnail)

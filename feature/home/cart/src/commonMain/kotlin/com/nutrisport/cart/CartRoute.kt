@@ -7,12 +7,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CartRoute() {
-    val viewModel = koinViewModel<CartViewModel>()
-    val cartItems by viewModel.cartItems.collectAsState()
+  val viewModel = koinViewModel<CartViewModel>()
+  val cartItems by viewModel.cartItems.collectAsState()
 
-    CartScreen(
-        cartItems = cartItems,
-        onUpdateQuantity = viewModel::updateCartItemQuantity,
-        onDeleteItem = viewModel::deleteCartItem,
-    )
+  CartScreen(
+    cartItems = cartItems,
+    onUpdateQuantity = viewModel::updateCartItemQuantity,
+    onDeleteItem = viewModel::deleteCartItem,
+  )
 }

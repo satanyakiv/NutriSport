@@ -1,6 +1,5 @@
 package com.nutrisport.checkout
 
-
 import ContentWithMessageBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

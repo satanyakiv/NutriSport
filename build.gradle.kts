@@ -66,6 +66,20 @@ subprojects {
         config.setFrom("${rootProject.projectDir}/detekt/config.yml")
         autoCorrect = true
         parallel = true
+        source.setFrom(
+            "src/commonMain/kotlin",
+            "src/androidMain/kotlin",
+            "src/iosMain/kotlin",
+            "src/main/kotlin",
+            "src/main/java",
+        )
+        buildUponDefaultConfig = false
+    }
+
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        exclude { element ->
+            element.file.path.contains("/build/generated/")
+        }
     }
 
     dependencies {

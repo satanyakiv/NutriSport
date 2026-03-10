@@ -8,10 +8,10 @@ import com.nutrisport.shared.CategoryRed
 import com.nutrisport.shared.CategoryYellow
 
 val ProductCategory.color: Color
-    get() = when (this) {
-        ProductCategory.Protein -> CategoryYellow
-        ProductCategory.Creatine -> CategoryBlue
-        ProductCategory.PreWorkout -> CategoryGreen
-        ProductCategory.Gainers -> CategoryPurple
-        ProductCategory.Accessories -> CategoryRed
-    }
+  get() = when (this) {
+    ProductCategory.Protein -> CategoryYellow
+    ProductCategory.Creatine -> CategoryBlue
+    ProductCategory.PreWorkout -> CategoryGreen
+    ProductCategory.Gainers -> CategoryPurple
+    ProductCategory.Accessories -> CategoryRed
+  }

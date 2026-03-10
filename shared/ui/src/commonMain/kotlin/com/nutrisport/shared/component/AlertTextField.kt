@@ -43,7 +43,7 @@ fun AlertTextField(
       .padding(16.dp),
     verticalAlignment = Alignment.CenterVertically,
 
-    ) {
+  ) {
     if (icon != null) {
       Image(
         painter = painterResource(icon),

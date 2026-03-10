@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDao {
 
-    @Query("SELECT * FROM customers WHERE id = :id")
-    fun observeById(id: String): Flow<CustomerEntity?>
+  @Query("SELECT * FROM customers WHERE id = :id")
+  fun observeById(id: String): Flow<CustomerEntity?>
 
-    @Upsert
-    suspend fun upsert(customer: CustomerEntity)
+  @Upsert
+  suspend fun upsert(customer: CustomerEntity)
 
-    @Query("DELETE FROM customers WHERE id = :id")
-    suspend fun deleteById(id: String)
+  @Query("DELETE FROM customers WHERE id = :id")
+  suspend fun deleteById(id: String)
 }

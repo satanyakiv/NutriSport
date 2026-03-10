@@ -1,6 +1,5 @@
 package com.nutrisport.cart.component
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,6 +28,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.nutrisport.cart.model.CartItemUi
 import com.nutrisport.shared.BorderIdle
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
@@ -37,7 +37,6 @@ import com.nutrisport.shared.Surface
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
-import com.nutrisport.cart.model.CartItemUi
 import com.nutrisport.shared.component.QuantityCounter
 import com.nutrisport.shared.domain.QuantityCounterSize
 import org.jetbrains.compose.resources.painterResource

@@ -7,18 +7,18 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AdminPanelRoute(
-    goBack: () -> Unit,
-    goToManageProduct: (String?) -> Unit,
+  goBack: () -> Unit,
+  goToManageProduct: (String?) -> Unit,
 ) {
-    val viewModel = koinViewModel<AdminPanelViewModel>()
-    val products by viewModel.filteredProducts.collectAsState()
-    val searchQuery by viewModel.searchQuery.collectAsState()
+  val viewModel = koinViewModel<AdminPanelViewModel>()
+  val products by viewModel.filteredProducts.collectAsState()
+  val searchQuery by viewModel.searchQuery.collectAsState()
 
-    AdminPanelScreen(
-        goBack = goBack,
-        goToManageProduct = goToManageProduct,
-        products = products,
-        searchQuery = searchQuery,
-        onSearchQueryChange = viewModel::updateSearchQuery,
-    )
+  AdminPanelScreen(
+    goBack = goBack,
+    goToManageProduct = goToManageProduct,
+    products = products,
+    searchQuery = searchQuery,
+    onSearchQueryChange = viewModel::updateSearchQuery,
+  )
 }

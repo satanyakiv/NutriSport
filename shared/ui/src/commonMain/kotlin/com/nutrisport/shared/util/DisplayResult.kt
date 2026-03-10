@@ -21,49 +21,49 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun <T> UiState<T>.DisplayResult(
-    modifier: Modifier = Modifier,
-    onIdle: (@Composable () -> Unit)? = null,
-    onLoading: (@Composable () -> Unit)? = null,
-    onError: (@Composable (String) -> Unit)? = null,
-    onSuccess: @Composable (T) -> Unit,
-    transitionSpec: ContentTransform? = scaleIn(tween(durationMillis = 400))
-        + fadeIn(tween(durationMillis = 800))
-        togetherWith scaleOut(tween(durationMillis = 400))
-        + fadeOut(
-        tween(durationMillis = 800),
+  modifier: Modifier = Modifier,
+  onIdle: (@Composable () -> Unit)? = null,
+  onLoading: (@Composable () -> Unit)? = null,
+  onError: (@Composable (String) -> Unit)? = null,
+  onSuccess: @Composable (T) -> Unit,
+  transitionSpec: ContentTransform? = scaleIn(tween(durationMillis = 400))
+    + fadeIn(tween(durationMillis = 800))
+    togetherWith scaleOut(tween(durationMillis = 400))
+    + fadeOut(
+      tween(durationMillis = 800),
     ),
-    backgroundColor: Color? = null,
+  backgroundColor: Color? = null,
 ) {
-    AnimatedContent(
-        modifier = modifier
-            .background(color = backgroundColor ?: Color.Unspecified),
-        targetState = this,
-        transitionSpec = {
-            transitionSpec ?: (EnterTransition.None togetherWith ExitTransition.None)
-        },
-        label = "Content Animation",
-    ) { state ->
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            when (state) {
-                is UiState.Idle -> {
-                    onIdle?.invoke()
-                }
-
-                is UiState.Loading -> {
-                    onLoading?.invoke()
-                }
-
-                is UiState.Content -> {
-                    state.result.fold(
-                        ifLeft = { error -> onError?.invoke(error.message) },
-                        ifRight = { data -> onSuccess(data) },
-                    )
-                }
-            }
+  AnimatedContent(
+    modifier = modifier
+      .background(color = backgroundColor ?: Color.Unspecified),
+    targetState = this,
+    transitionSpec = {
+      transitionSpec ?: (EnterTransition.None togetherWith ExitTransition.None)
+    },
+    label = "Content Animation",
+  ) { state ->
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Center,
+    ) {
+      when (state) {
+        is UiState.Idle -> {
+          onIdle?.invoke()
         }
+
+        is UiState.Loading -> {
+          onLoading?.invoke()
+        }
+
+        is UiState.Content -> {
+          state.result.fold(
+            ifLeft = { error -> onError?.invoke(error.message) },
+            ifRight = { data -> onSuccess(data) },
+          )
+        }
+      }
     }
+  }
 }

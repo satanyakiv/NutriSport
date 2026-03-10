@@ -69,8 +69,8 @@ object Resources {
   }
 
   object Flag {
-        val India = Res.drawable.ic_india
-        val Usa = Res.drawable.ic_usa
-        val Serbia = Res.drawable.ic_serbia
+    val India = Res.drawable.ic_india
+    val Usa = Res.drawable.ic_usa
+    val Serbia = Res.drawable.ic_serbia
   }
 }

@@ -7,14 +7,14 @@ import com.nutrisport.shared.util.DomainResult
 import com.nutrisport.shared.util.Either
 
 class FakeOrderRepository : OrderRepository {
-    var fakeCurrentUserId: String? = "user-1"
-    var createOrderError: String? = null
+  var fakeCurrentUserId: String? = "user-1"
+  var createOrderError: String? = null
 
-    override fun getCurrentUserId() = fakeCurrentUserId
+  override fun getCurrentUserId() = fakeCurrentUserId
 
-    override suspend fun createTheOrder(
-        order: Order,
-    ): DomainResult<Unit> = createOrderError?.let {
-        Either.Left(AppError.Unknown(it))
-    } ?: Either.Right(Unit)
+  override suspend fun createTheOrder(
+    order: Order,
+  ): DomainResult<Unit> = createOrderError?.let {
+    Either.Left(AppError.Unknown(it))
+  } ?: Either.Right(Unit)
 }

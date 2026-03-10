@@ -1,23 +1,22 @@
 package com.nutrisport.checkout
 
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.domain.Customer
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.domain.usecase.CreateOrderUseCase
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
-import com.nutrisport.shared.util.orZero
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
+import com.nutrisport.shared.util.orZero
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.domain.Customer
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase

@@ -107,6 +107,6 @@ internal fun List<Country>.filterByCountry(query: String): List<Country> {
   val queryInt = query.toIntOrNull()
   return filter {
     it.name.lowercase().contains(queryLower) ||
-        (queryInt != null && it.dialCode == queryInt)
+      (queryInt != null && it.dialCode == queryInt)
   }
 }

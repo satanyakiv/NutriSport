@@ -59,7 +59,9 @@ fun CustomTextField(
           fontSize = FontSize.REGULAR
         )
       }
-    } else null,
+    } else {
+      null
+    },
     singleLine = !expanded,
     shape = RoundedCornerShape(size = 6.dp),
     keyboardOptions = keyboardOptions,

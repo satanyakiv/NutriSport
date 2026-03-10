@@ -59,8 +59,11 @@ internal fun CategorySearchTopBar(
               IconButton(
                 modifier = Modifier.size(14.dp),
                 onClick = {
-                  if (searchQuery.isNotEmpty()) onSearchQueryChange("")
-                  else onSearchBarVisibilityChange(false)
+                  if (searchQuery.isNotEmpty()) {
+                    onSearchQueryChange("")
+                  } else {
+                    onSearchBarVisibilityChange(false)
+                  }
                 },
               ) {
                 Icon(

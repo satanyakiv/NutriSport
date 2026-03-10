@@ -7,16 +7,16 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DetailsRoute(goBack: () -> Unit) {
-    val viewModel = koinViewModel<DetailsViewModel>()
-    val product by viewModel.product.collectAsState()
+  val viewModel = koinViewModel<DetailsViewModel>()
+  val product by viewModel.product.collectAsState()
 
-    DetailsScreen(
-        goBack = goBack,
-        product = product,
-        quantity = viewModel.quantity,
-        selectedFlavor = viewModel.selectedFlavor,
-        onUpdateQuantity = viewModel::updateQuantity,
-        onUpdateFlavor = viewModel::updateFlavor,
-        onAddItemToCart = viewModel::addItemToCart,
-    )
+  DetailsScreen(
+    goBack = goBack,
+    product = product,
+    quantity = viewModel.quantity,
+    selectedFlavor = viewModel.selectedFlavor,
+    onUpdateQuantity = viewModel::updateQuantity,
+    onUpdateFlavor = viewModel::updateFlavor,
+    onAddItemToCart = viewModel::addItemToCart,
+  )
 }

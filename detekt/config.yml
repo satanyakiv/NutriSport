@@ -1,5 +1,6 @@
 build:
   maxIssues: -1
+  excludeCorrectable: false
 
 complexity:
   active: true
@@ -55,7 +56,7 @@ formatting:
     active: true
     autoCorrect: true
     maxLineLength: 120
-    indentSize: 4
+    indentSize: 2
   SpacingAroundColon:
     active: true
     autoCorrect: true
@@ -88,7 +89,7 @@ formatting:
   Indentation:
     active: true
     autoCorrect: true
-    indentSize: 4
+    indentSize: 2
   TrailingCommaOnCallSite:
     active: false
   TrailingCommaOnDeclarationSite:

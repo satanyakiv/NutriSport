@@ -6,11 +6,11 @@ import kotlinx.serialization.json.Json
 
 class Converters {
 
-    @TypeConverter
-    fun fromStringList(value: List<String>?): String? =
-        value?.let { Json.encodeToString(it) }
+  @TypeConverter
+  fun fromStringList(value: List<String>?): String? =
+    value?.let { Json.encodeToString(it) }
 
-    @TypeConverter
-    fun toStringList(value: String?): List<String>? =
-        value?.let { Json.decodeFromString(it) }
+  @TypeConverter
+  fun toStringList(value: String?): List<String>? =
+    value?.let { Json.decodeFromString(it) }
 }

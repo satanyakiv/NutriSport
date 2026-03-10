@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OrderDao {
 
-    @Query("SELECT * FROM orders WHERE customerId = :customerId")
-    fun observeByCustomerId(customerId: String): Flow<List<OrderEntity>>
+  @Query("SELECT * FROM orders WHERE customerId = :customerId")
+  fun observeByCustomerId(customerId: String): Flow<List<OrderEntity>>
 
-    @Upsert
-    suspend fun upsert(order: OrderEntity)
+  @Upsert
+  suspend fun upsert(order: OrderEntity)
 }

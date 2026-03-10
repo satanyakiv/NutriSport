@@ -1,22 +1,21 @@
 package com.portfolio.payment_completed
 
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.shared.domain.CustomerRepository
-import com.nutrisport.shared.domain.OrderRepository
-import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.domain.CartItem
+import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.Order
+import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.Product
+import com.nutrisport.shared.domain.ProductRepository
 import com.nutrisport.shared.util.AppError
-import com.nutrisport.shared.util.orZero
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
+import com.nutrisport.shared.util.orZero
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted

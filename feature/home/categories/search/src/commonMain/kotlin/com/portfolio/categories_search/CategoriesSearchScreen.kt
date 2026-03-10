@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.portfolio.categories_search.component.CategorySearchTopBar
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
 import com.nutrisport.shared.component.InfoCard
@@ -25,6 +24,7 @@ import com.nutrisport.shared.component.ProductCard
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.DisplayResult
 import com.nutrisport.shared.util.UiState
+import com.portfolio.categories_search.component.CategorySearchTopBar
 
 @Composable
 fun CategorySearchScreen(

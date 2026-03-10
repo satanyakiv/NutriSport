@@ -4,8 +4,8 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import com.nutrisport.shared.domain.fakeCartItem
-import com.nutrisport.shared.domain.fakeProduct
+import com.nutrisport.shared.test.fakeCartItem
+import com.nutrisport.shared.test.fakeProduct
 import kotlin.test.Test
 
 class EnrichCartWithProductsUseCaseTest {

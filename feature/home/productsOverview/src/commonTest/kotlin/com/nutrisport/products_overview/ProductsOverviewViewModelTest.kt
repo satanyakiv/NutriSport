@@ -7,15 +7,13 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.nutrisport.shared.domain.Product
-import com.nutrisport.shared.domain.ProductCategory
-import com.nutrisport.shared.domain.ProductRepository
+import com.nutrisport.shared.test.FakeProductRepository
+import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.AppError
-import com.nutrisport.shared.util.DomainResult
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -40,29 +38,12 @@ class ProductsOverviewViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun product(id: String, title: String, isNew: Boolean = false, isDiscounted: Boolean = false) =
-        Product(
-            id = id, title = title, description = "desc",
-            thumbnail = "url", category = "Protein", price = 10.0,
-            isNew = isNew, isDiscounted = isDiscounted,
-        )
-
     @Test
     fun `should combine new and discounted products`() = runTest(testDispatcher) {
         // Arrange
-        val newProducts = listOf(product("1", "NEW", isNew = true))
-        val discountedProducts = listOf(product("2", "DISCOUNTED", isDiscounted = true))
-
-        val repo = object : ProductRepository {
-            override fun readDiscountedProducts() = flowOf(Either.Right(discountedProducts))
-            override fun readNewProducts() = flowOf(Either.Right(newProducts))
-            override fun getCurrentUserId() = "user-1"
-            override fun readProductByIdFlow(id: String): Flow<DomainResult<Product>> =
-                flowOf(Either.Right(product(id, "P")))
-            override fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Right(emptyList()))
-            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Right(emptyList()))
+        val repo = FakeProductRepository().apply {
+            newProducts = flowOf(Either.Right(listOf(fakeProduct(id = "1", title = "NEW", isNew = true))))
+            discountedProducts = flowOf(Either.Right(listOf(fakeProduct(id = "2", title = "DISCOUNTED", isDiscounted = true))))
         }
 
         // Act
@@ -82,18 +63,10 @@ class ProductsOverviewViewModelTest {
     @Test
     fun `should deduplicate products by id`() = runTest(testDispatcher) {
         // Arrange
-        val sharedProduct = product("1", "SHARED", isNew = true, isDiscounted = true)
-
-        val repo = object : ProductRepository {
-            override fun readDiscountedProducts() = flowOf(Either.Right(listOf(sharedProduct)))
-            override fun readNewProducts() = flowOf(Either.Right(listOf(sharedProduct)))
-            override fun getCurrentUserId() = "user-1"
-            override fun readProductByIdFlow(id: String): Flow<DomainResult<Product>> =
-                flowOf(Either.Right(product(id, "P")))
-            override fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Right(emptyList()))
-            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Right(emptyList()))
+        val sharedProduct = fakeProduct(id = "1", title = "SHARED", isNew = true, isDiscounted = true)
+        val repo = FakeProductRepository().apply {
+            discountedProducts = flowOf(Either.Right(listOf(sharedProduct)))
+            newProducts = flowOf(Either.Right(listOf(sharedProduct)))
         }
 
         // Act
@@ -113,17 +86,8 @@ class ProductsOverviewViewModelTest {
     @Test
     fun `should propagate error from new products`() = runTest(testDispatcher) {
         // Arrange
-        val repo = object : ProductRepository {
-            override fun readDiscountedProducts() = flowOf(Either.Right(emptyList<Product>()))
-            override fun readNewProducts(): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Left(AppError.Network("Network error")))
-            override fun getCurrentUserId() = "user-1"
-            override fun readProductByIdFlow(id: String): Flow<DomainResult<Product>> =
-                flowOf(Either.Right(product(id, "P")))
-            override fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Right(emptyList()))
-            override fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>> =
-                flowOf(Either.Right(emptyList()))
+        val repo = FakeProductRepository().apply {
+            newProducts = flowOf(Either.Left(AppError.Network("Network error")))
         }
 
         // Act

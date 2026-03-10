@@ -6,15 +6,11 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
-import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.shared.domain.Product
-import com.nutrisport.shared.util.DomainResult
-import com.nutrisport.shared.util.Either
+import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -40,41 +36,11 @@ class AdminPanelViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun product(id: String, title: String) = Product(
-        id = id, title = title, description = "desc",
-        thumbnail = "url", category = "Protein", price = 10.0,
-    )
-
-    private fun fakeAdminRepo(
-        products: List<Product> = emptyList(),
-        searchResults: List<Product> = emptyList(),
-    ): AdminRepository = object : AdminRepository {
-        override fun getCurrentUserId() = "user-1"
-        override suspend fun createNewProduct(product: Product): DomainResult<Unit> =
-            Either.Right(Unit)
-        override suspend fun uploadImageToStorage(file: dev.gitlive.firebase.storage.File) = null
-        override suspend fun deleteImageFromStorage(downloadUrl: String): DomainResult<Unit> =
-            Either.Right(Unit)
-        override fun readLastTenProducts() = flowOf(Either.Right(products))
-        override suspend fun readProductById(id: String): DomainResult<Product> =
-            Either.Right(products.first { it.id == id })
-        override suspend fun updateProductThumbnail(
-            productId: String,
-            downloadUrl: String,
-        ): DomainResult<Unit> = Either.Right(Unit)
-        override suspend fun updateProduct(product: Product): DomainResult<Unit> =
-            Either.Right(Unit)
-        override suspend fun deleteProduct(productId: String): DomainResult<Unit> =
-            Either.Right(Unit)
-        override fun searchProductByTitle(query: String): Flow<DomainResult<List<Product>>> =
-            flowOf(Either.Right(searchResults))
-    }
-
     @Test
     fun `should show all products when search is empty`() = runTest(testDispatcher) {
         // Arrange
-        val products = listOf(product("1", "WHEY"), product("2", "CREATINE"))
-        val viewModel = AdminPanelViewModel(fakeAdminRepo(products))
+        val products = listOf(fakeProduct(id = "1", title = "WHEY"), fakeProduct(id = "2", title = "CREATINE"))
+        val viewModel = AdminPanelViewModel(FakeAdminRepository(products))
 
         // Act & Assert
         viewModel.filteredProducts.test {
@@ -90,9 +56,9 @@ class AdminPanelViewModelTest {
     @Test
     fun `should search products by title`() = runTest(testDispatcher) {
         // Arrange
-        val allProducts = listOf(product("1", "WHEY"), product("2", "CREATINE"))
-        val searchResults = listOf(product("1", "WHEY"))
-        val viewModel = AdminPanelViewModel(fakeAdminRepo(allProducts, searchResults))
+        val allProducts = listOf(fakeProduct(id = "1", title = "WHEY"), fakeProduct(id = "2", title = "CREATINE"))
+        val searchResults = listOf(fakeProduct(id = "1", title = "WHEY"))
+        val viewModel = AdminPanelViewModel(FakeAdminRepository(allProducts, searchResults))
 
         // Assert — subscribe first (WhileSubscribed requires active collector)
         viewModel.filteredProducts.test {

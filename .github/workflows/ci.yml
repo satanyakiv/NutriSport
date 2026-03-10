@@ -39,8 +39,8 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Unit tests
-        run: ./gradlew allTests --no-daemon
+      - name: Unit tests (JVM)
+        run: ./gradlew testAndroidHostTest --no-daemon
 
       - name: Upload test results
         if: always()

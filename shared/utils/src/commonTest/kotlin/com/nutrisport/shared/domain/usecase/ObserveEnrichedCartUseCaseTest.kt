@@ -7,12 +7,12 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.nutrisport.shared.domain.CartItem
-import com.nutrisport.shared.domain.FakeCustomerRepository
-import com.nutrisport.shared.domain.FakeProductRepository
 import com.nutrisport.shared.domain.Product
-import com.nutrisport.shared.domain.fakeCartItem
-import com.nutrisport.shared.domain.fakeCustomer
-import com.nutrisport.shared.domain.fakeProduct
+import com.nutrisport.shared.test.FakeCustomerRepository
+import com.nutrisport.shared.test.FakeProductRepository
+import com.nutrisport.shared.test.fakeCartItem
+import com.nutrisport.shared.test.fakeCustomer
+import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.DomainResult
 import com.nutrisport.shared.util.Either

@@ -49,9 +49,10 @@ fun `should return products when repository succeeds`() = runTest {
 4. **No real I/O in unit tests.** Mock repos, use TestDispatcher.
 5. **Use Turbine** for all Flow assertions — never `.first()` or `.toList()`.
 6. **Fake data factories:** `fakeProduct()`, `fakeCustomer()`, etc.
-7. **Never `./gradlew test` without `--tests` filter** — too slow.
-8. **Tests mirror source:** `src/commonTest/kotlin/` ↔ `src/commonMain/kotlin/`.
-9. **Mappers always tested:** `toDomain()` and `toUi()` are pure — easy to test.
+7. **Fakes in separate files.** Fake repositories, fake data factories, test doubles — all live in dedicated files (`Fake*.kt`), not inside test classes. Test files contain only tests.
+8. **Never `./gradlew test` without `--tests` filter** — too slow.
+9. **Tests mirror source:** `src/commonTest/kotlin/` ↔ `src/commonMain/kotlin/`.
+10. **Mappers always tested:** `toDomain()` and `toUi()` are pure — easy to test.
 
 ## What to Test
 

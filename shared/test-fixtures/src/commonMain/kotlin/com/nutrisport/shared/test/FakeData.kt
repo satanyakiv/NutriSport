@@ -1,4 +1,9 @@
-package com.nutrisport.shared.domain
+package com.nutrisport.shared.test
+
+import com.nutrisport.shared.domain.CartItem
+import com.nutrisport.shared.domain.Customer
+import com.nutrisport.shared.domain.Order
+import com.nutrisport.shared.domain.Product
 
 fun fakeProduct(
     id: String = "prod-1",

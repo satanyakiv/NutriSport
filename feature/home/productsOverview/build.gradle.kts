@@ -15,5 +15,8 @@ kotlin {
             implementation(project(":shared:ui"))
             implementation(project(":data"))
         }
+        commonTest.dependencies {
+            implementation(project(":shared:test-fixtures"))
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.nutrisport.shared.domain.usecase
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
-import com.nutrisport.shared.domain.FakeCustomerRepository
+import com.nutrisport.shared.test.FakeCustomerRepository
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import kotlinx.coroutines.test.runTest

@@ -3,8 +3,8 @@ package com.nutrisport.shared.domain.usecase
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
-import com.nutrisport.shared.domain.FakeOrderRepository
-import com.nutrisport.shared.domain.fakeCartItem
+import com.nutrisport.shared.test.FakeOrderRepository
+import com.nutrisport.shared.test.fakeCartItem
 import com.nutrisport.shared.util.Either
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

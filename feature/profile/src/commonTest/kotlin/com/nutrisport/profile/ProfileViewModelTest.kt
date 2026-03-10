@@ -3,21 +3,16 @@ package com.nutrisport.profile
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Customer
-import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
+import com.nutrisport.shared.test.FakeCustomerRepository
 import com.nutrisport.shared.util.AppError
-import com.nutrisport.shared.util.DomainResult
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -42,33 +37,7 @@ class ProfileViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private val customerFlow = MutableStateFlow<DomainResult<Customer>>(
-        Either.Right(Customer(id = "", firstName = "", lastName = "", email = "")),
-    )
-    private var updateCustomerError: String? = null
-
-    private val fakeCustomerRepo = object : CustomerRepository {
-        override fun getCurrentUserId() = "user-1"
-        override fun readCustomerFlow(): Flow<DomainResult<Customer>> = customerFlow
-        override suspend fun createCustomer(
-            uid: String,
-            displayName: String?,
-            email: String?,
-        ): DomainResult<Unit> = Either.Right(Unit)
-        override suspend fun updateCustomer(customer: Customer): DomainResult<Unit> {
-            return updateCustomerError?.let { Either.Left(AppError.Unknown(it)) }
-                ?: Either.Right(Unit)
-        }
-        override suspend fun addItemToCart(cartItem: CartItem): DomainResult<Unit> =
-            Either.Right(Unit)
-        override suspend fun updateCartItemQuantity(
-            id: String,
-            quantity: Int,
-        ): DomainResult<Unit> = Either.Right(Unit)
-        override suspend fun deleteCartItem(id: String): DomainResult<Unit> = Either.Right(Unit)
-        override suspend fun deleteAllCartItems(): DomainResult<Unit> = Either.Right(Unit)
-        override suspend fun signOut(): DomainResult<Unit> = Either.Right(Unit)
-    }
+    private val fakeCustomerRepo = FakeCustomerRepository()
 
     private fun createViewModel(): ProfileViewModel {
         return ProfileViewModel(
@@ -82,7 +51,7 @@ class ProfileViewModelTest {
     fun `should populate screen state when customer loads`() = runTest(testDispatcher) {
         val viewModel = createViewModel()
 
-        customerFlow.value = Either.Right(
+        fakeCustomerRepo.customerFlow.value = Either.Right(
             Customer(
                 id = "user-1", firstName = "John", lastName = "Doe",
                 email = "john@e.com", city = "Belgrade", postalCode = 11000,
@@ -102,7 +71,7 @@ class ProfileViewModelTest {
     fun `should set error when customer load fails`() = runTest(testDispatcher) {
         val viewModel = createViewModel()
 
-        customerFlow.value = Either.Left(AppError.Network("Network error"))
+        fakeCustomerRepo.customerFlow.value = Either.Left(AppError.Network("Network error"))
         advanceUntilIdle()
 
         assertThat(viewModel.screenReady).isInstanceOf<UiState.Content<Unit>>()
@@ -148,7 +117,7 @@ class ProfileViewModelTest {
     fun `should validate form as valid when all fields filled`() = runTest(testDispatcher) {
         val viewModel = createViewModel()
 
-        customerFlow.value = Either.Right(
+        fakeCustomerRepo.customerFlow.value = Either.Right(
             Customer(
                 id = "user-1", firstName = "John", lastName = "Doe",
                 email = "john@e.com", city = "Belgrade", postalCode = 11000,
@@ -173,7 +142,7 @@ class ProfileViewModelTest {
 
     @Test
     fun `should call onError when updating customer fails`() = runTest(testDispatcher) {
-        updateCustomerError = "Update failed"
+        fakeCustomerRepo.updateCustomerError = "Update failed"
         val viewModel = createViewModel()
         var errorMessage: String? = null
 

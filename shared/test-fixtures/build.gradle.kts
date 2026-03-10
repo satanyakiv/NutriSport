@@ -1,21 +1,17 @@
 plugins {
     id("nutrisport.kmp.library")
-    alias(libs.plugins.serialization)
 }
 
 kotlin {
     android {
-        namespace = "com.nutrisport.shared.utils"
+        namespace = "com.nutrisport.shared.test.fixtures"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-        withHostTest {}
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.serialization)
-        }
-        commonTest.dependencies {
-            implementation(project(":shared:test-fixtures"))
+            implementation(project(":shared:utils"))
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

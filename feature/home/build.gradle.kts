@@ -19,5 +19,8 @@ kotlin {
             implementation(project(":feature:home:categories"))
             implementation(project(":feature:home:cart"))
         }
+        commonTest.dependencies {
+            implementation(project(":shared:test-fixtures"))
+        }
     }
 }

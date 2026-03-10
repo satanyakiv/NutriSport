@@ -3,44 +3,18 @@ package com.nutrisport.cart.mapper
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.nutrisport.shared.domain.CartItem
-import com.nutrisport.shared.domain.Product
+import com.nutrisport.shared.test.fakeCartItem
+import com.nutrisport.shared.test.fakeProduct
 import kotlin.test.Test
 
 class CartMappersTest {
 
     private val mapper = CartItemToUiMapper()
 
-    private fun fakeProduct(
-        id: String = "prod-1",
-        title: String = "Whey Protein",
-        thumbnail: String = "https://example.com/img.png",
-        price: Double = 29.99,
-    ) = Product(
-        id = id,
-        title = title,
-        description = "desc",
-        thumbnail = thumbnail,
-        category = "Protein",
-        price = price,
-    )
-
-    private fun fakeCartItem(
-        id: String = "cart-1",
-        productId: String = "prod-1",
-        flavor: String? = "Chocolate",
-        quantity: Int = 2,
-    ) = CartItem(
-        id = id,
-        productId = productId,
-        flavor = flavor,
-        quantity = quantity,
-    )
-
     @Test
     fun `should map all fields correctly`() {
         // Arrange
-        val cartItem = fakeCartItem()
+        val cartItem = fakeCartItem(quantity = 2)
         val product = fakeProduct()
 
         // Act
@@ -49,8 +23,8 @@ class CartMappersTest {
         // Assert
         assertThat(ui.cartItemId).isEqualTo("cart-1")
         assertThat(ui.productId).isEqualTo("prod-1")
-        assertThat(ui.title).isEqualTo("Whey Protein")
-        assertThat(ui.thumbnail).isEqualTo("https://example.com/img.png")
+        assertThat(ui.title).isEqualTo("WHEY PROTEIN")
+        assertThat(ui.thumbnail).isEqualTo("https://example.com/img.jpg")
         assertThat(ui.flavor).isEqualTo("Chocolate")
         assertThat(ui.quantity).isEqualTo(2)
         assertThat(ui.unitPrice).isEqualTo(29.99)
@@ -59,7 +33,7 @@ class CartMappersTest {
     @Test
     fun `should format unit price correctly`() {
         // Arrange & Act
-        val ui = mapper.map(fakeCartItem(), fakeProduct(price = 9.90))
+        val ui = mapper.map(fakeCartItem(quantity = 2), fakeProduct(price = 9.90))
 
         // Assert
         assertThat(ui.formattedUnitPrice).isEqualTo("$9.90")
@@ -77,7 +51,7 @@ class CartMappersTest {
     @Test
     fun `should handle null flavor`() {
         // Arrange & Act
-        val ui = mapper.map(fakeCartItem(flavor = null), fakeProduct())
+        val ui = mapper.map(fakeCartItem(flavor = null, quantity = 2), fakeProduct())
 
         // Assert
         assertThat(ui.flavor).isNull()

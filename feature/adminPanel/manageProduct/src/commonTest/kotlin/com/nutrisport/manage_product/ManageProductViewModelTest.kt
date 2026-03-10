@@ -4,17 +4,13 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import androidx.lifecycle.SavedStateHandle
-import com.nutrisport.data.domain.AdminRepository
-import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.AppError
-import com.nutrisport.shared.util.DomainResult
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -39,39 +35,20 @@ class ManageProductViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private var createProductError: String? = null
-    private var updateProductError: String? = null
-    private var deleteProductError: String? = null
-
-    private val fakeAdminRepo = object : AdminRepository {
-        override fun getCurrentUserId() = "user-1"
-        override suspend fun createNewProduct(product: Product): DomainResult<Unit> {
-            return createProductError?.let { Either.Left(AppError.Unknown(it)) } ?: Either.Right(Unit)
-        }
-        override suspend fun uploadImageToStorage(file: dev.gitlive.firebase.storage.File): DomainResult<String> =
-            Either.Right("https://example.com/img.jpg")
-        override suspend fun deleteImageFromStorage(downloadUrl: String): DomainResult<Unit> {
-            return Either.Right(Unit)
-        }
-        override fun readLastTenProducts() = flowOf(Either.Right(emptyList<Product>()))
-        override suspend fun readProductById(id: String): DomainResult<Product> = Either.Right(
-            Product(id = id, title = "T", description = "D", thumbnail = "U", category = "Protein", price = 10.0),
-        )
-        override suspend fun updateProductThumbnail(
-            productId: String,
-            downloadUrl: String,
-        ): DomainResult<Unit> {
-            return Either.Right(Unit)
-        }
-        override suspend fun updateProduct(product: Product): DomainResult<Unit> {
-            return updateProductError?.let { Either.Left(AppError.Unknown(it)) } ?: Either.Right(Unit)
-        }
-        override suspend fun deleteProduct(productId: String): DomainResult<Unit> {
-            return deleteProductError?.let { Either.Left(AppError.Unknown(it)) } ?: Either.Right(Unit)
-        }
-        override fun searchProductByTitle(query: String): Flow<DomainResult<List<Product>>> =
-            flowOf(Either.Right(emptyList()))
-    }
+    private val fakeAdminRepo = FakeAdminRepository(
+        products = listOf(
+            fakeProduct(
+                id = "prod-1",
+                title = "T",
+                description = "D",
+                thumbnail = "U",
+                category = "Protein",
+                price = 10.0,
+                flavors = null,
+                weight = null,
+            ),
+        ),
+    )
 
     private fun createViewModel(productId: String = ""): ManageProductViewModel {
         val savedState = SavedStateHandle(mapOf("id" to productId))
@@ -159,7 +136,7 @@ class ManageProductViewModelTest {
 
     @Test
     fun `should call onError when creating product fails`() = runTest(testDispatcher) {
-        createProductError = "Create failed"
+        fakeAdminRepo.createProductError = "Create failed"
         val viewModel = createViewModel()
         var errorMessage: String? = null
 

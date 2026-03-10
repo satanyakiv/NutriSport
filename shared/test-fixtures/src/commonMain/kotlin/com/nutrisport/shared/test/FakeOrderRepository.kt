@@ -1,5 +1,7 @@
-package com.nutrisport.shared.domain
+package com.nutrisport.shared.test
 
+import com.nutrisport.shared.domain.Order
+import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.DomainResult
 import com.nutrisport.shared.util.Either

@@ -3,8 +3,8 @@ package com.nutrisport.shared.domain.usecase
 import assertk.assertThat
 import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
-import com.nutrisport.shared.domain.fakeCartItem
-import com.nutrisport.shared.domain.fakeProduct
+import com.nutrisport.shared.test.fakeCartItem
+import com.nutrisport.shared.test.fakeProduct
 import kotlin.test.Test
 
 class CalculateCartTotalUseCaseTest {

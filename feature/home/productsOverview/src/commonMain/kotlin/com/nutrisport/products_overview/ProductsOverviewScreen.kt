@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -36,14 +35,13 @@ import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.ProductCard
 import com.nutrisport.shared.util.DisplayResult
-import org.koin.compose.viewmodel.koinViewModel
+import com.nutrisport.shared.util.UiState
 
 @Composable
 fun ProductsOverviewScreen(
+  products: UiState<List<com.nutrisport.shared.domain.Product>>,
   goToDetails: (String) -> Unit,
 ) {
-  val viewModel = koinViewModel<ProductsOverviewViewModel>()
-  val products by viewModel.products.collectAsState()
   val listState = rememberLazyListState()
 
   val centeredIndex: Int? by remember {

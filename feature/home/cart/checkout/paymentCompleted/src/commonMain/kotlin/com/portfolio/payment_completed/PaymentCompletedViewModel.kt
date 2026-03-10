@@ -18,9 +18,7 @@ import com.nutrisport.shared.util.orZero
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
@@ -130,7 +128,7 @@ class PaymentViewModel(
     val customerData = customer.value.getSuccessDataOrNull()
     if (customerData != null) {
       val customerId = customerData.id
-      viewModelScope.launch(Dispatchers.IO) {
+      viewModelScope.launch {
         orderRepository.createTheOrder(
           order = Order(
             customerId = customerId,

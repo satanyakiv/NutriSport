@@ -33,7 +33,11 @@ class CustomerRepositoryImpl(
     private val customerDao: CustomerDao,
     private val cartItemDao: CartItemDao,
 ) : CustomerRepository {
-    private val customerCollection = Firebase.firestore.collection(collectionPath = "customer")
+    private val customerCollection = Firebase.firestore.collection(collectionPath = COLLECTION_NAME)
+
+    companion object {
+        private const val COLLECTION_NAME = "customer"
+    }
     private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun getCurrentUserId(): String? = currentUserId()

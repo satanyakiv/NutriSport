@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nutrisport.cart.component.CartItemCard
@@ -25,14 +23,15 @@ import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.util.DisplayResult
 import com.nutrisport.shared.util.UiState
-import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
 @Composable
-fun CartScreen() {
+fun CartScreen(
+  cartItems: UiState<List<com.nutrisport.cart.model.CartItemUi>>,
+  onUpdateQuantity: (String, Int, () -> Unit, (String) -> Unit) -> Unit,
+  onDeleteItem: (String, () -> Unit, (String) -> Unit) -> Unit,
+) {
   val messageBarState = rememberMessageBarState()
-  val viewModel = koinViewModel<CartViewModel>()
-  val cartItems by viewModel.cartItems.collectAsState(UiState.Loading)
 
   ContentWithMessageBar(
     contentBackgroundColor = Surface,
@@ -60,26 +59,26 @@ fun CartScreen() {
               CartItemCard(
                 cartItemUi = cartItemUi,
                 onMinusClick = { quantity ->
-                  viewModel.updateCartItemQuantity(
-                    id = cartItemUi.cartItemId,
-                    quantity = quantity,
-                    onSuccess = {},
-                    onError = { messageBarState.addError(it) }
+                  onUpdateQuantity(
+                    cartItemUi.cartItemId,
+                    quantity,
+                    {},
+                    { messageBarState.addError(it) },
                   )
                 },
                 onPlusClick = { quantity ->
-                  viewModel.updateCartItemQuantity(
-                    id = cartItemUi.cartItemId,
-                    quantity = quantity,
-                    onSuccess = {},
-                    onError = { messageBarState.addError(it) }
+                  onUpdateQuantity(
+                    cartItemUi.cartItemId,
+                    quantity,
+                    {},
+                    { messageBarState.addError(it) },
                   )
                 },
                 onDeleteClick = {
-                  viewModel.deleteCartItem(
-                    id = cartItemUi.cartItemId,
-                    onSuccess = {},
-                    onError = { messageBarState.addError(it) }
+                  onDeleteItem(
+                    cartItemUi.cartItemId,
+                    {},
+                    { messageBarState.addError(it) },
                   )
                 }
               )

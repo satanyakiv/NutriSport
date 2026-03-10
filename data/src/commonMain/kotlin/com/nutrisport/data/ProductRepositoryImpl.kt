@@ -30,8 +30,12 @@ class ProductRepositoryImpl(
     private val entityToDomain: ProductEntityToDomainMapper,
     private val productDao: ProductDao,
 ) : ProductRepository {
-    private val productCollection = Firebase.firestore.collection(collectionPath = "product")
+    private val productCollection = Firebase.firestore.collection(collectionPath = COLLECTION_NAME)
     private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    companion object {
+        private const val COLLECTION_NAME = "product"
+    }
 
     override fun getCurrentUserId(): String? = currentUserId()
 

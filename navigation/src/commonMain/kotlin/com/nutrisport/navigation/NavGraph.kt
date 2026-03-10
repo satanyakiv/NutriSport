@@ -1,6 +1,5 @@
 package com.nutrisport.navigation
 
-import CategorySearchScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -8,16 +7,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.nutrisport.admin_panel.AdminPanelScreen
-import com.nutrisport.auth.component.AuthScreen
-import com.nutrisport.checkout.CheckoutScreen
-import com.nutrisport.details.DetailsScreen
-import com.nutrisport.home.HomeGraphScreen
-import com.nutrisport.manage_product.ManageProductScreen
-import com.nutrisport.profile.ProfileScreen
+import com.nutrisport.admin_panel.AdminPanelRoute
+import com.nutrisport.auth.component.AuthRoute
+import com.nutrisport.checkout.CheckoutRoute
+import com.nutrisport.details.DetailsRoute
+import com.nutrisport.home.HomeGraphRoute
+import com.nutrisport.manage_product.ManageProductRoute
+import com.nutrisport.profile.ProfileRoute
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.navigation.Screen
-import com.portfolio.payment_completed.PaymentCompletedScreen
+import com.portfolio.categories_search.CategoriesSearchRoute
+import com.portfolio.payment_completed.PaymentCompletedRoute
 
 @Composable
 fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
@@ -39,7 +39,7 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
 
 private fun NavGraphBuilder.authDestination(navController: NavController) {
   composable<Screen.Auth> {
-    AuthScreen(
+    AuthRoute(
       goToHome = {
         navController.navigate(Screen.HomeGraph) {
           popUpTo<Screen.Auth> { inclusive = true }
@@ -51,7 +51,7 @@ private fun NavGraphBuilder.authDestination(navController: NavController) {
 
 private fun NavGraphBuilder.homeGraphDestination(navController: NavController) {
   composable<Screen.HomeGraph> {
-    HomeGraphScreen(
+    HomeGraphRoute(
       navigateToAuth = {
         navController.navigate(Screen.Auth) {
           popUpTo<Screen.HomeGraph> { inclusive = true }
@@ -78,7 +78,7 @@ private fun NavGraphBuilder.homeGraphDestination(navController: NavController) {
 
 private fun NavGraphBuilder.profileDestination(navController: NavController) {
   composable<Screen.Profile> {
-    ProfileScreen(
+    ProfileRoute(
       goBack = { navController.navigateUp() },
     )
   }
@@ -86,7 +86,7 @@ private fun NavGraphBuilder.profileDestination(navController: NavController) {
 
 private fun NavGraphBuilder.adminDestinations(navController: NavController) {
   composable<Screen.AdminPanel> {
-    AdminPanelScreen(
+    AdminPanelRoute(
       goBack = { navController.navigateUp() },
       goToManageProduct = { id ->
         navController.navigate(Screen.ManageProduct(id = id))
@@ -95,7 +95,7 @@ private fun NavGraphBuilder.adminDestinations(navController: NavController) {
   }
   composable<Screen.ManageProduct> {
     val id = it.toRoute<Screen.ManageProduct>().id
-    ManageProductScreen(
+    ManageProductRoute(
       id = id,
       goBack = { navController.navigateUp() },
     )
@@ -104,7 +104,7 @@ private fun NavGraphBuilder.adminDestinations(navController: NavController) {
 
 private fun NavGraphBuilder.detailsDestination(navController: NavController) {
   composable<Screen.Details> {
-    DetailsScreen(
+    DetailsRoute(
       goBack = { navController.navigateUp() },
     )
   }
@@ -113,7 +113,7 @@ private fun NavGraphBuilder.detailsDestination(navController: NavController) {
 private fun NavGraphBuilder.categorySearchDestination(navController: NavController) {
   composable<Screen.CategorySearch> {
     val category = ProductCategory.valueOf(it.toRoute<Screen.CategorySearch>().category)
-    CategorySearchScreen(
+    CategoriesSearchRoute(
       category = category,
       navigateToDetails = { id ->
         navController.navigate(Screen.Details(id))
@@ -126,7 +126,7 @@ private fun NavGraphBuilder.categorySearchDestination(navController: NavControll
 private fun NavGraphBuilder.checkoutDestinations(navController: NavController) {
   composable<Screen.Checkout> {
     val totalAmount = it.toRoute<Screen.Checkout>().totalAmount
-    CheckoutScreen(
+    CheckoutRoute(
       totalAmount = totalAmount,
       navigateBack = { navController.navigateUp() },
       navigateToPaymentCompleted = { isSuccess, error ->
@@ -135,7 +135,7 @@ private fun NavGraphBuilder.checkoutDestinations(navController: NavController) {
     )
   }
   composable<Screen.PaymentCompleted> {
-    PaymentCompletedScreen(
+    PaymentCompletedRoute(
       navigateBack = {
         navController.navigate(Screen.HomeGraph) {
           launchSingleTop = true

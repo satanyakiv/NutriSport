@@ -17,14 +17,13 @@ import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.util.DisplayResult
-import org.koin.compose.viewmodel.koinViewModel
+import com.nutrisport.shared.util.UiState
 
 @Composable
 fun PaymentCompletedScreen(
+  screenState: UiState<Unit>,
   navigateBack: () -> Unit,
 ) {
-  val viewModel = koinViewModel<PaymentViewModel>()
-  val screenState = viewModel.screenState
 
   Column(
     modifier = Modifier

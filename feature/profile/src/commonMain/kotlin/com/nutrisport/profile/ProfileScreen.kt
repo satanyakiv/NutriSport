@@ -24,20 +24,28 @@ import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.ProfileForm
+import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.util.DisplayResult
+import com.nutrisport.shared.util.UiState
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
   goBack: () -> Unit,
+  screenReady: UiState<Unit>,
+  screenState: ProfileScreenState,
+  isFormValid: Boolean,
+  onCountrySelect: (Country) -> Unit,
+  onFirstNameChange: (String) -> Unit,
+  onLastNameChange: (String) -> Unit,
+  onCityChange: (String) -> Unit,
+  onPostalCodeChange: (Int?) -> Unit,
+  onAddressChange: (String) -> Unit,
+  onPhoneNumberChange: (String) -> Unit,
+  onUpdateCustomer: (() -> Unit, (String) -> Unit) -> Unit,
 ) {
-  val viewModel = koinViewModel<ProfileViewModel>()
-  val screenReady = viewModel.screenReady
-  val screenState = viewModel.screenState
-  val isFormValid = viewModel.isFormValid
   val messageBarState = rememberMessageBarState()
 
   Scaffold(
@@ -102,20 +110,20 @@ fun ProfileScreen(
               ProfileForm(
                 modifier = Modifier.weight(1f),
                 country = screenState.country,
-                onCountrySelect = viewModel::updateCountry,
+                onCountrySelect = onCountrySelect,
                 firstName = screenState.firstName,
-                onFirstNameChange = viewModel::updateFirstName,
+                onFirstNameChange = onFirstNameChange,
                 lastName = screenState.lastName,
-                onLastNameChange = viewModel::updateLastName,
+                onLastNameChange = onLastNameChange,
                 email = screenState.email,
                 city = screenState.city,
-                onCityChange = viewModel::updateCity,
+                onCityChange = onCityChange,
                 postalCode = screenState.postalCode,
-                postalCodeChange = viewModel::updatePostalCode,
+                postalCodeChange = onPostalCodeChange,
                 address = screenState.address,
-                onAddressChange = viewModel::updateAddress,
+                onAddressChange = onAddressChange,
                 phoneNumber = screenState.phoneNumber?.number,
-                onPhoneNumberChange = viewModel::updatePhoneNumber
+                onPhoneNumberChange = onPhoneNumberChange,
               )
               Spacer(modifier = Modifier.height(12.dp))
               PrimaryButton(
@@ -123,9 +131,9 @@ fun ProfileScreen(
                 icon = Resources.Icon.Checkmark,
                 enabled = isFormValid,
                 onClick = {
-                  viewModel.updateCustomer(
-                    onSuccess = { messageBarState.addSuccess("Successfully updated!") },
-                    onError = { message -> messageBarState.addError(message) },
+                  onUpdateCustomer(
+                    { messageBarState.addSuccess("Successfully updated!") },
+                    { message -> messageBarState.addError(message) },
                   )
                 }
               )

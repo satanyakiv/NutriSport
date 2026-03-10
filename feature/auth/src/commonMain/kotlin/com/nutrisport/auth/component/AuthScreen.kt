@@ -30,16 +30,15 @@ import com.nutrisport.shared.TextSecondary
 import com.nutrisport.shared.TextWhite
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
 @Composable
 fun AuthScreen(
   goToHome: () -> Unit,
+  onCreateCustomer: (String, String?, String?, () -> Unit, (String) -> Unit) -> Unit,
 ) {
   val coroutineScope = rememberCoroutineScope()
   val messageBarState = rememberMessageBarState()
-  val viewModel = koinViewModel<AuthViewModel>()
   var loadingState by remember { mutableStateOf(false) }
 
   Scaffold { padding ->
@@ -85,18 +84,18 @@ fun AuthScreen(
           linkAccount = false,
           onResult = { result ->
             result.onSuccess { user ->
-              viewModel.createCustomer(
-                uid = user?.uid.orEmpty(),
-                displayName = user?.displayName,
-                email = user?.email,
-                onSuccess = {
+              onCreateCustomer(
+                user?.uid.orEmpty(),
+                user?.displayName,
+                user?.email,
+                {
                   coroutineScope.launch {
                     messageBarState.addSuccess("Auth Successful")
                     delay(2000)
                     goToHome()
                   }
                 },
-                onError = { e -> messageBarState.addError(e) }
+                { e -> messageBarState.addError(e) },
               )
               loadingState = false
 

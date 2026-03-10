@@ -15,7 +15,9 @@ import com.nutrisport.data.mapper.CustomerDtoToEntityMapper
 import com.nutrisport.data.mapper.CustomerEntityToDomainMapper
 import com.nutrisport.data.mapper.ProductDtoToDomainMapper
 import com.nutrisport.data.mapper.ProductDtoToEntityMapper
+import com.nutrisport.data.mapper.OrderToDtoMapper
 import com.nutrisport.data.mapper.ProductEntityToDomainMapper
+import com.nutrisport.data.mapper.ProductToDtoMapper
 import com.nutrisport.details.mapper.ProductToUiMapper
 import com.nutrisport.cart.mapper.CartItemToUiMapper
 import com.nutrisport.database.NutriSportDatabase
@@ -57,6 +59,8 @@ val sharedModule = module {
     factory { ProductDtoToEntityMapper() }
     factory { ProductEntityToDomainMapper() }
     factory { ProductDtoToDomainMapper() }
+    factory { ProductToDtoMapper() }
+    factory { OrderToDtoMapper() }
     factory { CustomerDtoToEntityMapper() }
     factory { CustomerEntityToDomainMapper() }
 
@@ -68,11 +72,11 @@ val sharedModule = module {
     single<CustomerRepository> {
         CustomerRepositoryImpl(get(), get(), get(), get(), get())
     }
-    single<AdminRepository> { AdminRepositoryImpl(get(), get()) }
+    single<AdminRepository> { AdminRepositoryImpl(get(), get(), get()) }
     single<ProductRepository> {
         ProductRepositoryImpl(get(), get(), get(), get())
     }
-    single<OrderRepository> { OrderRepositoryImpl(get()) }
+    single<OrderRepository> { OrderRepositoryImpl(get(), get()) }
 
     // UseCases
     factory { CalculateCartTotalUseCase() }

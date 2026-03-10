@@ -1,5 +1,8 @@
 package com.nutrisport.data.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ProductDto(
     val id: String,
     val createdAt: Long,

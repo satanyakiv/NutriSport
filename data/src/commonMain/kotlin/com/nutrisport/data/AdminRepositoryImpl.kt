@@ -2,6 +2,7 @@ package com.nutrisport.data
 
 import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.data.mapper.ProductDtoToDomainMapper
+import com.nutrisport.data.mapper.ProductToDtoMapper
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.DomainResult
@@ -22,20 +23,26 @@ import kotlin.uuid.Uuid
 class AdminRepositoryImpl(
     private val productMapper: ProductMapper,
     private val dtoToDomain: ProductDtoToDomainMapper,
+    private val domainToDto: ProductToDtoMapper,
 ) : AdminRepository {
-    private val productCollection = Firebase.firestore.collection(collectionPath = "product")
+    private val productCollection = Firebase.firestore.collection(collectionPath = COLLECTION_NAME)
+
+    companion object {
+        private const val COLLECTION_NAME = "product"
+    }
 
     override fun getCurrentUserId(): String? = currentUserId()
 
     override suspend fun createNewProduct(product: Product): DomainResult<Unit> {
         return try {
             withAuth {
-                productCollection.document(product.id).set(
+                val dto = domainToDto.map(
                     product.copy(
                         title = product.title.lowercase(),
                         category = product.category.filter { it.isLetter() },
                     ),
                 )
+                productCollection.document(product.id).set(dto)
                 Either.Right(Unit)
             }
         } catch (e: Exception) {
@@ -43,16 +50,18 @@ class AdminRepositoryImpl(
         }
     }
 
-    override suspend fun uploadImageToStorage(file: File): String? {
-        if (currentUserId() == null) return null
-        val path = Firebase.storage.reference.child("images/${Uuid.random().toHexString()}")
+    override suspend fun uploadImageToStorage(file: File): DomainResult<String> {
         return try {
-            withTimeout(20000) {
-                path.putFile(file)
-                path.getDownloadUrl()
+            withAuth {
+                val path = Firebase.storage.reference.child("images/${Uuid.random().toHexString()}")
+                val url = withTimeout(20000) {
+                    path.putFile(file)
+                    path.getDownloadUrl()
+                }
+                Either.Right(url)
             }
         } catch (e: Exception) {
-            null
+            Either.Left(AppError.Network("Error uploading image: ${e.message}"))
         }
     }
 
@@ -119,12 +128,13 @@ class AdminRepositoryImpl(
             withAuth {
                 val document = productCollection.document(product.id).get()
                 if (document.exists) {
-                    productCollection.document(product.id).update(
+                    val dto = domainToDto.map(
                         product.copy(
                             title = product.title.lowercase(),
                             category = product.category.filter { it.isLetter() },
                         ),
                     )
+                    productCollection.document(product.id).update(dto)
                     Either.Right(Unit)
                 } else {
                     Either.Left(AppError.NotFound("Product is not available"))

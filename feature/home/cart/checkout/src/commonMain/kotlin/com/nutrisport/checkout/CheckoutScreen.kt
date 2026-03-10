@@ -24,8 +24,8 @@ import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.ProfileForm
+import com.nutrisport.shared.domain.Country
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,11 +34,18 @@ fun CheckoutScreen(
   totalAmount: Double,
   navigateBack: () -> Unit,
   navigateToPaymentCompleted: (Boolean?, String?) -> Unit,
+  screenState: CheckoutScreenState,
+  isFormValid: Boolean,
+  onCountrySelect: (Country) -> Unit,
+  onFirstNameChange: (String) -> Unit,
+  onLastNameChange: (String) -> Unit,
+  onCityChange: (String) -> Unit,
+  onPostalCodeChange: (Int?) -> Unit,
+  onAddressChange: (String) -> Unit,
+  onPhoneNumberChange: (String) -> Unit,
+  onPayOnDelivery: (() -> Unit, (String) -> Unit) -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
-  val viewModel = koinViewModel<CheckoutViewModel>()
-  val screenState = viewModel.screenState
-  val isFormValid = viewModel.isFormValid
 
   Scaffold(
     containerColor = Surface,
@@ -107,20 +114,20 @@ fun CheckoutScreen(
         ProfileForm(
           modifier = Modifier.weight(1f),
           country = screenState.country,
-          onCountrySelect = viewModel::updateCountry,
+          onCountrySelect = onCountrySelect,
           firstName = screenState.firstName,
-          onFirstNameChange = viewModel::updateFirstName,
+          onFirstNameChange = onFirstNameChange,
           lastName = screenState.lastName,
-          onLastNameChange = viewModel::updateLastName,
+          onLastNameChange = onLastNameChange,
           email = screenState.email,
           city = screenState.city,
-          onCityChange = viewModel::updateCity,
+          onCityChange = onCityChange,
           postalCode = screenState.postalCode,
-          postalCodeChange = viewModel::updatePostalCode,
+          postalCodeChange = onPostalCodeChange,
           address = screenState.address,
-          onAddressChange = viewModel::updateAddress,
+          onAddressChange = onAddressChange,
           phoneNumber = screenState.phoneNumber?.number,
-          onPhoneNumberChange = viewModel::updatePhoneNumber
+          onPhoneNumberChange = onPhoneNumberChange,
         )
         Column {
           PrimaryButton(
@@ -129,13 +136,9 @@ fun CheckoutScreen(
             secondary = true,
             enabled = isFormValid,
             onClick = {
-              viewModel.payOnDelivery(
-                onSuccess = {
-                  navigateToPaymentCompleted(true, null)
-                },
-                onError = { message ->
-                  navigateToPaymentCompleted(null, message)
-                }
+              onPayOnDelivery(
+                { navigateToPaymentCompleted(true, null) },
+                { message -> navigateToPaymentCompleted(null, message) },
               )
             }
           )

@@ -7,32 +7,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.AdminRepository
-import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import dev.gitlive.firebase.storage.File
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-
-@OptIn(ExperimentalUuidApi::class)
-data class ManageProductState(
-  val id: String = Uuid.random().toHexString(),
-  val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
-  val title: String = "",
-  val description: String = "",
-  val thumbnail: String = "",
-  val category: ProductCategory = ProductCategory.Protein,
-  val flavors: String? = null,
-  val weight: Int? = null,
-  val price: Double = 0.0,
-  val isNew: Boolean = false,
-  val isPopular: Boolean = false,
-  val isDiscounted: Boolean = false,
-)
 
 class ManageProductViewModel(
   private val adminRepository: AdminRepository,
@@ -54,35 +34,28 @@ class ManageProductViewModel(
   init {
     productId.takeIf { it.isNotEmpty() }?.let {
       viewModelScope.launch {
-        val selectedProduct = adminRepository.readProductById(productId)
-        selectedProduct.fold(
+        adminRepository.readProductById(productId).fold(
           ifLeft = { /* ignore load error for edit screen */ },
           ifRight = { product ->
-            updateId(product.id)
-            updateCreatedAt(product.createdAt)
-            updateTitle(product.title)
-            updateDescription(product.description)
-            updateThumbnail(product.thumbnail)
-            updateThumbnailUploaderState(UiState.Content(Either.Right(Unit)))
-            updateCategory(ProductCategory.valueOf(product.category))
-            updateFlavors(product.flavors?.joinToString(",").orEmpty())
-            updateWeight(product.weight)
-            updatePrice(product.price)
-            updateIsNew(product.isNew)
-            updateIsPopular(product.isPopular)
-            updateIsDiscounted(product.isDiscounted)
-          }
+            screenState = ManageProductState(
+              id = product.id,
+              createdAt = product.createdAt,
+              title = product.title,
+              description = product.description,
+              thumbnail = product.thumbnail,
+              category = ProductCategory.valueOf(product.category),
+              flavors = product.flavors?.joinToString(",").orEmpty(),
+              weight = product.weight,
+              price = product.price,
+              isNew = product.isNew,
+              isPopular = product.isPopular,
+              isDiscounted = product.isDiscounted,
+            )
+            thumbnailUploaderState = UiState.Content(Either.Right(Unit))
+          },
         )
       }
     }
-  }
-
-  fun updateId(id: String) {
-    screenState = screenState.copy(id = id)
-  }
-
-  fun updateCreatedAt(createdAt: Long) {
-    screenState = screenState.copy(createdAt = createdAt)
   }
 
   fun updateTitle(title: String) {
@@ -122,72 +95,26 @@ class ManageProductViewModel(
     onError: (String) -> Unit,
   ) {
     viewModelScope.launch {
-      adminRepository.createNewProduct(
-        product = Product(
-          id = screenState.id,
-          title = screenState.title,
-          description = screenState.description,
-          thumbnail = screenState.thumbnail,
-          category = screenState.category.title,
-          flavors = screenState.flavors?.split(","),
-          weight = screenState.weight,
-          price = screenState.price,
-          isNew = screenState.isNew,
-          isPopular = screenState.isPopular,
-          isDiscounted = screenState.isDiscounted,
-        ),
-      ).fold(
+      adminRepository.createNewProduct(screenState.toProduct()).fold(
         ifLeft = { error -> onError(error.message) },
-        ifRight = { onSuccess() }
+        ifRight = { onSuccess() },
       )
     }
   }
 
-  fun uploadThumbnailToStorage(
-    file: File?,
-    onSuccess: () -> Unit
-  ) {
+  fun uploadThumbnailToStorage(file: File?, onSuccess: () -> Unit) {
     if (file == null) {
-      updateThumbnailUploaderState(
-        UiState.Content(Either.Left(AppError.Unknown("File is null. Error while selecting an image")))
+      thumbnailUploaderState = UiState.Content(
+        Either.Left(AppError.Unknown("File is null. Error while selecting an image")),
       )
       return
     }
-
     viewModelScope.launch {
-      updateThumbnailUploaderState(UiState.Loading)
-      val downloadUrl = adminRepository.uploadImageToStorage(file)
-      try {
-        if (downloadUrl.isNullOrEmpty()) {
-          throw Exception("Error while uploading image to storage")
-        }
-
-        productId.takeIf { it.isNotEmpty() }?.let { _ ->
-          adminRepository.updateProductThumbnail(
-            productId = productId,
-            downloadUrl = downloadUrl,
-          ).fold(
-            ifLeft = { error ->
-              updateThumbnailUploaderState(
-                UiState.Content(Either.Left(AppError.Unknown(error.message)))
-              )
-            },
-            ifRight = {
-              updateThumbnail(downloadUrl)
-              updateThumbnailUploaderState(UiState.Content(Either.Right(Unit)))
-              onSuccess()
-            }
-          )
-        } ?: run {
-          updateThumbnail(downloadUrl)
-          updateThumbnailUploaderState(UiState.Content(Either.Right(Unit)))
-          onSuccess()
-        }
-      } catch (e: Exception) {
-        updateThumbnailUploaderState(
-          UiState.Content(Either.Left(AppError.Unknown(e.message.orEmpty())))
-        )
-      }
+      thumbnailUploaderState = UiState.Loading
+      adminRepository.uploadImageToStorage(file).fold(
+        ifLeft = { error -> setThumbnailError(error.message) },
+        ifRight = { url -> syncThumbnail(url, UiState.Content(Either.Right(Unit)), onSuccess) },
+      )
     }
   }
 
@@ -197,27 +124,9 @@ class ManageProductViewModel(
   ) {
     if (isFormValid) {
       viewModelScope.launch {
-        adminRepository.updateProduct(
-          product = Product(
-            id = screenState.id,
-            createdAt = screenState.createdAt,
-            title = screenState.title,
-            description = screenState.description,
-            thumbnail = screenState.thumbnail,
-            category = screenState.category.name,
-            flavors = screenState.flavors
-              ?.split(",")
-              ?.map { it.trim() }
-              ?.filter { it.isNotEmpty() },
-            weight = screenState.weight,
-            price = screenState.price,
-            isNew = screenState.isNew,
-            isPopular = screenState.isPopular,
-            isDiscounted = screenState.isDiscounted,
-          ),
-        ).fold(
+        adminRepository.updateProduct(screenState.toProduct()).fold(
           ifLeft = { error -> onError(error.message) },
-          ifRight = { onSuccess() }
+          ifRight = { onSuccess() },
         )
       }
     } else {
@@ -230,29 +139,9 @@ class ManageProductViewModel(
     onError: (String) -> Unit,
   ) {
     viewModelScope.launch {
-      adminRepository.deleteImageFromStorage(
-        downloadUrl = screenState.thumbnail,
-      ).fold(
+      adminRepository.deleteImageFromStorage(screenState.thumbnail).fold(
         ifLeft = { error -> onError(error.message) },
-        ifRight = {
-          productId.takeIf { it.isNotEmpty() }?.let { _ ->
-            adminRepository.updateProductThumbnail(
-              productId = productId,
-              downloadUrl = "",
-            ).fold(
-              ifLeft = { error -> onError(error.message) },
-              ifRight = {
-                updateThumbnail("")
-                updateThumbnailUploaderState(UiState.Idle)
-                onSuccess()
-              }
-            )
-          } ?: run {
-            updateThumbnail("")
-            updateThumbnailUploaderState(UiState.Idle)
-            onSuccess()
-          }
-        }
+        ifRight = { syncThumbnail("", UiState.Idle, onSuccess, onError) },
       )
     }
   }
@@ -289,5 +178,31 @@ class ManageProductViewModel(
 
   fun updateIsDiscounted(it: Boolean) {
     screenState = screenState.copy(isDiscounted = it)
+  }
+
+  private suspend fun syncThumbnail(
+    url: String,
+    successState: UiState<Unit>,
+    onSuccess: () -> Unit,
+    onError: ((String) -> Unit)? = null,
+  ) {
+    if (productId.isNotEmpty()) {
+      adminRepository.updateProductThumbnail(productId, url).fold(
+        ifLeft = { error -> onError?.invoke(error.message) ?: setThumbnailError(error.message) },
+        ifRight = { applyThumbnail(url, successState, onSuccess) },
+      )
+    } else {
+      applyThumbnail(url, successState, onSuccess)
+    }
+  }
+
+  private fun applyThumbnail(url: String, state: UiState<Unit>, onSuccess: () -> Unit) {
+    screenState = screenState.copy(thumbnail = url)
+    thumbnailUploaderState = state
+    onSuccess()
+  }
+
+  private fun setThumbnailError(message: String) {
+    thumbnailUploaderState = UiState.Content(Either.Left(AppError.Unknown(message)))
   }
 }

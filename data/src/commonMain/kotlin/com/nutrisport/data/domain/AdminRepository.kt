@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface AdminRepository {
     fun getCurrentUserId(): String?
     suspend fun createNewProduct(product: Product): DomainResult<Unit>
-    suspend fun uploadImageToStorage(file: File): String?
+    suspend fun uploadImageToStorage(file: File): DomainResult<String>
     suspend fun deleteImageFromStorage(downloadUrl: String): DomainResult<Unit>
     fun readLastTenProducts(): Flow<DomainResult<List<Product>>>
     suspend fun readProductById(id: String): DomainResult<Product>

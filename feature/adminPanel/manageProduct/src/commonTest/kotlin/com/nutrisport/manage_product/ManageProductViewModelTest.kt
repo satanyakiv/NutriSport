@@ -48,7 +48,8 @@ class ManageProductViewModelTest {
         override suspend fun createNewProduct(product: Product): DomainResult<Unit> {
             return createProductError?.let { Either.Left(AppError.Unknown(it)) } ?: Either.Right(Unit)
         }
-        override suspend fun uploadImageToStorage(file: dev.gitlive.firebase.storage.File) = "https://example.com/img.jpg"
+        override suspend fun uploadImageToStorage(file: dev.gitlive.firebase.storage.File): DomainResult<String> =
+            Either.Right("https://example.com/img.jpg")
         override suspend fun deleteImageFromStorage(downloadUrl: String): DomainResult<Unit> {
             return Either.Right(Unit)
         }

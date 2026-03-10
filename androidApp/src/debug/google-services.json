@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:388178172033:android:1c3395f5a1b5c2553a5580",
         "android_client_info": {
-          "package_name": "com.portfolio.nutrisport.debug"
+          "package_name": "com.portfolio.nutrisport"
         }
       },
       "oauth_client": [
@@ -29,6 +29,57 @@
             {
               "client_id": "388178172033-485u6jh40urs518eqider54ph3fe14qk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "388178172033-ea2631usc989s6p5mj1dd2par4obehlr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.portfolio.nutrisport.NutriSport"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388178172033:android:32b819f0d29b06c23a5580",
+        "android_client_info": {
+          "package_name": "com.portfolio.nutrisport.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388178172033-138rqnnng5labivqcsrj3o56vqpu0u4l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portfolio.nutrisport.debug",
+            "certificate_hash": "b219ed2b8138e5af8a1269714ac6ee242f37e1fc"
+          }
+        },
+        {
+          "client_id": "388178172033-485u6jh40urs518eqider54ph3fe14qk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4jAyPv1WXaiqxPqm6XzzWUdZs4jDQZLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388178172033-485u6jh40urs518eqider54ph3fe14qk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388178172033-ea2631usc989s6p5mj1dd2par4obehlr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.portfolio.nutrisport.NutriSport"
+              }
             }
           ]
         }

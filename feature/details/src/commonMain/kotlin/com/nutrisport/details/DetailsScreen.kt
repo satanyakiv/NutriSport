@@ -172,7 +172,7 @@ fun DetailsScreen(
                       )
                       Spacer(modifier = Modifier.width(4.dp))
                       Text(
-                        text = selectedProduct.formattedWeight ?: "",
+                        text = selectedProduct.formattedWeight.orEmpty(),
                         fontSize = FontSize.REGULAR,
                         color = TextPrimary
                       )

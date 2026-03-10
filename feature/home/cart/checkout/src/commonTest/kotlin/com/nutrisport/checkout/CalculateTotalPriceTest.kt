@@ -5,6 +5,7 @@ import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Product
+import com.nutrisport.shared.util.orZero
 import kotlin.test.Test
 
 class CalculateTotalPriceTest {
@@ -65,7 +66,7 @@ class CalculateTotalPriceTest {
     private fun calculateTotal(cartItems: List<CartItem>, products: List<Product>): Double {
         return cartItems.sumOf { cartItem ->
             val product = products.find { it.id == cartItem.productId }
-            product?.price?.times(cartItem.quantity) ?: 0.0
+            product?.price?.times(cartItem.quantity).orZero()
         }
     }
 }

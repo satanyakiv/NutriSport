@@ -7,6 +7,7 @@
 - `internal` by default, `public` only when needed across modules
 - No wildcard imports
 - Trailing commas in multiline declarations
+- Use `orZero()` / `.orEmpty()` instead of `?: 0.0` / `?: 0` / `?: ""` (see `shared/utils/.../util/NullSafety.kt`)
 
 ## Compose
 

@@ -38,7 +38,7 @@ class ManageProductViewModel(
   private val adminRepository: AdminRepository,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-  private val productId = savedStateHandle.get<String>("id") ?: ""
+  private val productId = savedStateHandle.get<String>("id").orEmpty()
 
   var screenState by mutableStateOf(ManageProductState())
     private set

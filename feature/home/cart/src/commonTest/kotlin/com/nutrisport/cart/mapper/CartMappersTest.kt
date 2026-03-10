@@ -9,6 +9,8 @@ import kotlin.test.Test
 
 class CartMappersTest {
 
+    private val mapper = CartItemToUiMapper()
+
     private fun fakeProduct(
         id: String = "prod-1",
         title: String = "Whey Protein",
@@ -38,10 +40,11 @@ class CartMappersTest {
     @Test
     fun `should map all fields correctly`() {
         // Arrange
-        val pair = Pair(fakeCartItem(), fakeProduct())
+        val cartItem = fakeCartItem()
+        val product = fakeProduct()
 
         // Act
-        val ui = pair.toUi()
+        val ui = mapper.map(cartItem, product)
 
         // Assert
         assertThat(ui.cartItemId).isEqualTo("cart-1")
@@ -55,11 +58,8 @@ class CartMappersTest {
 
     @Test
     fun `should format unit price correctly`() {
-        // Arrange
-        val pair = Pair(fakeCartItem(), fakeProduct(price = 9.90))
-
-        // Act
-        val ui = pair.toUi()
+        // Arrange & Act
+        val ui = mapper.map(fakeCartItem(), fakeProduct(price = 9.90))
 
         // Assert
         assertThat(ui.formattedUnitPrice).isEqualTo("$9.90")
@@ -67,11 +67,8 @@ class CartMappersTest {
 
     @Test
     fun `should calculate and format total price`() {
-        // Arrange
-        val pair = Pair(fakeCartItem(quantity = 3), fakeProduct(price = 10.00))
-
-        // Act
-        val ui = pair.toUi()
+        // Arrange & Act
+        val ui = mapper.map(fakeCartItem(quantity = 3), fakeProduct(price = 10.00))
 
         // Assert
         assertThat(ui.formattedTotalPrice).isEqualTo("$30.00")
@@ -79,11 +76,8 @@ class CartMappersTest {
 
     @Test
     fun `should handle null flavor`() {
-        // Arrange
-        val pair = Pair(fakeCartItem(flavor = null), fakeProduct())
-
-        // Act
-        val ui = pair.toUi()
+        // Arrange & Act
+        val ui = mapper.map(fakeCartItem(flavor = null), fakeProduct())
 
         // Assert
         assertThat(ui.flavor).isNull()
@@ -91,11 +85,8 @@ class CartMappersTest {
 
     @Test
     fun `should handle zero price`() {
-        // Arrange
-        val pair = Pair(fakeCartItem(quantity = 1), fakeProduct(price = 0.0))
-
-        // Act
-        val ui = pair.toUi()
+        // Arrange & Act
+        val ui = mapper.map(fakeCartItem(quantity = 1), fakeProduct(price = 0.0))
 
         // Assert
         assertThat(ui.formattedUnitPrice).isEqualTo("$0.00")

@@ -16,6 +16,8 @@ import com.nutrisport.data.mapper.CustomerEntityToDomainMapper
 import com.nutrisport.data.mapper.ProductDtoToDomainMapper
 import com.nutrisport.data.mapper.ProductDtoToEntityMapper
 import com.nutrisport.data.mapper.ProductEntityToDomainMapper
+import com.nutrisport.details.mapper.ProductToUiMapper
+import com.nutrisport.cart.mapper.CartItemToUiMapper
 import com.nutrisport.database.NutriSportDatabase
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.OrderRepository
@@ -57,6 +59,10 @@ val sharedModule = module {
     factory { ProductDtoToDomainMapper() }
     factory { CustomerDtoToEntityMapper() }
     factory { CustomerEntityToDomainMapper() }
+
+    // Mappers — Domain → UI
+    factory { ProductToUiMapper() }
+    factory { CartItemToUiMapper() }
 
     // Repositories
     single<CustomerRepository> {

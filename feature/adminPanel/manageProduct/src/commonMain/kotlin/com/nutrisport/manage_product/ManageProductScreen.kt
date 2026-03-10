@@ -62,6 +62,7 @@ import com.nutrisport.shared.component.dialog.CategoriesDialog
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.DisplayResult
 import com.nutrisport.shared.util.UiState
+import com.nutrisport.shared.util.orZero
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -317,7 +318,7 @@ fun ManageProductScreen(
             Column {
               CustomTextField(
                 value = screenState.weight?.toString().orEmpty(),
-                onValueChange = { viewModel.updateWeight(it.toIntOrNull() ?: 0) },
+                onValueChange = { viewModel.updateWeight(it.toIntOrNull().orZero()) },
                 placeholder = "Weight",
                 keyboardOptions = KeyboardOptions(
                   keyboardType = KeyboardType.Number,
@@ -339,7 +340,7 @@ fun ManageProductScreen(
             value = screenState.price.toString(),
             onValueChange = {
               if (it.toDoubleOrNull() != null) {
-                viewModel.updatePrice(it.toDoubleOrNull() ?: 0.0)
+                viewModel.updatePrice(it.toDoubleOrNull().orZero())
               }
             },
             placeholder = "Price",

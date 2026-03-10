@@ -56,6 +56,7 @@ import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.UiState
 import com.nutrisport.shared.util.getScreenWidth
+import com.nutrisport.shared.util.orZero
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import rememberMessageBarState
@@ -253,7 +254,7 @@ fun HomeGraphScreen(
                 .padding(all = 12.dp)
             ) {
               BottomBar(
-                cartItemCount = customer.getSuccessDataOrNull()?.cart?.size ?: 0,
+                cartItemCount = customer.getSuccessDataOrNull()?.cart?.size.orZero(),
                 selected = selectedDestination,
                 onSelect = { destination ->
                   navController.navigate(destination.screen) {

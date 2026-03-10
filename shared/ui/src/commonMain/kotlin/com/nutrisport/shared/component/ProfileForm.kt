@@ -87,7 +87,7 @@ fun ProfileForm(
       error = city?.length !in 3..50
     )
     CustomTextField(
-      value = postalCode?.toString() ?: "",
+      value = postalCode?.toString().orEmpty(),
       onValueChange = { postalCodeChange(it.toIntOrNull()) },
       placeholder = "Postal code",
       error = postalCode.toString().length !in 3..8,

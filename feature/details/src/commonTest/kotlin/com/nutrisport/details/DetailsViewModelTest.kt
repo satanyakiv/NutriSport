@@ -6,6 +6,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import androidx.lifecycle.SavedStateHandle
+import com.nutrisport.details.mapper.ProductToUiMapper
 import com.nutrisport.details.model.ProductUi
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Customer
@@ -91,7 +92,7 @@ class DetailsViewModelTest {
 
     private fun createViewModel(productId: String = "prod-1"): DetailsViewModel {
         val savedState = SavedStateHandle(mapOf("id" to productId))
-        return DetailsViewModel(fakeProductRepo, fakeCustomerRepo, savedState)
+        return DetailsViewModel(fakeProductRepo, fakeCustomerRepo, ProductToUiMapper(), savedState)
     }
 
     @Test

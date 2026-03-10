@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.details.mapper.toUi
+import com.nutrisport.details.mapper.ProductToUiMapper
 import com.nutrisport.details.model.ProductUi
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.ProductRepository
@@ -21,12 +21,13 @@ import kotlinx.coroutines.launch
 class DetailsViewModel(
   private val productRepository: ProductRepository,
   private val customerRepository: CustomerRepository,
+  private val productToUiMapper: ProductToUiMapper,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   val product = productRepository.readProductByIdFlow(
-    savedStateHandle.get<String>("id") ?: ""
+    savedStateHandle.get<String>("id").orEmpty()
   ).map<_, UiState<ProductUi>> { result ->
-    UiState.Content(result.map { it.toUi() })
+    UiState.Content(result.map { productToUiMapper.map(it) })
   }.onStart { emit(UiState.Loading) }
     .stateIn(
       scope = viewModelScope,

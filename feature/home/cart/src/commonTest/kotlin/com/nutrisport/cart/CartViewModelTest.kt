@@ -2,6 +2,7 @@ package com.nutrisport.cart
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.nutrisport.cart.mapper.CartItemToUiMapper
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.CustomerRepository
@@ -89,7 +90,7 @@ class CartViewModelTest {
                 flowOf(Either.Right(emptyList()))
         }
         val observeUseCase = ObserveEnrichedCartUseCase(fakeCustomerRepo, fakeProductRepo, enrichUseCase)
-        return CartViewModel(fakeCustomerRepo, observeUseCase)
+        return CartViewModel(fakeCustomerRepo, observeUseCase, CartItemToUiMapper())
     }
 
     @Test

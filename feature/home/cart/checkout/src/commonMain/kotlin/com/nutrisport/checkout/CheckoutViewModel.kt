@@ -13,6 +13,7 @@ import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.domain.usecase.CreateOrderUseCase
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
+import com.nutrisport.shared.util.orZero
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
@@ -160,7 +161,7 @@ class CheckoutViewModel(
     createOrderUseCase(
       customerId = screenState.id,
       cartItems = screenState.cart,
-      totalAmount = savedStateHandle.get<Double>("totalAmount") ?: 0.0,
+      totalAmount = savedStateHandle.get<Double>("totalAmount").orZero(),
     ).fold(
       ifLeft = { error -> onError(error.message) },
       ifRight = { onSuccess() }

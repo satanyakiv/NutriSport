@@ -3,18 +3,10 @@ package com.nutrisport.cart.mapper
 import com.nutrisport.cart.model.CartItemUi
 import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Product
-import kotlin.math.roundToInt
+import com.nutrisport.shared.util.formatPrice
 
-private fun Double.formatPrice(): String {
-    val cents = (this * 100).roundToInt()
-    val wholePart = cents / 100
-    val fracPart = (cents % 100).toString().padStart(2, '0')
-    return "$${wholePart}.${fracPart}"
-}
-
-fun Pair<CartItem, Product>.toUi(): CartItemUi {
-    val (cartItem, product) = this
-    return CartItemUi(
+class CartItemToUiMapper {
+    fun map(cartItem: CartItem, product: Product): CartItemUi = CartItemUi(
         cartItemId = cartItem.id,
         productId = product.id,
         title = product.title,

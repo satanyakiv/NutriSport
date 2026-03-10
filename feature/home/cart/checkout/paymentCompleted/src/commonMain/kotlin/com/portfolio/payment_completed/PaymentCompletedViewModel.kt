@@ -14,6 +14,7 @@ import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Order
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.util.AppError
+import com.nutrisport.shared.util.orZero
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import io.github.aakira.napier.Napier
@@ -151,7 +152,7 @@ class PaymentViewModel(
   fun calculateTotalPrice(cartItems: List<CartItem>, products: List<Product>): Double {
     return cartItems.sumOf { cartItem ->
       val product = products.find { it.id == cartItem.productId }
-      product?.price?.times(cartItem.quantity) ?: 0.0
+      product?.price?.times(cartItem.quantity).orZero()
     }
   }
 }

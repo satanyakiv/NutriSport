@@ -1,6 +1,6 @@
 # 12 — Detekt Strict Mode
 
-Status: IDLE
+Status: IMPLEMENTED
 Group: D (sequence: 11→12)
 Depends on: 11-performance
 

@@ -7,6 +7,7 @@ import com.nutrisport.shared.util.AppConfig
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 
+@Suppress("FunctionNaming")
 fun MainViewController() = ComposeUIViewController(
   configure = {
     if (AppConfig.enableLogging) {

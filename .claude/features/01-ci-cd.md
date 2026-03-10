@@ -1,6 +1,6 @@
 # 01 — CI/CD Pipeline
 
-Status: IDLE
+Status: IMPLEMENTED
 Group: A
 Depends on: none
 

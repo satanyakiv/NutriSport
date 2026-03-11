@@ -16,6 +16,7 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.kotlinx.serialization)
+            implementation(libs.koin.core)
         }
     }
 }

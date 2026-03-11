@@ -22,6 +22,7 @@ kotlin {
             implementation(libs.firebase.storage)
             implementation(libs.auth.firebase.kmp)
             implementation(libs.kotlinx.serialization)
+            implementation(libs.koin.core)
             implementation(project(":domain"))
             implementation(project(":database"))
         }

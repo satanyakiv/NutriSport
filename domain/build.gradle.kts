@@ -13,6 +13,7 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       implementation(libs.kotlinx.serialization)
+      implementation(libs.koin.core)
     }
     commonTest.dependencies {
       implementation(project(":shared:testing"))

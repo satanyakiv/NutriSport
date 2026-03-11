@@ -24,7 +24,7 @@ Read `build/reports/kover/xml/report.xml`. For each `<class>` element, extract L
 coverage% = covered / (covered + missed) * 100
 ```
 
-If `$ARGUMENTS` contains a module filter (e.g., `:data`), only include classes whose package matches that module.
+If `$ARGUMENTS` contains a module filter (e.g., `:network`), only include classes whose package matches that module.
 
 ### Step 3 — Classify classes
 

@@ -22,7 +22,7 @@ $ARGUMENTS
 3. **REFACTOR**: Apply changes. Zero behavior changes.
    - Move models to correct layers with proper suffixes (Dto/Ui)
    - Extract/update mappers (`.toDomain()`, `.toUi()`)
-   - Keep ViewModel logic in feature, data logic in data, domain pure
+   - Keep ViewModel logic in feature, data logic in network, domain pure
    - Extract UseCase if ViewModel business logic > 10 lines
 
 4. **VERIFY**:
@@ -31,7 +31,7 @@ $ARGUMENTS
 
 5. **CHECKLIST**:
    - [ ] No file > 150 lines, no function > 20 lines
-   - [ ] No Dto outside `:data`, no domain models in Composables
+   - [ ] No Dto outside `:network`, no domain models in Composables
    - [ ] No Firebase/network imports in feature modules
    - [ ] All mappers tested
    - [ ] Convention plugins used (no manual plugin config)

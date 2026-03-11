@@ -6,12 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nutrisport.data.domain.AdminRepository
+import com.nutrisport.shared.domain.AdminRepository
+import com.nutrisport.shared.domain.PlatformFile
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
-import dev.gitlive.firebase.storage.File
 import kotlinx.coroutines.launch
 
 class ManageProductViewModel(
@@ -102,7 +102,7 @@ class ManageProductViewModel(
     }
   }
 
-  fun uploadThumbnailToStorage(file: File?, onSuccess: () -> Unit) {
+  fun uploadThumbnailToStorage(file: PlatformFile?, onSuccess: () -> Unit) {
     if (file == null) {
       thumbnailUploaderState = UiState.Content(
         Either.Left(AppError.Unknown("File is null. Error while selecting an image")),

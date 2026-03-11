@@ -13,10 +13,10 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":shared:utils"))
             implementation(project(":shared:ui"))
-            implementation(project(":data"))
+            implementation(project(":domain"))
         }
         commonTest.dependencies {
-            implementation(project(":shared:test-fixtures"))
+            implementation(project(":shared:testing"))
         }
     }
 }

@@ -10,9 +10,11 @@ NutriSport is a KMP (Kotlin Multiplatform) project targeting Android + iOS.
 androidApp          — Android entry point (Activity, Application)
 composeApp          — Shared KMP UI entry (AppContent)
 navigation          — NavHost + type-safe routing (SetupNavGraph)
-shared/utils        — Domain layer: models, interfaces, use cases, Either, AppError
+domain              — Pure domain layer: models, repo interfaces, use cases, Either, AppError, NullSafety
+shared/utils        — App utilities: Constants, AppConfig, FormatPrice, Log, Screen.kt (routes)
 shared/ui           — Shared UI: composable components, UiState, DisplayResult, resources
-data                — Data layer: Firebase repos, DTOs, mappers to domain
+shared/testing      — Test fixtures: fake data factories, fake repositories
+network             — Data layer: Firebase repos, DTOs, mappers to domain
 database            — Room KMP: entities, DAOs, local cache
 di                  — Koin DI configuration (sharedModule + platform modules)
 analytics           — Abstract analytics tracking (CompositeTracker)
@@ -25,24 +27,30 @@ build-logic/        — Convention plugins (library, feature, feature.full)
 ```
 androidApp / iosApp
   └─ composeApp
-       ├─ navigation (depends on all feature modules + shared:utils)
-       ├─ di (depends on all feature modules + data + analytics + shared:utils)
-       ├─ shared:utils (domain layer — no external deps)
-       ├─ shared:ui (depends on shared:utils)
-       └─ data (depends on shared:utils + database)
+       ├─ navigation (depends on all feature modules + :domain)
+       ├─ di (depends on all feature modules + :network + :database + :domain)
+       ├─ domain (pure — no project deps)
+       ├─ shared:utils (no project deps)
+       ├─ shared:ui (depends on :domain + :shared:utils)
+       └─ network (depends on :domain + :database)
 
-feature modules → shared:utils + shared:ui (never depend on each other)
-data → shared:utils (never shared:ui)
-di, analytics, navigation → shared:utils only
+feature modules → :domain + :shared:utils + :shared:ui (never depend on each other)
+network → :domain + :database (never :shared:ui)
+shared:testing → :domain
+di → :domain + :network + :database + all features
+navigation → :domain + features
+analytics → :domain only
 ```
 
 ### Clean Architecture Layers
 
 | Layer | Module | Contains |
 |-------|--------|----------|
-| Domain | `:shared:utils` | Models, repo interfaces, use cases, `Either`/`AppError` |
+| Domain | `:domain` | Models, repo interfaces, use cases, `Either`/`AppError`/`DomainResult`, `NullSafety` |
+| Utilities | `:shared:utils` | Constants, AppConfig, FormatPrice, Log, Screen.kt (navigation routes) |
 | Shared UI | `:shared:ui` | Composables, `UiState`, `DisplayResult`, resources |
-| Data | `:data` | DTOs (`Dto`), mappers, repo implementations, Firebase |
+| Data | `:network` | DTOs (`Dto`), mappers, repo implementations, Firebase |
+| Test Fixtures | `:shared:testing` | Fake data factories, fake repositories |
 | Presentation | `:feature/*` | UI models (`Ui`), ViewModels, Screens |
 
 ### Convention Plugins
@@ -56,16 +64,17 @@ di, analytics, navigation → shared:utils only
 ## Rules
 
 1. **No circular deps.** Feature modules NEVER depend on each other.
-2. **shared:utils is pure domain.** No platform code, no Firebase, no network.
-3. **shared:ui is for reusable Compose components.** Depends only on shared:utils.
-4. **data owns all external I/O.** Firebase, APIs, file storage — only here.
-5. **di module** is the only place that wires repositories and ViewModels.
-6. **navigation module** is the only module that knows about all features.
-7. **ViewModels** live in feature modules. One ViewModel per screen (max).
-8. **Max 150 lines/file, max 20 lines/function.** No god classes.
-9. **Convention plugins** — always use them. Never duplicate plugin config.
-10. **DTOs never leak** outside `:data`. Map to domain before returning.
-11. **Domain models never leak** into Composables. Map to UI models.
+2. **:domain is pure.** No platform code, no Firebase, no network, no project deps.
+3. **shared:utils is app utilities.** Constants, AppConfig, FormatPrice, Log, Screen.kt. No project deps.
+4. **shared:ui is for reusable Compose components.** Depends on `:domain` + `:shared:utils`.
+5. **:network owns all external I/O.** Firebase, APIs, file storage — only here.
+6. **di module** is the only place that wires repositories and ViewModels.
+7. **navigation module** is the only module that knows about all features.
+8. **ViewModels** live in feature modules. One ViewModel per screen (max).
+9. **Max 150 lines/file, max 20 lines/function.** No god classes.
+10. **Convention plugins** — always use them. Never duplicate plugin config.
+11. **DTOs never leak** outside `:network`. Map to domain before returning.
+12. **Domain models never leak** into Composables. Map to UI models.
 
 ## Naming
 
@@ -80,13 +89,13 @@ di, analytics, navigation → shared:utils only
 ## Adding a New Feature
 
 1. Create module under `feature/` with appropriate convention plugin
-2. Add `@Serializable` route to `Screen` sealed class in `shared:utils`
+2. Add `@Serializable` route to `Screen` sealed class in `:shared:utils`
 3. Create UI models in `feature/.../model/` if needed
 4. Create ViewModel with mappers in `feature/.../`
 5. Add composable destination in `navigation/NavGraph.kt`
 6. Register ViewModel in `di/KoinModule.kt`
 7. Add module to `settings.gradle.kts`
-8. Add deps: `implementation(project(":shared:utils"))` + `implementation(project(":shared:ui"))`
+8. Add deps: `implementation(project(":domain"))` + `implementation(project(":shared:utils"))` + `implementation(project(":shared:ui"))`
 
 ## Related
 

@@ -4,13 +4,13 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.nutrisport.shared.test.fixtures"
+        namespace = "com.nutrisport.shared.testing"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared:utils"))
+            implementation(project(":domain"))
             implementation(libs.kotlinx.coroutines.test)
         }
     }

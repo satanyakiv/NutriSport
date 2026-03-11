@@ -10,20 +10,20 @@ No favorites/wishlist feature exists. This is a full-cycle feature module demons
 
 ## Files to Create
 
-### Domain (shared:utils)
-- [ ] `shared/utils/.../domain/Favorite.kt` — `data class Favorite(val productId: String, val addedAt: Long)`
-- [ ] `shared/utils/.../domain/FavoriteRepository.kt` — interface
-- [ ] `shared/utils/.../domain/usecase/ToggleFavoriteUseCase.kt`
-- [ ] `shared/utils/.../domain/usecase/ObserveFavoritesUseCase.kt`
+### Domain (:domain)
+- [ ] `domain/.../domain/Favorite.kt` — `data class Favorite(val productId: String, val addedAt: Long)`
+- [ ] `domain/.../domain/FavoriteRepository.kt` — interface
+- [ ] `domain/.../domain/usecase/ToggleFavoriteUseCase.kt`
+- [ ] `domain/.../domain/usecase/ObserveFavoritesUseCase.kt`
 
 ### Database
 - [ ] `database/.../entity/FavoriteEntity.kt` — Room entity
 - [ ] `database/.../dao/FavoriteDao.kt` — CRUD + observe
 
 ### Data
-- [ ] `data/.../FavoriteRepositoryImpl.kt` — Room + Firebase sync
-- [ ] `data/.../dto/FavoriteDto.kt` — Firestore DTO
-- [ ] `data/.../mapper/FavoriteMapper.kt` — Dto↔Domain↔Entity mappers
+- [ ] `network/.../FavoriteRepositoryImpl.kt` — Room + Firebase sync
+- [ ] `network/.../dto/FavoriteDto.kt` — Firestore DTO
+- [ ] `network/.../mapper/FavoriteMapper.kt` — Dto↔Domain↔Entity mappers
 
 ### Feature Module
 - [ ] `feature/favorites/build.gradle.kts` — `nutrisport.kmp.feature` plugin
@@ -48,7 +48,7 @@ None — uses existing stack.
 
 ## Implementation Steps
 
-1. Create domain models and interfaces in shared:utils
+1. Create domain models and interfaces in :domain
 2. Create `FavoriteEntity` + `FavoriteDao` in database module
 3. Update `NutriSportDatabase` with new entity/DAO
 4. Create `FavoriteDto` + `FavoriteMapper` in data module
@@ -68,7 +68,7 @@ None — uses existing stack.
 ```bash
 ./gradlew :feature:favorites:compileCommonMainKotlinMetadata
 ./gradlew :database:compileCommonMainKotlinMetadata
-./gradlew :data:compileCommonMainKotlinMetadata
+./gradlew :network:compileCommonMainKotlinMetadata
 ./gradlew assembleDebug
 
 # Verify module is included

@@ -29,8 +29,8 @@ Group E runs last — tests cover all new code.
 | File | Features that modify it |
 |------|------------------------|
 | `database/.../NutriSportDatabase.kt` | 04, 06, 07 |
-| `shared/utils/.../domain/ProductRepository.kt` | 04, 05, 06 |
-| `data/.../ProductRepositoryImpl.kt` | 04, 05, 06 |
+| `domain/.../domain/ProductRepository.kt` | 04, 05, 06 |
+| `network/.../ProductRepositoryImpl.kt` | 04, 05, 06 |
 | `database/.../dao/ProductDao.kt` | 05, 06 |
 | `di/.../KoinModule.kt` | 04, 07 |
 | `navigation/.../Screen.kt` | 07 |

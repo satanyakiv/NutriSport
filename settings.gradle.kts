@@ -16,7 +16,8 @@ dependencyResolutionManagement {
     mavenCentral()
   }
 }
-include(":data")
+include(":domain")
+include(":network")
 include(":di")
 include(":feature:adminPanel")
 include(":feature:adminPanel:manageProduct")
@@ -35,6 +36,6 @@ include(":androidApp")
 include(":feature:home:cart:checkout:paymentCompleted")
 include(":shared:utils")
 include(":shared:ui")
-include(":shared:test-fixtures")
+include(":shared:testing")
 include(":analytics")
 include(":database")

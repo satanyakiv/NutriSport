@@ -59,20 +59,20 @@ Currently the app reads directly from Firebase (Firestore) with no offline strat
 
 ## Files to Create
 
-- [ ] `shared/utils/.../domain/sync/RefreshPolicy.kt` — `Now`, `TryNow`, `CacheOnly` enum
-- [ ] `shared/utils/.../domain/sync/SyncStatus.kt` — `Synced`, `Stale`, `Offline` sealed class
-- [ ] `shared/utils/.../domain/sync/ConnectivityObserver.kt` — interface
+- [ ] `domain/.../domain/sync/RefreshPolicy.kt` — `Now`, `TryNow`, `CacheOnly` enum
+- [ ] `domain/.../domain/sync/SyncStatus.kt` — `Synced`, `Stale`, `Offline` sealed class
+- [ ] `domain/.../domain/sync/ConnectivityObserver.kt` — interface
 - [ ] `database/.../entity/SyncMetadataEntity.kt` — entityType, lastSyncTimestamp, etag
 - [ ] `database/.../dao/SyncMetadataDao.kt` — CRUD for sync metadata
-- [ ] `data/.../sync/ConnectivityObserverImpl.kt` — konnection-based implementation
-- [ ] `data/.../sync/SyncOrchestrator.kt` — coordinates refresh for all entity types
+- [ ] `network/.../sync/ConnectivityObserverImpl.kt` — konnection-based implementation
+- [ ] `network/.../sync/SyncOrchestrator.kt` — coordinates refresh for all entity types
 
 ## Files to Modify
 
 - [ ] `database/.../NutriSportDatabase.kt` — add SyncMetadataEntity + SyncMetadataDao
-- [ ] `data/.../ProductRepositoryImpl.kt` — Room-first reads, Firebase sync
-- [ ] `data/.../CustomerRepositoryImpl.kt` — Room-first reads, Firebase sync
-- [ ] `shared/utils/.../domain/ProductRepository.kt` — add sync-aware methods
+- [ ] `network/.../ProductRepositoryImpl.kt` — Room-first reads, Firebase sync
+- [ ] `network/.../CustomerRepositoryImpl.kt` — Room-first reads, Firebase sync
+- [ ] `domain/.../domain/ProductRepository.kt` — add sync-aware methods
 - [ ] `di/.../KoinModule.kt` — register SyncOrchestrator, ConnectivityObserver
 - [ ] `gradle/libs.versions.toml` — add konnection dependency
 
@@ -103,9 +103,9 @@ Currently the app reads directly from Firebase (Firestore) with no offline strat
 
 ```bash
 # Compile check
-./gradlew :shared:utils:compileCommonMainKotlinMetadata
+./gradlew :domain:compileCommonMainKotlinMetadata
 ./gradlew :database:compileCommonMainKotlinMetadata
-./gradlew :data:compileCommonMainKotlinMetadata
+./gradlew :network:compileCommonMainKotlinMetadata
 
 # Full build
 ./gradlew assembleDebug
@@ -114,7 +114,7 @@ Currently the app reads directly from Firebase (Firestore) with no offline strat
 ## Conflict Zones
 
 - `NutriSportDatabase.kt` — also modified by 06, 07
-- `ProductRepository.kt` — also modified by 05, 06
-- `ProductRepositoryImpl.kt` — also modified by 05, 06
+- `domain/.../ProductRepository.kt` — also modified by 05, 06
+- `network/.../ProductRepositoryImpl.kt` — also modified by 05, 06
 - `KoinModule.kt` — also modified by 07
 - `libs.versions.toml` — also modified by 05, 10, 11

@@ -30,9 +30,9 @@ import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.dialog.CategoriesDialog
+import com.nutrisport.shared.domain.PlatformFile
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.UiState
-import dev.gitlive.firebase.storage.File
 import rememberMessageBarState
 
 @Composable
@@ -52,7 +52,7 @@ fun ManageProductScreen(
   onIsNewChange: (Boolean) -> Unit,
   onIsPopularChange: (Boolean) -> Unit,
   onIsDiscountedChange: (Boolean) -> Unit,
-  onUploadThumbnail: (File?, () -> Unit) -> Unit,
+  onUploadThumbnail: (PlatformFile?, () -> Unit) -> Unit,
   onDeleteThumbnail: (() -> Unit, (String) -> Unit) -> Unit,
   onUpdateThumbnailState: (UiState<Unit>) -> Unit,
   onCreateProduct: (() -> Unit, (String) -> Unit) -> Unit,

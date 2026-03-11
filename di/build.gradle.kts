@@ -15,8 +15,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.koin.core)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.koin.compose)
+            implementation(libs.bundles.koin.compose)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
 
@@ -32,7 +31,8 @@ kotlin {
             implementation(project(":feature:profile"))
             implementation(project(":feature:adminPanel"))
             implementation(project(":feature:adminPanel:manageProduct"))
-            implementation(project(":data"))
+            implementation(project(":domain"))
+            implementation(project(":network"))
             implementation(project(":database"))
             implementation(project(":shared:utils"))
         }

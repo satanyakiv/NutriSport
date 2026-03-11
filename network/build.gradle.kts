@@ -5,7 +5,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.nutrisport.data"
+        namespace = "com.nutrisport.network"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         withHostTest {}
@@ -22,7 +22,7 @@ kotlin {
             implementation(libs.firebase.storage)
             implementation(libs.auth.firebase.kmp)
             implementation(libs.kotlinx.serialization)
-            implementation(project(":shared:utils"))
+            implementation(project(":domain"))
             implementation(project(":database"))
         }
     }

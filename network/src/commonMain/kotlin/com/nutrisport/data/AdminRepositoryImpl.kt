@@ -1,8 +1,9 @@
 package com.nutrisport.data
 
-import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.data.mapper.ProductDtoToDomainMapper
 import com.nutrisport.data.mapper.ProductToDtoMapper
+import com.nutrisport.shared.domain.AdminRepository
+import com.nutrisport.shared.domain.PlatformFile
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.DomainResult
@@ -10,7 +11,6 @@ import com.nutrisport.shared.util.Either
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.Direction
 import dev.gitlive.firebase.firestore.firestore
-import dev.gitlive.firebase.storage.File
 import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -50,12 +50,12 @@ class AdminRepositoryImpl(
     }
   }
 
-  override suspend fun uploadImageToStorage(file: File): DomainResult<String> {
+  override suspend fun uploadImageToStorage(file: PlatformFile): DomainResult<String> {
     return try {
       withAuth {
         val path = Firebase.storage.reference.child("images/${Uuid.random().toHexString()}")
         val url = withTimeout(20000) {
-          path.putFile(file)
+          path.putFile(file.toStorageFile())
           path.getDownloadUrl()
         }
         Either.Right(url)

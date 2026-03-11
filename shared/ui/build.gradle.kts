@@ -14,13 +14,8 @@ kotlin {
         androidResources.enable = true
     }
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.ktor.android.client)
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.darwin.client)
-        }
         commonMain.dependencies {
+            implementation(project(":domain"))
             implementation(project(":shared:utils"))
             implementation(libs.bundles.coil)
             implementation(libs.kotlinx.serialization)

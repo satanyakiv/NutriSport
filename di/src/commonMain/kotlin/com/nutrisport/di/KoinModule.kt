@@ -11,7 +11,6 @@ import com.nutrisport.data.CustomerRepositoryImpl
 import com.nutrisport.data.OrderRepositoryImpl
 import com.nutrisport.data.ProductMapper
 import com.nutrisport.data.ProductRepositoryImpl
-import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.data.mapper.CustomerDtoToEntityMapper
 import com.nutrisport.data.mapper.CustomerEntityToDomainMapper
 import com.nutrisport.data.mapper.OrderToDtoMapper
@@ -26,6 +25,7 @@ import com.nutrisport.home.HomeGraphViewModel
 import com.nutrisport.manage_product.ManageProductViewModel
 import com.nutrisport.products_overview.ProductsOverviewViewModel
 import com.nutrisport.profile.ProfileViewModel
+import com.nutrisport.shared.domain.AdminRepository
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.ProductRepository

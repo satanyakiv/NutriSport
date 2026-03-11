@@ -7,7 +7,7 @@
 - `internal` by default, `public` only when needed across modules
 - No wildcard imports
 - Trailing commas in multiline declarations
-- Use `orZero()` / `.orEmpty()` instead of `?: 0.0` / `?: 0` / `?: ""` (see `shared/utils/.../util/NullSafety.kt`)
+- Use `orZero()` / `.orEmpty()` instead of `?: 0.0` / `?: 0` / `?: ""` (see `domain/.../util/NullSafety.kt`)
 
 ## Compose
 
@@ -28,7 +28,7 @@
 - Repositories return `Flow<T>` (cold streams)
 - One-shot operations return `suspend fun`
 - Never use `GlobalScope`
-- Use `Dispatchers.IO` only in data layer, never in ViewModels
+- Use `Dispatchers.IO` only in network/data layer, never in ViewModels
 
 ## Koin
 
@@ -39,10 +39,10 @@
 
 ## Firebase
 
-- All Firebase calls in `data` module only
+- All Firebase calls in `network` module only
 - Wrap Firebase exceptions into `Either.Left(AppError.Network(...))`
 - Collection names as constants in companion objects
-- Never expose Firebase models outside `data` — map to domain models
+- Never expose Firebase models outside `network` — map to domain models
 
 ## Git
 

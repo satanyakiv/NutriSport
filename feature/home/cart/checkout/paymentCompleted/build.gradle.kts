@@ -13,7 +13,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":shared:utils"))
             implementation(project(":shared:ui"))
-            implementation(project(":data"))
+            implementation(project(":domain"))
         }
     }
 }

@@ -30,6 +30,7 @@ kotlin {
         androidMain.dependencies {
             implementation(project.dependencies.platform(libs.firebase.bom))
         }
+        @Suppress("DEPRECATION")
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -47,10 +48,11 @@ kotlin {
             api(libs.kmp.notifier)
 
             implementation(project(":navigation"))
+            implementation(project(":domain"))
             implementation(project(":shared:utils"))
             implementation(project(":shared:ui"))
             implementation(project(":di"))
-            implementation(project(":data"))
+            implementation(project(":network"))
         }
 
         iosMain.dependencies {

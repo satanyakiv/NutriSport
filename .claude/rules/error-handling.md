@@ -2,16 +2,18 @@
 
 ## Domain/Data Layer
 
+All error types live in `:domain` module.
+
 ```kotlin
-// Either — generic result type
+// Either — generic result type (domain/.../util/Either.kt)
 sealed class Either<out L, out R> { Left(value: L), Right(value: R) }
 
-// AppError — typed domain errors
+// AppError — typed domain errors (domain/.../util/AppError.kt)
 sealed class AppError(message: String) {
     Network, NotFound, Unauthorized, Unknown
 }
 
-// DomainResult — standard alias
+// DomainResult — standard alias (domain/.../util/AppError.kt)
 typealias DomainResult<T> = Either<AppError, T>
 ```
 

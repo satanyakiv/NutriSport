@@ -11,9 +11,9 @@ No search exists. With offline-first (04) providing Room as SSOT, we can use Roo
 ## Files to Create
 
 - [ ] `database/.../entity/ProductFts.kt` — `@Fts4` virtual table for product search
-- [ ] `shared/utils/.../domain/search/SearchQuery.kt` — `data class SearchQuery(text: String, category: ProductCategory?, priceRange: ClosedRange<Double>?)`
-- [ ] `shared/utils/.../domain/search/SearchRepository.kt` — interface
-- [ ] `data/.../SearchRepositoryImpl.kt` — Room FTS + filter combination
+- [ ] `domain/.../domain/search/SearchQuery.kt` — `data class SearchQuery(text: String, category: ProductCategory?, priceRange: ClosedRange<Double>?)`
+- [ ] `domain/.../domain/search/SearchRepository.kt` — interface
+- [ ] `network/.../SearchRepositoryImpl.kt` — Room FTS + filter combination
 - [ ] `feature/home/.../search/SearchBar.kt` — composable search bar
 - [ ] `feature/home/.../search/FilterSheet.kt` — bottom sheet with category/price filters
 
@@ -21,8 +21,8 @@ No search exists. With offline-first (04) providing Room as SSOT, we can use Roo
 
 - [ ] `database/.../NutriSportDatabase.kt` — add ProductFts entity
 - [ ] `database/.../dao/ProductDao.kt` — add FTS query methods
-- [ ] `data/.../ProductRepositoryImpl.kt` — populate FTS table on sync
-- [ ] `shared/utils/.../domain/ProductRepository.kt` — add search method (or use SearchRepository)
+- [ ] `network/.../ProductRepositoryImpl.kt` — populate FTS table on sync
+- [ ] `domain/.../domain/ProductRepository.kt` — add search method (or use SearchRepository)
 - [ ] `feature/home/.../HomeViewModel.kt` — search state + debounced query
 - [ ] `feature/home/.../HomeScreen.kt` — integrate SearchBar + FilterSheet
 - [ ] `di/.../KoinModule.kt` — register SearchRepository if separate
@@ -54,7 +54,7 @@ None — Room FTS4 is built-in.
 
 ```bash
 ./gradlew :database:compileCommonMainKotlinMetadata
-./gradlew :data:compileCommonMainKotlinMetadata
+./gradlew :network:compileCommonMainKotlinMetadata
 ./gradlew :feature:home:compileCommonMainKotlinMetadata
 ./gradlew assembleDebug
 ```
@@ -63,5 +63,5 @@ None — Room FTS4 is built-in.
 
 - `NutriSportDatabase.kt` — also modified by 04, 07
 - `ProductDao.kt` — also modified by 05
-- `ProductRepository.kt` — also modified by 04, 05
-- `ProductRepositoryImpl.kt` — also modified by 04, 05
+- `domain/.../ProductRepository.kt` — also modified by 04, 05
+- `network/.../ProductRepositoryImpl.kt` — also modified by 04, 05

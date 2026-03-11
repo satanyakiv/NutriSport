@@ -25,6 +25,7 @@ kotlin {
             implementation(project(":feature:home:cart:checkout"))
             implementation(project(":feature:home:cart:checkout:paymentCompleted"))
             implementation(project(":feature:adminPanel:manageProduct"))
+            implementation(project(":domain"))
             implementation(project(":shared:utils"))
         }
     }

@@ -55,6 +55,7 @@ android {
 dependencies {
     implementation(project(":composeApp"))
     implementation(project(":di"))
+    implementation(project(":domain"))
     implementation(project(":shared:utils"))
     implementation(platform(libs.firebase.bom))
     implementation("com.google.firebase:firebase-common")
@@ -63,6 +64,4 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.napier)
-    implementation(compose.components.uiToolingPreview)
-    debugImplementation(compose.uiTooling)
 }

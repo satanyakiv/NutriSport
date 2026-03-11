@@ -28,6 +28,7 @@ Read .claude/rules/architecture.md for full rules (section "Adding a New Feature
        }
        sourceSets {
            commonMain.dependencies {
+               implementation(project(":domain"))
                implementation(project(":shared:utils"))
                implementation(project(":shared:ui"))
            }
@@ -35,7 +36,7 @@ Read .claude/rules/architecture.md for full rules (section "Adding a New Feature
    }
    ```
 
-3. **Add route** — `@Serializable` to `Screen` sealed class in `shared/utils/.../navigation/Screen.kt`
+3. **Add route** — `@Serializable` to `Screen` sealed class in `shared/utils/.../Screen.kt`
 
 4. **Create ViewModel** — `{Name}ViewModel` in `feature/{name}/`
    - Inject repository via constructor

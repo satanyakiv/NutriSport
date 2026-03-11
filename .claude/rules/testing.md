@@ -97,7 +97,7 @@ feature/cart/src/commonTest/kotlin/com/nutrisport/feature/cart/
     CartMapperTest.kt
     FakeCartData.kt
 
-data/src/commonTest/kotlin/com/nutrisport/data/
+network/src/commonTest/kotlin/com/nutrisport/network/
     ProductRepositoryTest.kt
     ProductMapperTest.kt
     FakeFirestoreData.kt
@@ -131,5 +131,6 @@ data/src/commonTest/kotlin/com/nutrisport/data/
 - ViewModels: 80%+
 - Repositories: 70%+
 - Mappers: 90%+
+- Domain: 90%+
 - Shared utils: 90%+
 - UI composables: not measured (use E2E for critical paths)

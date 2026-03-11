@@ -9,17 +9,17 @@ $ARGUMENTS
 Scan the specified module/files for these violations:
 
 ### Critical (must fix)
-- [ ] **DTO leak**: `*Dto` import outside `:data` module
-- [ ] **Firebase leak**: `dev.gitlive.firebase.*` import outside `:data`
+- [ ] **DTO leak**: `*Dto` import outside `:network` module
+- [ ] **Firebase leak**: `dev.gitlive.firebase.*` import outside `:network`
 - [ ] **Domain in UI**: Domain model used directly in `@Composable` parameters
 - [ ] **Circular dep**: Feature module depends on another feature module
-- [ ] **shared:utils impurity**: Platform/network/Firebase code in `:shared:utils`
+- [ ] **:domain impurity**: Platform/network/Firebase code in `:domain`
 
 ### Warning (should fix)
 - [ ] **Missing mapper**: Direct field access across layers instead of mapper
 - [ ] **Fat ViewModel**: Business logic > 10 lines (extract UseCase)
 - [ ] **God class**: File > 150 lines or function > 20 lines
-- [ ] **Wrong module**: Repository impl not in `:data`, ViewModel not in `:feature`
+- [ ] **Wrong module**: Repository impl not in `:network`, ViewModel not in `:feature`
 - [ ] **Missing suffix**: Model outside domain without Dto/Ui suffix
 - [ ] **ViewModel in Screen**: ViewModel injected inside Screen composable (should be in Route)
 
@@ -35,9 +35,9 @@ Scan the specified module/files for these violations:
 ## Model Placement Reference
 
 ```
-shared/utils/.../domain/     → Product, Customer (no suffix)
-data/.../dto/                → ProductDto (Dto suffix)
-data/.../mapper/             → ProductMapper (toDomain/toDto)
+domain/.../domain/           → Product, Customer (no suffix)
+network/.../dto/             → ProductDto (Dto suffix)
+network/.../mapper/          → ProductMapper (toDomain/toDto)
 feature/.../model/           → ProductUi (Ui suffix)
 feature/.../mapper/          → ProductMappers (toUi)
 ```

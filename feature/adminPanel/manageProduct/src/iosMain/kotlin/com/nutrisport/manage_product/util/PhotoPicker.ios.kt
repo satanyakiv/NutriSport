@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import dev.gitlive.firebase.storage.File
+import com.nutrisport.shared.domain.PlatformFile
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 import platform.UIKit.UIImagePickerController
@@ -28,7 +28,7 @@ actual class PhotoPicker {
 
   @Composable
   actual fun InitializePhotoPicker(
-    onImageSelect: (File?) -> Unit
+    onImageSelect: (PlatformFile?) -> Unit,
   ) {
     val openPhotoPickerState by remember { openPhotoPicker }
 
@@ -72,28 +72,24 @@ actual class PhotoPicker {
     }
   }
 
-  // Delegate class implementing the necessary protocols
-  private class PickerDelegate(private val callback: (File?) -> Unit) :
+  private class PickerDelegate(private val callback: (PlatformFile?) -> Unit) :
     NSObject(),
     UIImagePickerControllerDelegateProtocol,
     UINavigationControllerDelegateProtocol {
 
-    // Override the method to handle the media picked by the user
     override fun imagePickerController(
       picker: UIImagePickerController,
-      didFinishPickingMediaWithInfo: Map<Any?, *>
+      didFinishPickingMediaWithInfo: Map<Any?, *>,
     ) {
-      // Extract the URL of the picked media
       val url = didFinishPickingMediaWithInfo[UIImagePickerControllerImageURL] as? NSURL
       if (url != null) {
-        callback(File(url))
+        callback(PlatformFile(url))
       } else {
         callback(null)
       }
       picker.dismissViewControllerAnimated(true, completion = null)
     }
 
-    // Override the method to handle the cancellation of the picker
     override fun imagePickerControllerDidCancel(picker: UIImagePickerController) {
       callback(null)
       picker.dismissViewControllerAnimated(true, completion = null)

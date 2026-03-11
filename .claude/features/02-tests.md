@@ -11,10 +11,10 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 ## Files to Create
 
 ### Mapper Tests
-- [ ] `data/src/commonTest/.../mapper/ProductMapperTest.kt`
-- [ ] `data/src/commonTest/.../mapper/CustomerMapperTest.kt`
-- [ ] `data/src/commonTest/.../mapper/CartItemMapperTest.kt`
-- [ ] `data/src/commonTest/.../mapper/OrderMapperTest.kt`
+- [ ] `network/src/commonTest/.../mapper/ProductMapperTest.kt`
+- [ ] `network/src/commonTest/.../mapper/CustomerMapperTest.kt`
+- [ ] `network/src/commonTest/.../mapper/CartItemMapperTest.kt`
+- [ ] `network/src/commonTest/.../mapper/OrderMapperTest.kt`
 - [ ] `feature/home/src/commonTest/.../mapper/ProductUiMapperTest.kt`
 - [ ] `feature/cart/src/commonTest/.../mapper/CartItemUiMapperTest.kt`
 
@@ -26,15 +26,15 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 - [ ] `feature/profile/src/commonTest/.../ProfileViewModelTest.kt`
 
 ### UseCase Tests
-- [ ] `shared/utils/src/commonTest/.../usecase/CalculateCartTotalUseCaseTest.kt`
-- [ ] `shared/utils/src/commonTest/.../usecase/EnrichCartWithProductsUseCaseTest.kt`
-- [ ] `shared/utils/src/commonTest/.../usecase/ValidateProfileFormUseCaseTest.kt`
-- [ ] `shared/utils/src/commonTest/.../usecase/SignOutUseCaseTest.kt`
-- [ ] `shared/utils/src/commonTest/.../usecase/CreateOrderUseCaseTest.kt`
-- [ ] `shared/utils/src/commonTest/.../usecase/ObserveEnrichedCartUseCaseTest.kt`
+- [ ] `domain/src/commonTest/.../usecase/CalculateCartTotalUseCaseTest.kt`
+- [ ] `domain/src/commonTest/.../usecase/EnrichCartWithProductsUseCaseTest.kt`
+- [ ] `domain/src/commonTest/.../usecase/ValidateProfileFormUseCaseTest.kt`
+- [ ] `domain/src/commonTest/.../usecase/SignOutUseCaseTest.kt`
+- [ ] `domain/src/commonTest/.../usecase/CreateOrderUseCaseTest.kt`
+- [ ] `domain/src/commonTest/.../usecase/ObserveEnrichedCartUseCaseTest.kt`
 
 ### Fake Data Factories
-- [ ] `shared/utils/src/commonTest/.../FakeData.kt` — fakeProduct(), fakeCustomer(), etc.
+- [ ] `shared/testing/src/commonMain/.../FakeData.kt` — fakeProduct(), fakeCustomer(), etc.
 
 ## Files to Modify
 
@@ -68,9 +68,9 @@ All already in convention plugins:
 ./gradlew koverVerify
 
 # Specific test classes
-./gradlew :shared:utils:allTests --tests "*CalculateCartTotalUseCaseTest"
+./gradlew :domain:allTests --tests "*CalculateCartTotalUseCaseTest"
 ./gradlew :feature:cart:allTests --tests "*CartViewModelTest"
-./gradlew :data:allTests --tests "*ProductMapperTest"
+./gradlew :network:allTests --tests "*ProductMapperTest"
 ```
 
 ## Conflict Zones

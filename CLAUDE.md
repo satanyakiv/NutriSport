@@ -29,9 +29,11 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ## Quick Reference
 
 ### Layers
-- **Domain** (`:shared:utils`) — models (no suffix), repository interfaces, use cases, `Either`/`DomainResult`/`AppError`
+- **Domain** (`:domain`) — models (no suffix), repository interfaces, use cases, `Either`/`DomainResult`/`AppError`, `NullSafety`
+- **Utilities** (`:shared:utils`) — Constants, AppConfig, FormatPrice, Log, Screen.kt (navigation routes)
 - **Shared UI** (`:shared:ui`) — composable components, `UiState`, `DisplayResult`, resources, colors, fonts
-- **Data** (`:data`) — DTOs (`Dto` suffix), mappers (`.toDomain()`), repository impls
+- **Data** (`:network`) — DTOs (`Dto` suffix), mappers (`.toDomain()`), repository impls
+- **Test Fixtures** (`:shared:testing`) — fake data factories, fake repositories
 - **Presentation** (`:feature/*`) — UI models (`Ui` suffix), mappers (`.toUi()`), ViewModels
 
 ### Error Handling

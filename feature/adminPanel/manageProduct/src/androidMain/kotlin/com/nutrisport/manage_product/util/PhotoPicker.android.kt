@@ -9,7 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dev.gitlive.firebase.storage.File
+import com.nutrisport.shared.domain.PlatformFile
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class PhotoPicker {
@@ -22,12 +22,12 @@ actual class PhotoPicker {
 
   @Composable
   actual fun InitializePhotoPicker(
-    onImageSelect: (File?) -> Unit,
+    onImageSelect: (PlatformFile?) -> Unit,
   ) {
     val pickMedia = rememberLauncherForActivityResult(
       contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-      uri?.let { onImageSelect(File(it)) } ?: onImageSelect(null)
+      uri?.let { onImageSelect(PlatformFile(it)) } ?: onImageSelect(null)
       openPhotoPicker = false
     }
 

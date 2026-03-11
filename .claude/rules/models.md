@@ -4,18 +4,18 @@
 
 | Layer       | Suffix         | Example            | Location                               |
 |-------------|----------------|--------------------|----------------------------------------|
-| Domain      | (none)         | `Product`          | `shared/utils/.../domain/Product.kt`   |
-| Data (DTO)  | `Dto`          | `ProductDto`       | `data/.../dto/ProductDto.kt`           |
-| Data Mapper | `Mapper`       | `ProductMapper`    | `data/.../mapper/ProductMapper.kt`     |
+| Domain      | (none)         | `Product`          | `domain/.../domain/Product.kt`         |
+| Data (DTO)  | `Dto`          | `ProductDto`       | `network/.../dto/ProductDto.kt`        |
+| Data Mapper | `Mapper`       | `ProductMapper`    | `network/.../mapper/ProductMapper.kt`  |
 | UI Model    | `Ui`           | `ProductUi`        | `feature/.../model/ProductUi.kt`       |
 | UI Mapper   | `ToUiMapper`   | `ProductToUiMapper` | `feature/.../mapper/ProductToUiMapper.kt` |
-| Error       | `AppError`     | `AppError.Network` | `shared/utils/.../util/AppError.kt`    |
-| Result      | `DomainResult` | `DomainResult<T>`  | `shared/utils/.../util/AppError.kt`    |
+| Error       | `AppError`     | `AppError.Network` | `domain/.../util/AppError.kt`          |
+| Result      | `DomainResult` | `DomainResult<T>`  | `domain/.../util/AppError.kt`          |
 | UI State    | `UiState`      | `UiState<T>`       | `shared/ui/.../util/UiState.kt`        |
 
 ### Mapper Rules
 
-1. **Data mappers** live in `:data` — class with `map()` method, injected into repositories.
+1. **Data mappers** live in `:network` — class with `map()` method, injected into repositories.
 2. **UI mappers** live in feature modules — class with `map()` method, injected into ViewModels.
 3. Domain models NEVER know about DTOs or UI models.
 4. Mappers are pure (no side effects), testable as standalone classes.
@@ -27,7 +27,7 @@
 
 ## Use Cases
 
-Path: `shared/utils/src/commonMain/kotlin/com/nutrisport/shared/domain/usecase/`
+Path: `domain/src/commonMain/kotlin/com/nutrisport/shared/domain/usecase/`
 
 ### Pattern
 
@@ -56,7 +56,7 @@ class SignOutUseCase(private val customerRepository: CustomerRepository) {
 2. **Pure use cases** (no deps) — instantiate directly or via `factory {}` in Koin.
 3. **Use cases with repo deps** — inject via constructor, register `factory { UseCase(get()) }`.
 4. **Use cases can compose other use cases** — inject nested use cases via constructor.
-5. **Tests** — pure unit tests in `shared/utils/src/commonTest/.../usecase/`.
+5. **Tests** — pure unit tests in `domain/src/commonTest/.../usecase/`.
 6. **Naming** — `{Action}{Entity}UseCase` (e.g., `CalculateCartTotalUseCase`).
 7. **Return DomainResult** for fallible operations, raw value for pure computations.
 

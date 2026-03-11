@@ -10,17 +10,13 @@ kotlin {
         withHostTest {}
     }
     sourceSets {
-        androidMain.dependencies {
-            implementation(project.dependencies.platform(libs.firebase.bom))
-        }
         commonMain.dependencies {
-            implementation(libs.firebase.storage)
             implementation(project(":shared:utils"))
             implementation(project(":shared:ui"))
-            implementation(project(":data"))
+            implementation(project(":domain"))
         }
         commonTest.dependencies {
-            implementation(project(":shared:test-fixtures"))
+            implementation(project(":shared:testing"))
         }
     }
 }

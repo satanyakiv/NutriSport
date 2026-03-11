@@ -19,10 +19,10 @@ No performance optimizations applied. Baseline Profiles speed up startup, `@Immu
 - [ ] `build-logic/convention/.../KmpLibraryPlugin.kt` — add compose compiler stability config
 
 ### State Classes (add @Immutable / @Stable)
-- [ ] `shared/utils/.../domain/Product.kt` — `@Immutable`
-- [ ] `shared/utils/.../domain/Customer.kt` — `@Immutable`
-- [ ] `shared/utils/.../domain/CartItem.kt` — `@Immutable`
-- [ ] `shared/utils/.../domain/Order.kt` — `@Immutable`
+- [ ] `domain/.../domain/Product.kt` — `@Immutable`
+- [ ] `domain/.../domain/Customer.kt` — `@Immutable`
+- [ ] `domain/.../domain/CartItem.kt` — `@Immutable`
+- [ ] `domain/.../domain/Order.kt` — `@Immutable`
 - [ ] `shared/ui/.../util/UiState.kt` — `@Immutable` on sealed class
 
 ### UI Model Classes
@@ -62,7 +62,7 @@ No performance optimizations applied. Baseline Profiles speed up startup, `@Immu
 
 ```bash
 # Compile check
-./gradlew :shared:utils:compileCommonMainKotlinMetadata
+./gradlew :domain:compileCommonMainKotlinMetadata
 ./gradlew assembleDebug
 
 # Compose compiler reports (check for unstable classes)

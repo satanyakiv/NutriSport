@@ -16,9 +16,10 @@ plugins {
 }
 
 dependencies {
+    kover(project(":domain"))
     kover(project(":shared:utils"))
     kover(project(":shared:ui"))
-    kover(project(":data"))
+    kover(project(":network"))
     kover(project(":database"))
     kover(project(":di"))
     kover(project(":navigation"))

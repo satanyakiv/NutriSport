@@ -41,14 +41,17 @@ None.
      androidApp --> composeApp
      composeApp --> navigation
      composeApp --> di
+     composeApp --> domain
      composeApp --> shared:utils
      composeApp --> shared:ui
      navigation --> feature modules
-     di --> data
+     di --> network
      di --> feature modules
-     data --> shared:utils
-     data --> database
+     network --> domain
+     network --> database
+     shared:ui --> domain
      shared:ui --> shared:utils
+     feature modules --> domain
      feature modules --> shared:utils
      feature modules --> shared:ui
    ```

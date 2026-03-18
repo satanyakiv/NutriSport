@@ -9,7 +9,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ci:
+              - '.github/**'
+
+      - uses: rhysd/actionlint@v1
+        if: steps.filter.outputs.ci == 'true'
+
   lint:
+    needs: actionlint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

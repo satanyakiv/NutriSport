@@ -21,8 +21,8 @@ android {
         applicationId = "com.portfolio.nutrisport"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = (findProperty("app.versionCode") as? String)?.toIntOrNull() ?: 1
+        versionName = (findProperty("app.versionName") as? String) ?: "1.0-dev"
     }
     signingConfigs {
         getByName("debug") {

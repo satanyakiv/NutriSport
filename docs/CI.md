@@ -145,7 +145,7 @@ iosApp/
 ### Android (configured)
 
 | Secret                     | Used in                    | Purpose                           |
-|----------------------------|----------------------------|-----------------------------------|
+| -------------------------- | -------------------------- | --------------------------------- |
 | `FIREBASE_APP_ID`          | `debug.yml`, `release.yml` | Firebase App Distribution app ID  |
 | `FIREBASE_SERVICE_ACCOUNT` | `debug.yml`, `release.yml` | Firebase service account JSON     |
 | `KEYSTORE_BASE64`          | `release.yml`              | Release keystore (base64-encoded) |
@@ -156,7 +156,7 @@ iosApp/
 ### iOS (not configured)
 
 | Secret                          | Used in           | Purpose                                 |
-|---------------------------------|-------------------|-----------------------------------------|
+| ------------------------------- | ----------------- | --------------------------------------- |
 | `MATCH_PASSWORD`                | `ios-release.yml` | Decryption password for Match cert repo |
 | `MATCH_GIT_BASIC_AUTH`          | `ios-release.yml` | GitHub PAT for Match cert repo access   |
 | `APP_STORE_CONNECT_KEY_ID`      | `ios-release.yml` | App Store Connect API key ID            |

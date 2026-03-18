@@ -1,0 +1,25 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Upload to TestFlight"
+  lane :beta do
+    # Завантажує certificate + provisioning profile із зашифрованого git-репо (Matchfile)
+    match(type: "appstore", readonly: true)
+
+    build_app(
+      workspace: "iosApp/iosApp.xcworkspace",
+      scheme: "iosApp",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.nutrisport.app" => "match AppStore com.nutrisport.app"
+        }
+      }
+    )
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true  # не чекати поки Apple обробить білд (~10 хв)
+    )
+  end
+end

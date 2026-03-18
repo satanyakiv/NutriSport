@@ -1,0 +1,3 @@
+app_identifier("com.nutrisport.app")   # Bundle ID застосунку
+apple_id("your@apple.id")             # Apple ID акаунту в Apple Developer Program
+team_id("XXXXXXXXXX")                 # Team ID — знаходиться в developer.apple.com → Membership

@@ -1,0 +1,62 @@
+name: iOS Release (TestFlight)
+
+# NOTE: цей workflow вимкнено — запускається тільки вручну через GitHub UI
+# Потребує: Apple Developer Account ($99/рік) + налаштованих secrets (див. нижче)
+#
+# Необхідні secrets у GitHub repo (Settings → Secrets → Actions):
+#   MATCH_PASSWORD                 — пароль від зашифрованого Match репозиторію
+#   MATCH_GIT_BASIC_AUTH           — GitHub PAT для доступу до ios-certificates репо
+#   APP_STORE_CONNECT_KEY_ID       — Key ID з App Store Connect API (appstoreconnect.apple.com)
+#   APP_STORE_CONNECT_ISSUER_ID    — Issuer ID з App Store Connect API
+#   APP_STORE_CONNECT_KEY_CONTENT  — вміст .p8 файлу в base64
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "release" to confirm iOS release'
+        required: true
+
+jobs:
+  ios-release:
+    # Подвійний захист від випадкового запуску
+    if: github.event.inputs.confirm == 'release'
+    runs-on: macos-14  # Apple Silicon раннер
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/gradle-setup
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true  # автоматично робить bundle install з Gemfile
+
+      # Компілюємо Kotlin/Native framework для реального девайса (arm64)
+      - name: Compile Kotlin/Native (iOS Device)
+        run: ./gradlew :composeApp:linkReleaseFrameworkIosArm64 --no-daemon
+
+      # Fastlane Match — завантажує certificate + provisioning profile із зашифрованого git-репо
+      - name: Setup Code Signing via Match
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTH: ${{ secrets.MATCH_GIT_BASIC_AUTH }}
+        run: bundle exec fastlane match appstore --readonly
+
+      # Збираємо підписаний .ipa через Fastlane (викликає xcodebuild під капотом)
+      - name: Build & Sign .ipa
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+        run: bundle exec fastlane beta
+
+      # Артефакт для діагностики — .ipa зберігається 7 днів
+      - name: Upload .ipa artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-release-${{ github.ref_name }}
+          path: iosApp/build/export/*.ipa
+          retention-days: 7

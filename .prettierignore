@@ -1,0 +1,12 @@
+**/build/
+.gradle/
+*.kt
+*.kts
+*.java
+*.swift
+*.xml
+*.json
+*.yaml
+*.yml
+*.plist
+*.properties

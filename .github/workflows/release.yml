@@ -8,17 +8,19 @@ on:
 jobs:
   build-release:
     runs-on: ubuntu-latest
+    environment: android-release
     steps:
-      - uses: actions/checkout@v4
+      - uses: ./.github/actions/gradle-setup
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      - uses: gradle/actions/setup-gradle@v4
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/release.keystore"
 
       - name: Build release APK
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/release.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease --no-daemon
 
       - name: Upload release APK
@@ -26,3 +28,12 @@ jobs:
         with:
           name: release-apk
           path: androidApp/build/outputs/apk/release/*.apk
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          file: androidApp/build/outputs/apk/release/androidApp-release.apk
+          groups: internal-testers
+          releaseNotes: "Release ${{ github.ref_name }}"

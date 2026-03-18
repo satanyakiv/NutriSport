@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
@@ -22,6 +24,29 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+        create("release") {
+            val props = Properties()
+            val localPropsFile = rootProject.file("local.properties")
+            if (localPropsFile.exists()) {
+                props.load(localPropsFile.inputStream())
+            }
+            val storeFilePath = props.getProperty("release.storeFile")
+                ?.takeIf { it.isNotBlank() }
+                ?: System.getenv("KEYSTORE_PATH")
+                ?: "release.keystore"
+            storeFile = file(storeFilePath)
+            storePassword = props.getProperty("release.storePassword") ?: System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = props.getProperty("release.keyAlias") ?: System.getenv("KEY_ALIAS")
+            keyPassword = props.getProperty("release.keyPassword") ?: System.getenv("KEY_PASSWORD")
+        }
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -32,11 +57,13 @@ android {
     }
     buildTypes {
         debug {
+            signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = ".debug"
             isDebuggable = true
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -58,7 +85,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":shared:utils"))
     implementation(platform(libs.firebase.bom))
-    implementation("com.google.firebase:firebase-common")
+    implementation(libs.google.firebase.common)
     implementation(libs.androidx.activity.compose)
     implementation(libs.splash.screen)
     implementation(libs.koin.android)

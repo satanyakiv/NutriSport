@@ -7,7 +7,9 @@ kotlin {
         namespace = "com.portfolio.payment_completed"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-        withHostTest {}
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
     }
     sourceSets {
         commonMain.dependencies {

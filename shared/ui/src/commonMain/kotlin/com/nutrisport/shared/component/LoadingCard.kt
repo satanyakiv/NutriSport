@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.IconPrimary
 
@@ -13,7 +14,7 @@ fun LoadingCard(
   modifier: Modifier = Modifier,
 ) {
   Box(
-    modifier = modifier,
+    modifier = modifier.testTag("loading_indicator"),
     contentAlignment = Alignment.Center,
   ) {
     CircularProgressIndicator(

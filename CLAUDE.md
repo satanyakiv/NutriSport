@@ -29,6 +29,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ## Quick Reference
 
 ### Layers
+
 - **Domain** (`:domain`) — models (no suffix), repository interfaces, use cases, `Either`/`DomainResult`/`AppError`, `NullSafety`
 - **Utilities** (`:shared:utils`) — Constants, AppConfig, FormatPrice, Log, Screen.kt (navigation routes)
 - **Shared UI** (`:shared:ui`) — composable components, `UiState`, `DisplayResult`, resources, colors, fonts
@@ -37,11 +38,13 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - **Presentation** (`:feature/*`) — UI models (`Ui` suffix), mappers (`.toUi()`), ViewModels
 
 ### Error Handling
+
 - **Domain/Data**: `DomainResult<T>` = `Either<AppError, T>` — type-safe errors
 - **Presentation**: `UiState<T>` — `Idle`, `Loading`, `Content(DomainResult<T>)`
 - **AppError**: `Network`, `NotFound`, `Unauthorized`, `Unknown`
 
 ### Key Commands
+
 ```bash
 ./gradlew :{module}:allTests --tests "*TestClass"  # run specific test
 ./gradlew :{module}:compileCommonMainKotlinMetadata # quick compile check (common)
@@ -53,20 +56,24 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ```
 
 ### Screen Pattern (Route-Screen)
+
 - **Route**: `{Feature}Route` — DI (koinViewModel), collectAsState, passes to Screen
 - **Screen**: `{Feature}Screen` — pure UI, receives state + callbacks, no DI
 - Navigation → Route → Screen
 
 ### Convention Plugins
-- `nutrisport.kmp.library` — base KMP + Compose
+
+- `nutrisport.kmp.library` — base KMP + Compose + compose.uiTest + Robolectric
 - `nutrisport.kmp.feature` — + Koin + messagebar
 - `nutrisport.kmp.feature.full` — + Coil + navigation + Ktor
 
 ### Build Gotchas
+
 - CMP Compose deps: use `ComposeExtension.dependencies` accessor, NOT direct Maven coordinates
 - Room KMP: `expect object` must declare `override fun initialize()` + `@Suppress("KotlinNoActualForExpect")`
 - `androidLibrary {}` deprecated in AGP 9.1+ → use `android {}` inside `kotlin {}`
 - KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
+- UI tests: `androidHostTest` + Robolectric (not `commonTest`) — CMP compose.uiTest needs Android context
 - Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`
 
 ## References

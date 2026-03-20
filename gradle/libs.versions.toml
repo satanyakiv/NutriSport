@@ -25,6 +25,7 @@ room = "2.8.4"
 sqlite = "2.6.2"
 ksp = "2.3.6"
 detekt = "1.23.8"
+robolectric = "4.14.1"
 messagebar = "1.0.9"
 google = "4.4.4"
 splash = "1.2.0"
@@ -79,6 +80,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 messagebar-kmp = { module = "com.stevdza-san:messagebarkmp", version.ref = "messagebar" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [bundles]
 koin-compose = ["koin-compose", "koin-compose-viewmodel"]

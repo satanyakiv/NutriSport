@@ -17,3 +17,12 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# JVM heap dumps
+*.hprof
+
+# Generated baseline profiles
+**/generated/baselineProfiles/
+
+# Firebase config for benchmark build type
+androidApp/src/benchmark/google-services.json

@@ -35,7 +35,7 @@ class AdminRepositoryImpl(
 
   override suspend fun createNewProduct(product: Product): DomainResult<Unit> {
     return try {
-      withAuth {
+      withAdminAuth {
         val dto = domainToDto.map(
           product.copy(
             title = product.title.lowercase(),
@@ -52,7 +52,7 @@ class AdminRepositoryImpl(
 
   override suspend fun uploadImageToStorage(file: PlatformFile): DomainResult<String> {
     return try {
-      withAuth {
+      withAdminAuth {
         val path = Firebase.storage.reference.child("images/${Uuid.random().toHexString()}")
         val url = withTimeout(20000) {
           path.putFile(file.toStorageFile())
@@ -109,7 +109,7 @@ class AdminRepositoryImpl(
     downloadUrl: String,
   ): DomainResult<Unit> {
     return try {
-      withAuth {
+      withAdminAuth {
         val document = productCollection.document(productId).get()
         if (document.exists) {
           productCollection.document(productId).updateFields { "thumbnail" to downloadUrl }
@@ -125,7 +125,7 @@ class AdminRepositoryImpl(
 
   override suspend fun updateProduct(product: Product): DomainResult<Unit> {
     return try {
-      withAuth {
+      withAdminAuth {
         val document = productCollection.document(product.id).get()
         if (document.exists) {
           val dto = domainToDto.map(
@@ -147,7 +147,7 @@ class AdminRepositoryImpl(
 
   override suspend fun deleteProduct(productId: String): DomainResult<Unit> {
     return try {
-      withAuth {
+      withAdminAuth {
         val document = productCollection.document(productId).get()
         if (document.exists) {
           productCollection.document(productId).delete()

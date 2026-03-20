@@ -2,6 +2,7 @@ package com.portfolio.nutrisport
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -24,6 +25,9 @@ class MainActivity : ComponentActivity() {
     )
     installSplashScreen()
     super.onCreate(savedInstanceState)
+    if (!BuildConfig.ENABLE_LOGGING) {
+      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
     initNotifier()
     requestNotificationPermission()
 

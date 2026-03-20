@@ -21,7 +21,7 @@ jobs:
             ci:
               - '.github/**'
 
-      - uses: rhysd/actionlint@v1
+      - uses: rhysd/actionlint@v1.7.11
         if: steps.filter.outputs.ci == 'true'
 
   lint:

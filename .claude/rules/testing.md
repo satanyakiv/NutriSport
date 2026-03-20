@@ -7,13 +7,13 @@
 - **Mocking:** `dev.mokkery:mokkery-plugin` (compiler plugin)
 - **Assertions:** `com.willowtreeapps.assertk:assertk`
 - **Coroutines:** `kotlinx-coroutines-test` (runTest, TestDispatcher)
-- **UI tests:** `compose.uiTest` (Compose Multiplatform, commonTest)
+- **UI tests:** `compose.uiTest` + Robolectric (androidHostTest, runs on JVM)
 - **Coverage:** `org.jetbrains.kotlinx.kover:0.9.7` (JVM/Android only)
 
 ## Test Pyramid
 
 ```
-        /  E2E  \        — compose.uiTest: critical user journeys (commonTest)
+        /  E2E  \        — compose.uiTest + Robolectric: critical user journeys (androidHostTest)
        /----------\
       / Integration \    — Repository tests with mocked data sources
      /----------------\
@@ -51,13 +51,13 @@ fun `should return products when repository succeeds`() = runTest {
 6. **Fake data factories:** `fakeProduct()`, `fakeCustomer()`, etc.
 7. **Fakes in separate files.** Fake repositories, fake data factories, test doubles — all live in dedicated files (`Fake*.kt`), not inside test classes. Test files contain only tests.
 8. **Never `./gradlew test` without `--tests` filter** — too slow.
-9. **Tests mirror source:** `src/commonTest/kotlin/` ↔ `src/commonMain/kotlin/`.
+9. **Tests mirror source:** `src/commonTest/kotlin/` ↔ `src/commonMain/kotlin/`. UI tests in `src/androidHostTest/kotlin/`.
 10. **Mappers always tested:** `toDomain()` and `toUi()` are pure — easy to test.
 
 ## What to Test
 
 | Layer      | What                              | How                        |
-|------------|-----------------------------------|----------------------------|
+| ---------- | --------------------------------- | -------------------------- |
 | ViewModel  | State transitions, error handling | Turbine + mock repository  |
 | Repository | DTO→Domain mapping, error wrap    | Mock data source           |
 | UseCases   | Business logic, validation        | Pure unit tests (no mocks) |
@@ -72,30 +72,37 @@ fun `should return products when repository succeeds`() = runTest {
 - Simple data classes without logic
 - Platform-specific code (instrumented tests if needed)
 
-## UI Tests (compose.uiTest)
+## UI Tests (compose.uiTest + Robolectric)
 
-Cross-platform in `commonTest`. Same API as Jetpack Compose Testing.
+Live in `androidHostTest` (not `commonTest`). Use Robolectric for Android context on JVM — no emulator needed, ~2-5s per module. Same Compose Testing API (`onNodeWithText`, `onNodeWithTag`, etc.).
 
 ```kotlin
 @OptIn(ExperimentalTestApi::class)
-@Test
-fun `should show error when cart is empty`() = runComposeUiTest {
-    setContent { CartScreen(state = CartState.Empty) }
-    onNodeWithTag("empty_cart_message").assertIsDisplayed()
-    onNodeWithTag("checkout_button").assertDoesNotExist()
+@RunWith(RobolectricTestRunner::class)
+class CartScreenTest {
+    @Test
+    fun `should show error when cart is empty`() = runComposeUiTest {
+        setContent { CartScreen(state = CartState.Empty) }
+        onNodeWithTag("empty_cart_message").assertIsDisplayed()
+        onNodeWithTag("checkout_button").assertDoesNotExist()
+    }
 }
 ```
 
 **Use for:** critical user flows (auth, checkout, cart operations).
 **Don't use for:** every screen — too slow, too brittle.
+**Convention plugin** adds `compose.uiTest` (commonTest) + `robolectric` (androidHostTest) automatically.
 
 ## Test Organization
 
 ```
-feature/cart/src/commonTest/kotlin/com/nutrisport/feature/cart/
+feature/cart/src/commonTest/kotlin/com/nutrisport/cart/
     CartViewModelTest.kt
     CartMapperTest.kt
     FakeCartData.kt
+
+feature/cart/src/androidHostTest/kotlin/com/nutrisport/cart/
+    CartScreenTest.kt          # UI smoke test (Robolectric)
 
 network/src/commonTest/kotlin/com/nutrisport/network/
     ProductRepositoryTest.kt
@@ -128,6 +135,7 @@ network/src/commonTest/kotlin/com/nutrisport/network/
 - Excludes: Compose-generated code, DI modules, BuildConfig
 
 **Targets:**
+
 - ViewModels: 80%+
 - Repositories: 70%+
 - Mappers: 90%+

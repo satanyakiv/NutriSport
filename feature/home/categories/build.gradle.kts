@@ -15,5 +15,8 @@ kotlin {
             implementation(project(":shared:ui"))
             implementation(project(":domain"))
         }
+        commonTest.dependencies {
+            implementation(project(":shared:testing"))
+        }
     }
 }

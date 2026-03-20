@@ -44,22 +44,22 @@ analytics → :domain only
 
 ### Clean Architecture Layers
 
-| Layer | Module | Contains |
-|-------|--------|----------|
-| Domain | `:domain` | Models, repo interfaces, use cases, `Either`/`AppError`/`DomainResult`, `NullSafety` |
-| Utilities | `:shared:utils` | Constants, AppConfig, FormatPrice, Log, Screen.kt (navigation routes) |
-| Shared UI | `:shared:ui` | Composables, `UiState`, `DisplayResult`, resources |
-| Data | `:network` | DTOs (`Dto`), mappers, repo implementations, Firebase |
-| Test Fixtures | `:shared:testing` | Fake data factories, fake repositories |
-| Presentation | `:feature/*` | UI models (`Ui`), ViewModels, Screens |
+| Layer         | Module            | Contains                                                                             |
+| ------------- | ----------------- | ------------------------------------------------------------------------------------ |
+| Domain        | `:domain`         | Models, repo interfaces, use cases, `Either`/`AppError`/`DomainResult`, `NullSafety` |
+| Utilities     | `:shared:utils`   | Constants, AppConfig, FormatPrice, Log, Screen.kt (navigation routes)                |
+| Shared UI     | `:shared:ui`      | Composables, `UiState`, `DisplayResult`, resources                                   |
+| Data          | `:network`        | DTOs (`Dto`), mappers, repo implementations, Firebase                                |
+| Test Fixtures | `:shared:testing` | Fake data factories, fake repositories                                               |
+| Presentation  | `:feature/*`      | UI models (`Ui`), ViewModels, Screens                                                |
 
 ### Convention Plugins
 
-| Plugin | Applies |
-|--------|---------|
-| `nutrisport.kmp.library` | KMP + Compose + Mokkery + Kover (iOS, jvmToolchain 21) |
-| `nutrisport.kmp.feature` | library + Koin Compose + messagebar |
-| `nutrisport.kmp.feature.full` | feature + Coil + compose-navigation + Ktor clients |
+| Plugin                        | Applies                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
+| `nutrisport.kmp.library`      | KMP + Compose + Mokkery + Kover + compose.uiTest + Robolectric (iOS, jvmToolchain 21) |
+| `nutrisport.kmp.feature`      | library + Koin Compose + messagebar                                                   |
+| `nutrisport.kmp.feature.full` | feature + Coil + compose-navigation + Ktor clients                                    |
 
 ## Rules
 

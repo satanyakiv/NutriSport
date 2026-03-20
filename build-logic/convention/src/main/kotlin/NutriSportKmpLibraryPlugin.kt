@@ -60,6 +60,16 @@ class NutriSportKmpLibraryPlugin : Plugin<Project> {
                 implementation(libs.findLibrary("kotlinx-coroutines-test").get())
                 implementation(libs.findLibrary("turbine").get())
                 implementation(libs.findLibrary("assertk").get())
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
+            }
+
+            sourceSets.configureEach {
+                if (name == "androidHostTest") {
+                    dependencies {
+                        implementation(libs.findLibrary("robolectric").get())
+                    }
+                }
             }
         }
     }

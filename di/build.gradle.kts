@@ -35,6 +35,7 @@ kotlin {
             implementation(project(":network"))
             implementation(project(":database"))
             implementation(project(":shared:utils"))
+            implementation(project(":shared:testing"))
         }
     }
 }

@@ -16,8 +16,11 @@ class NutrisportApplication : Application() {
       Napier.base(DebugAntilog())
     }
     initializeKoin(
-      config = { androidContext(this@NutrisportApplication) }
+      useFakeData = BuildConfig.USE_FAKE_DATA,
+      config = { androidContext(this@NutrisportApplication) },
     )
-    Firebase.initialize(this)
+    if (!BuildConfig.USE_FAKE_DATA) {
+      Firebase.initialize(this)
+    }
   }
 }

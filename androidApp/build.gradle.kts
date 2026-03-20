@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.baselineprofile)
 }
 
 kotlin {
@@ -61,6 +62,7 @@ android {
             applicationIdSuffix = ".debug"
             isDebuggable = true
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+            buildConfigField("Boolean", "USE_FAKE_DATA", "false")
         }
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -71,6 +73,14 @@ android {
                 "proguard-rules.pro",
             )
             buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+            buildConfigField("Boolean", "USE_FAKE_DATA", "false")
+        }
+        create("benchmark") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+            buildConfigField("Boolean", "USE_FAKE_DATA", "true")
         }
     }
     compileOptions {
@@ -91,4 +101,10 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.napier)
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(project(":benchmark"))
+}
+
+baselineProfile {
+    dexLayoutOptimization = true
 }

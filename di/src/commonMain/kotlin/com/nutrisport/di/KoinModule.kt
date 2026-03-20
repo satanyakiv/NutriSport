@@ -21,26 +21,33 @@ import org.koin.core.module.Module
 expect val targetModule: Module
 
 fun initializeKoin(
+  useFakeData: Boolean = false,
   config: (KoinApplication.() -> Unit)? = null,
 ) {
   startKoin {
     config?.invoke(this)
     modules(
-      targetModule,
-      domainModule,
-      databaseModule,
-      networkModule,
-      authModule,
-      homeModule,
-      profileModule,
-      detailsModule,
-      productsOverviewModule,
-      cartModule,
-      checkoutModule,
-      paymentModule,
-      categorySearchModule,
-      adminPanelModule,
-      manageProductModule,
+      buildList {
+        add(targetModule)
+        add(domainModule)
+        if (useFakeData) {
+          add(fakeNetworkModule)
+        } else {
+          add(databaseModule)
+          add(networkModule)
+        }
+        add(authModule)
+        add(homeModule)
+        add(profileModule)
+        add(detailsModule)
+        add(productsOverviewModule)
+        add(cartModule)
+        add(checkoutModule)
+        add(paymentModule)
+        add(categorySearchModule)
+        add(adminPanelModule)
+        add(manageProductModule)
+      },
     )
   }
 }

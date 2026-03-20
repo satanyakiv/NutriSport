@@ -1,6 +1,6 @@
 # 11 — Performance Optimization
 
-Status: IDLE
+Status: IN_PROGRESS
 Group: D (sequence: 11→12)
 Depends on: none
 
@@ -10,30 +10,46 @@ No performance optimizations applied. Baseline Profiles speed up startup, `@Immu
 
 ## Files to Create
 
-- [ ] `androidApp/.../BaselineProfileGenerator.kt` — (androidTest) baseline profile generator
-- [ ] `androidApp/src/main/baseline-prof.txt` — generated baseline profile rules
+- [x] `benchmark/.../BaselineProfileGenerator.kt` — macrobenchmark baseline profile generator (created in `:benchmark` module)
+- [x] `benchmark/.../StartupBenchmarks.kt` — startup timing benchmarks (cold/warm/hot)
+- [x] `androidApp/src/release/generated/baselineProfiles/baseline-prof.txt` — generated baseline profile rules (1.9 MB, real device)
+- [x] `di/.../FakeNetworkModule.kt` — Koin module with fake repos for benchmark build type
+- [x] `shared/testing/.../FakeAdminRepository.kt` — fake AdminRepository
 
 ## Files to Modify
 
-### Convention Plugins (Compose stability)
+### Build Config (Baseline Profile infra)
+
+- [x] `androidApp/build.gradle.kts` — benchmark build type + baselineprofile plugin
+- [x] `build.gradle.kts` + `settings.gradle.kts` — `:benchmark` module registration
+- [x] `gradle/libs.versions.toml` — profileinstaller, benchmark-macro, uiautomator
+- [x] `di/KoinModule.kt` — `useFakeData` param, conditional fake/real modules
+- [x] `NutrisportApplication.kt` — conditional Firebase init
+
+### Convention Plugins (Compose stability) — NOT STARTED
+
 - [ ] `build-logic/convention/.../KmpLibraryPlugin.kt` — add compose compiler stability config
 
-### State Classes (add @Immutable / @Stable)
+### State Classes (add @Immutable / @Stable) — NOT STARTED
+
 - [ ] `domain/.../domain/Product.kt` — `@Immutable`
 - [ ] `domain/.../domain/Customer.kt` — `@Immutable`
 - [ ] `domain/.../domain/CartItem.kt` — `@Immutable`
 - [ ] `domain/.../domain/Order.kt` — `@Immutable`
 - [ ] `shared/ui/.../util/UiState.kt` — `@Immutable` on sealed class
 
-### UI Model Classes
+### UI Model Classes — NOT STARTED
+
 - [ ] `feature/*/model/*Ui.kt` — `@Immutable` on all UI models
 
-### Screen Composables (use ImmutableList)
+### Screen Composables (use ImmutableList) — NOT STARTED
+
 - [ ] `feature/home/.../HomeScreen.kt` — `ImmutableList<ProductUi>` in params
 - [ ] `feature/cart/.../CartScreen.kt` — `ImmutableList<CartItemUi>` in params
 - [ ] ViewModels — `.toImmutableList()` when emitting state
 
-### Compose Compiler Reports
+### Compose Compiler Reports — NOT STARTED
+
 - [ ] `build-logic/convention/` — enable compose compiler metrics/reports in debug
 
 ## Dependencies (libs)

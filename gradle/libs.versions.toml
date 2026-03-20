@@ -26,6 +26,10 @@ sqlite = "2.6.2"
 ksp = "2.3.6"
 detekt = "1.23.8"
 robolectric = "4.16"
+profileinstaller = "1.4.1"
+benchmark-macro = "1.5.0-alpha04"
+uiautomator = "2.3.0"
+baselineprofile = "1.5.0-alpha04"
 messagebar = "1.0.9"
 google = "4.4.4"
 splash = "1.2.0"
@@ -81,6 +85,9 @@ androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.r
 
 messagebar-kmp = { module = "com.stevdza-san:messagebarkmp", version.ref = "messagebar" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
+benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmark-macro" }
+uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
 
 [bundles]
 koin-compose = ["koin-compose", "koin-compose-viewmodel"]
@@ -101,3 +108,4 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }

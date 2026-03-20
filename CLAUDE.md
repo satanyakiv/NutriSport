@@ -11,6 +11,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - [Conventions](.claude/rules/conventions.md) — code style, Compose, coroutines, Git
 - [Prompts](.claude/rules/prompts.md) — string resources and constants
 - [Plan Mode](.claude/rules/plan-mode.md) — feature plan files, status markers, orchestration
+- [Documentation](.claude/rules/docs.md) — docs/ file style, structure, formatting conventions
 
 ## Commands
 

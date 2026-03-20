@@ -2,7 +2,7 @@
 
 Status: IMPLEMENTED
 Group: D (sequence: 11→12)
-Depends on: 11-performance
+Depends on: 11-performance (NOTE: 11 is still IN_PROGRESS — Baseline Profile done, Compose stability pending. Detekt was implemented ahead of schedule since its changes don't conflict with the remaining @Immutable work.)
 
 ## Context
 

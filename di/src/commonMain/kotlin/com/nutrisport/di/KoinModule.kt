@@ -1,6 +1,8 @@
 package com.nutrisport.di
 
 import com.nutrisport.admin_panel.di.adminPanelModule
+import com.nutrisport.analytics.core.di.analyticsCoreModule
+import com.nutrisport.analytics.firebase.di.analyticsFirebaseModule
 import com.nutrisport.auth.di.authModule
 import com.nutrisport.cart.di.cartModule
 import com.nutrisport.checkout.di.checkoutModule
@@ -29,12 +31,14 @@ fun initializeKoin(
     modules(
       buildList {
         add(targetModule)
+        add(analyticsCoreModule)
         add(domainModule)
         if (useFakeData) {
           add(fakeNetworkModule)
         } else {
           add(databaseModule)
           add(networkModule)
+          add(analyticsFirebaseModule)
         }
         add(authModule)
         add(homeModule)

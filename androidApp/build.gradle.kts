@@ -90,6 +90,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":analytics:core"))
+    implementation(project(":analytics:firebase"))
     implementation(project(":composeApp"))
     implementation(project(":di"))
     implementation(project(":domain"))

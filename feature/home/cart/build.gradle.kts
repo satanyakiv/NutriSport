@@ -13,7 +13,6 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":analytics:core"))
             implementation(project(":shared:utils"))
             implementation(project(":shared:ui"))
             implementation(project(":domain"))

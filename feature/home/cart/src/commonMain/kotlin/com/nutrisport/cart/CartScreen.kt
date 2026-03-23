@@ -29,7 +29,7 @@ import rememberMessageBarState
 fun CartScreen(
   cartItems: UiState<List<com.nutrisport.cart.model.CartItemUi>>,
   onUpdateQuantity: (String, Int, () -> Unit, (String) -> Unit) -> Unit,
-  onDeleteItem: (String, String, () -> Unit, (String) -> Unit) -> Unit,
+  onDeleteItem: (String, () -> Unit, (String) -> Unit) -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
 
@@ -77,7 +77,6 @@ fun CartScreen(
                 onDeleteClick = {
                   onDeleteItem(
                     cartItemUi.cartItemId,
-                    cartItemUi.title,
                     {},
                     { messageBarState.addError(it) },
                   )

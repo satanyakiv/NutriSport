@@ -5,8 +5,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.himanshoe.tracey.navigation.rememberTraceyNavController
 import com.nutrisport.admin_panel.AdminPanelRoute
 import com.nutrisport.auth.component.AuthRoute
 import com.nutrisport.checkout.CheckoutRoute
@@ -21,7 +21,7 @@ import com.portfolio.payment_completed.PaymentCompletedRoute
 
 @Composable
 fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
-  val navController = rememberNavController()
+  val navController = rememberTraceyNavController()
 
   NavHost(
     navController = navController,

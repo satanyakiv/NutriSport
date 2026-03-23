@@ -10,12 +10,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.himanshoe.tracey.TraceyHost
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
 import com.nutrisport.navigation.SetupNavGraph
 import com.nutrisport.shared.Constants
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.navigation.Screen
+import com.nutrisport.shared.util.AppConfig
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -38,9 +40,13 @@ fun AppContent() {
       modifier = Modifier.fillMaxSize(),
       visible = appReady
     ) {
-      SetupNavGraph(
-        startDestination = startDestination
-      )
+      if (AppConfig.isDebug) {
+        TraceyHost {
+          SetupNavGraph(startDestination = startDestination)
+        }
+      } else {
+        SetupNavGraph(startDestination = startDestination)
+      }
     }
   }
 }

@@ -11,6 +11,17 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__claude-in-mobile__get_logs",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_OUTPUT\" | grep -q 'FATAL EXCEPTION\\|Process.*has died\\|CRASH'; then echo '[Tracey] Crash detected! Pull dump: adb pull /data/data/com.portfolio.nutrisport.debug/files/tracey/ ./tracey-dumps/'; fi"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "permission_prompt",

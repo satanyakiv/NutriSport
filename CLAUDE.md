@@ -20,6 +20,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/clean-arch <module>` — Clean Architecture compliance check
 - `/debug-deps <error>` — dependency/build crash debugger (**USE THIS for any build/compile error**)
 - `/security-audit` — OWASP Mobile Security audit (secrets, auth, encryption, permissions)
+- `/debug-crash <dump.json>` — analyze Tracey crash dump, correlate with code, suggest fix
 
 ## Skills
 
@@ -27,6 +28,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/new-feature <name>` — scaffold feature module with full boilerplate
 - `/kover-analyze [module]` — coverage analysis and prioritized recommendations
 - `/orchestrate-features <cmd>` — parallel feature development orchestration
+- `/replay-session <dump.json>` — reconstruct user journey from Tracey dump, identify failure point
 
 ## Quick Reference
 

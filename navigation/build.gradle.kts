@@ -14,6 +14,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization)
             implementation(libs.compose.navigation)
+            implementation(libs.tracey.navigation)
 
             implementation(project(":feature:auth"))
             implementation(project(":feature:home"))

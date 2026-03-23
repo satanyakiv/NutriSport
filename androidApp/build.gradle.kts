@@ -114,6 +114,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.napier)
+    implementation(libs.tracey)
     implementation(libs.androidx.profileinstaller)
     baselineProfile(project(":benchmark"))
 }

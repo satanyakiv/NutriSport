@@ -1,6 +1,6 @@
 # 03 — README with Architecture Diagram
 
-Status: IDLE
+Status: IMPLEMENTED
 Group: A
 Depends on: none
 

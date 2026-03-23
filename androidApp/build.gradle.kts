@@ -1,5 +1,13 @@
 import java.util.Properties
 
+val localProps = Properties().apply {
+    val localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) load(localPropsFile.inputStream())
+}
+val googleWebClientId: String = localProps.getProperty("GOOGLE_WEB_CLIENT_ID")
+    ?: System.getenv("GOOGLE_WEB_CLIENT_ID")
+    ?: ""
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
@@ -63,6 +71,7 @@ android {
             isDebuggable = true
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
             buildConfigField("Boolean", "USE_FAKE_DATA", "false")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${googleWebClientId}\"")
         }
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -74,6 +83,7 @@ android {
             )
             buildConfigField("Boolean", "ENABLE_LOGGING", "false")
             buildConfigField("Boolean", "USE_FAKE_DATA", "false")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${googleWebClientId}\"")
         }
         create("benchmark") {
             initWith(getByName("release"))
@@ -81,6 +91,7 @@ android {
             matchingFallbacks += listOf("release")
             isDebuggable = false
             buildConfigField("Boolean", "USE_FAKE_DATA", "true")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${googleWebClientId}\"")
         }
     }
     compileOptions {

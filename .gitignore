@@ -24,5 +24,10 @@ node_modules/
 # Generated baseline profiles
 **/generated/baselineProfiles/
 
-# Firebase config for benchmark build type
-androidApp/src/benchmark/google-services.json
+# Firebase config files (distributed via CI secrets)
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Keystores and signing
+*.keystore
+*.jks

@@ -7,6 +7,7 @@ import com.nutrisport.analytics.core.DebugAnalyticsProcessor
 import com.nutrisport.analytics.core.NutriSportAnalytics
 import com.nutrisport.analytics.firebase.FirebaseAnalyticsProcessor
 import com.nutrisport.di.initializeKoin
+import com.nutrisport.shared.Constants
 import com.nutrisport.shared.util.AppConfig
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
@@ -16,6 +17,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 class NutrisportApplication : Application() {
   override fun onCreate() {
     super.onCreate()
+    Constants.initGoogleClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
     if (AppConfig.enableLogging) {
       Napier.base(DebugAntilog())
     }

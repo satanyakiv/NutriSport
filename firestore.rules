@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if the authenticated user has isAdmin = true
+    function isAdmin() {
+      return request.auth != null
+        && get(/databases/$(database)/documents/customer/$(request.auth.uid)/privateData/role).data.isAdmin == true;
+    }
+
+    // Customer profile — only owner can read/write their own document
+    match /customer/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      // Private role data — read only (write restricted to backend/Cloud Functions)
+      match /privateData/{doc} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+
+    // Products — anyone authenticated can read, only admins can write
+    match /product/{productId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Orders — only the owning customer can read/write
+    match /order/{orderId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == resource.data.customerId;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.customerId;
+    }
+  }
+}

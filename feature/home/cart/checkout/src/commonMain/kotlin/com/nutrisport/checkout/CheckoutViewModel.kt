@@ -156,7 +156,7 @@ class CheckoutViewModel(
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
-    Napier.d("Creating order for customer=${screenState.id} cartSize=${screenState.cart.size}")
+    Napier.d("Creating order cartSize=${screenState.cart.size}")
     createOrderUseCase(
       customerId = screenState.id,
       cartItems = screenState.cart,

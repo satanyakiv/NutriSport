@@ -6,7 +6,7 @@ import com.himanshoe.tracey.Tracey
 import com.himanshoe.tracey.TraceyConfig
 import com.himanshoe.tracey.TraceyHost
 import com.himanshoe.tracey.navigation.rememberTraceyNavController
-import com.himanshoe.tracey.reporter.LogcatReporter
+import com.himanshoe.tracey.reporter.builtin.LogcatReporter
 import com.nutrisport.navigation.debug.DebugToolkit
 
 /** Debug instrumentation backed by Tracey session recorder. */

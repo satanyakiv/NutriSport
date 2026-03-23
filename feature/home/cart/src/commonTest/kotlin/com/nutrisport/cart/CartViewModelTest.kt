@@ -9,6 +9,7 @@ import com.nutrisport.shared.domain.usecase.EnrichCartWithProductsUseCase
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
 import com.nutrisport.shared.test.FakeCustomerRepository
 import com.nutrisport.shared.test.FakeProductRepository
+import com.nutrisport.shared.test.TestCoroutineDispatcherProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -36,7 +37,7 @@ class CartViewModelTest {
     }
 
     private val fakeCustomerRepo = FakeCustomerRepository()
-    private val fakeAnalytics = NutriSportAnalyticsImpl()
+    private val fakeAnalytics = NutriSportAnalyticsImpl(TestCoroutineDispatcherProvider(testDispatcher))
 
     private fun createViewModel(): CartViewModel {
         val enrichUseCase = EnrichCartWithProductsUseCase()

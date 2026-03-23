@@ -28,7 +28,9 @@
 - Repositories return `Flow<T>` (cold streams)
 - One-shot operations return `suspend fun`
 - Never use `GlobalScope`
-- Use `Dispatchers.IO` only in network/data layer, never in ViewModels
+- Never hardcode `Dispatchers.*` — inject `CoroutineDispatcherProvider` via constructor
+- `CoroutineDispatcherProvider` interface in `:domain`, `DefaultCoroutineDispatcherProvider` for production
+- In tests: `TestCoroutineDispatcherProvider(testDispatcher)` from `:shared:testing`
 
 ## Koin
 

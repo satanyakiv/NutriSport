@@ -1,9 +1,12 @@
 package com.nutrisport.analytics.core
 
-import kotlinx.coroutines.Dispatchers
+import com.nutrisport.shared.domain.coroutine.CoroutineDispatcherProvider
+import com.nutrisport.shared.domain.coroutine.DefaultCoroutineDispatcherProvider
 import kotlinx.coroutines.withContext
 
-class NutriSportAnalyticsImpl : NutriSportAnalytics {
+class NutriSportAnalyticsImpl(
+  private val dispatcherProvider: CoroutineDispatcherProvider = DefaultCoroutineDispatcherProvider,
+) : NutriSportAnalytics {
 
   private val processors = mutableMapOf<String, AnalyticsProcessor>()
 
@@ -12,7 +15,7 @@ class NutriSportAnalyticsImpl : NutriSportAnalytics {
   }
 
   override suspend fun logEvent(event: AnalyticsEvent) {
-    withContext(Dispatchers.Default) {
+    withContext(dispatcherProvider.default()) {
       processors.values.forEach { it.logEvent(event) }
     }
   }

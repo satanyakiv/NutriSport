@@ -86,6 +86,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `androidLibrary {}` deprecated in AGP 9.1+ → use `android {}` inside `kotlin {}`
 - KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
 - UI tests: `androidHostTest` + Robolectric (not `commonTest`) — CMP compose.uiTest needs Android context
+- Never hardcode `Dispatchers.*` — inject `CoroutineDispatcherProvider`. Hardcoded dispatchers cause flaky tests
 - Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`
 - Debug deps: never `implementation(libs.tracey)` in KMP modules — use `debugImplementation` in androidApp + `DebugToolkit`
 - `DebugModuleProvider` must exist in BOTH `src/debug/` AND `src/release/` (same class, different impl)

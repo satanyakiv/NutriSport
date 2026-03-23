@@ -2,6 +2,8 @@ package com.nutrisport.cart
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.nutrisport.analytics.core.NutriSportAnalyticsImpl
+import com.nutrisport.cart.analytics.CartAnalyticsInteractor
 import com.nutrisport.cart.mapper.CartItemToUiMapper
 import com.nutrisport.shared.domain.usecase.EnrichCartWithProductsUseCase
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
@@ -34,12 +36,18 @@ class CartViewModelTest {
     }
 
     private val fakeCustomerRepo = FakeCustomerRepository()
+    private val fakeAnalytics = NutriSportAnalyticsImpl()
 
     private fun createViewModel(): CartViewModel {
         val enrichUseCase = EnrichCartWithProductsUseCase()
         val fakeProductRepo = FakeProductRepository()
         val observeUseCase = ObserveEnrichedCartUseCase(fakeCustomerRepo, fakeProductRepo, enrichUseCase)
-        return CartViewModel(fakeCustomerRepo, observeUseCase, CartItemToUiMapper())
+        return CartViewModel(
+            fakeCustomerRepo,
+            observeUseCase,
+            CartItemToUiMapper(),
+            CartAnalyticsInteractor(fakeAnalytics),
+        )
     }
 
     @Test
@@ -70,7 +78,7 @@ class CartViewModelTest {
         val viewModel = createViewModel()
         var successCalled = false
 
-        viewModel.deleteCartItem("cart-1", onSuccess = { successCalled = true }, onError = {})
+        viewModel.deleteCartItem("cart-1", "Whey Protein", onSuccess = { successCalled = true }, onError = {})
         advanceUntilIdle()
 
         assertThat(successCalled).isEqualTo(true)
@@ -82,7 +90,7 @@ class CartViewModelTest {
         val viewModel = createViewModel()
         var errorMessage: String? = null
 
-        viewModel.deleteCartItem("cart-1", onSuccess = {}, onError = { errorMessage = it })
+        viewModel.deleteCartItem("cart-1", "Whey Protein", onSuccess = {}, onError = { errorMessage = it })
         advanceUntilIdle()
 
         assertThat(errorMessage).isEqualTo("Delete failed")

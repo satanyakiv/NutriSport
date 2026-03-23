@@ -21,7 +21,7 @@ class CartScreenTest {
       CartScreen(
         cartItems = UiState.Content(Either.Right(emptyList())),
         onUpdateQuantity = { _, _, _, _ -> },
-        onDeleteItem = { _, _, _ -> },
+        onDeleteItem = { _, _, _, _ -> },
       )
     }
 
@@ -49,7 +49,7 @@ class CartScreenTest {
       CartScreen(
         cartItems = UiState.Content(Either.Right(items)),
         onUpdateQuantity = { _, _, _, _ -> },
-        onDeleteItem = { _, _, _ -> },
+        onDeleteItem = { _, _, _, _ -> },
       )
     }
 
@@ -62,7 +62,7 @@ class CartScreenTest {
       CartScreen(
         cartItems = UiState.Loading,
         onUpdateQuantity = { _, _, _, _ -> },
-        onDeleteItem = { _, _, _ -> },
+        onDeleteItem = { _, _, _, _ -> },
       )
     }
 

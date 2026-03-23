@@ -4,14 +4,15 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.nutrisport.analytics"
+        namespace = "com.nutrisport.analytics.core"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         withHostTest {}
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared:utils"))
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.koin.core)
         }
     }
 }

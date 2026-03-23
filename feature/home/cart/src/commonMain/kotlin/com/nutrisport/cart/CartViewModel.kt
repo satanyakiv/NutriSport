@@ -2,6 +2,7 @@ package com.nutrisport.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nutrisport.cart.analytics.CartAnalyticsInteractor
 import com.nutrisport.cart.mapper.CartItemToUiMapper
 import com.nutrisport.cart.model.CartItemUi
 import com.nutrisport.shared.domain.CustomerRepository
@@ -17,6 +18,7 @@ class CartViewModel(
   private val customerRepository: CustomerRepository,
   private val observeEnrichedCartUseCase: ObserveEnrichedCartUseCase,
   private val cartItemToUiMapper: CartItemToUiMapper,
+  private val cartAnalytics: CartAnalyticsInteractor,
 ) : ViewModel() {
   val cartItems = observeEnrichedCartUseCase()
     .map<_, UiState<List<CartItemUi>>> { result ->
@@ -50,6 +52,7 @@ class CartViewModel(
 
   fun deleteCartItem(
     id: String,
+    productName: String,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
   ) {
@@ -58,7 +61,10 @@ class CartViewModel(
         id = id,
       ).fold(
         ifLeft = { error -> onError(error.message) },
-        ifRight = { onSuccess() },
+        ifRight = {
+          cartAnalytics.logRemoveFromCart(productId = id, productName = productName)
+          onSuccess()
+        },
       )
     }
   }

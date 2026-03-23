@@ -17,3 +17,17 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# JVM heap dumps
+*.hprof
+
+# Generated baseline profiles
+**/generated/baselineProfiles/
+
+# Firebase config files (distributed via CI secrets)
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Keystores and signing
+*.keystore
+*.jks

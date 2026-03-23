@@ -19,6 +19,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/refactor <scope>` — safe refactoring with test-first approach
 - `/clean-arch <module>` — Clean Architecture compliance check
 - `/debug-deps <error>` — dependency/build crash debugger (**USE THIS for any build/compile error**)
+- `/security-audit` — OWASP Mobile Security audit (secrets, auth, encryption, permissions)
 
 ## Skills
 

@@ -57,6 +57,17 @@
 - compileSdk/minSdk stay in each module (AGP limitation in precompiled plugins)
 - Modules with `composeResources/` need `android { androidResources.enable = true }` (CMP-9547; `androidLibrary {}` deprecated in AGP 9.1+)
 
+## Debug Dependencies
+
+- Debug-only libraries (Tracey, LeakCanary, etc.) — `debugImplementation` in `androidApp` only
+- Never import debug libraries in `commonMain` — use `DebugToolkit` interface
+- `DebugToolkit` interface in `:navigation` — polymorphic debug behavior (Strategy pattern)
+- `NoOpDebugToolkit` — default release/iOS implementation
+- Build-type source sets (`src/debug/`, `src/release/`) for variant-specific code
+- `DebugModuleProvider` in `androidApp` source sets — Koin modules per build type
+- `initializeKoin(additionalModules = DebugModuleProvider.modules)` — wires debug DI
+- No `if (isDebug)` guards for debug tools — use polymorphism
+
 ## Error Handling
 
 - Use `DomainResult<T>` (`Either<AppError, T>`) in domain/data layers

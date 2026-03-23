@@ -1,4 +1,4 @@
-package com.nutrisport.data.reporter
+package com.portfolio.nutrisport
 
 import com.himanshoe.tracey.Tracey
 import com.himanshoe.tracey.model.ReplayPayload

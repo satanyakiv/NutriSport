@@ -47,8 +47,6 @@ kotlin {
 
             api(libs.kmp.notifier)
 
-            implementation(libs.tracey)
-
             implementation(project(":analytics:core"))
             implementation(project(":analytics:firebase"))
             implementation(project(":navigation"))

@@ -3,14 +3,11 @@ package com.portfolio.nutrisport
 import android.app.Application
 import com.google.firebase.Firebase
 import com.google.firebase.initialize
-import com.himanshoe.tracey.Tracey
-import com.himanshoe.tracey.TraceyConfig
-import com.himanshoe.tracey.reporter.LogcatReporter
 import com.nutrisport.analytics.core.DebugAnalyticsProcessor
 import com.nutrisport.analytics.core.NutriSportAnalytics
 import com.nutrisport.analytics.firebase.FirebaseAnalyticsProcessor
-import com.nutrisport.data.reporter.ClaudeReporter
 import com.nutrisport.di.initializeKoin
+import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.shared.Constants
 import com.nutrisport.shared.util.AppConfig
 import io.github.aakira.napier.DebugAntilog
@@ -27,30 +24,14 @@ class NutrisportApplication : Application() {
     }
     initializeKoin(
       useFakeData = BuildConfig.USE_FAKE_DATA,
+      additionalModules = DebugModuleProvider.modules,
       config = { androidContext(this@NutrisportApplication) },
     )
     if (!BuildConfig.USE_FAKE_DATA) {
       Firebase.initialize(this)
     }
-    initTracey()
+    getKoin().get<DebugToolkit>().initialize()
     initAnalytics()
-  }
-
-  private fun initTracey() {
-    if (AppConfig.isDebug) {
-      Tracey.install(
-        TraceyConfig(
-          enabled = true,
-          showOverlay = true,
-          bufferDurationSeconds = 30,
-          maxEvents = 500,
-          trackLifecycle = true,
-          generateHtmlReport = true,
-          reporters = listOf(LogcatReporter(), ClaudeReporter()),
-          redactedTags = listOf("credit_card", "password"),
-        ),
-      )
-    }
   }
 
   private fun initAnalytics() {

@@ -72,7 +72,12 @@ class CustomerRepositoryImpl(
 
   override suspend fun signOut(): DomainResult<Unit> {
     return try {
+      val userId = currentUserId()
       Firebase.auth.signOut()
+      if (userId != null) {
+        customerDao.deleteById(userId)
+        cartItemDao.deleteAllByCustomerId(userId)
+      }
       Either.Right(Unit)
     } catch (e: Exception) {
       Either.Left(AppError.Network("Error while signing out: ${e.message}"))

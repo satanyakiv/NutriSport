@@ -7,6 +7,7 @@ import com.nutrisport.shared.util.Either
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.Query
+import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
@@ -17,6 +18,24 @@ internal fun currentUserId(): String? = Firebase.auth.currentUser?.uid
 internal inline fun <T> withAuth(action: (userId: String) -> DomainResult<T>): DomainResult<T> {
   val userId = currentUserId()
   return if (userId != null) action(userId) else Either.Left(AppError.Unauthorized())
+}
+
+internal suspend inline fun <T> withAdminAuth(
+  action: (userId: String) -> DomainResult<T>,
+): DomainResult<T> {
+  val userId = currentUserId() ?: return Either.Left(AppError.Unauthorized())
+  val isAdmin = try {
+    Firebase.firestore
+      .collection("customer")
+      .document(userId)
+      .collection("privateData")
+      .document("role")
+      .get()
+      .get<Boolean>("isAdmin")
+  } catch (_: Exception) {
+    false
+  }
+  return if (isAdmin) action(userId) else Either.Left(AppError.Unauthorized("Admin access required"))
 }
 
 internal fun Query.toProductDtoListFlow(

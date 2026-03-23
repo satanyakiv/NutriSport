@@ -26,6 +26,7 @@ sqlite = "2.6.2"
 ksp = "2.3.6"
 detekt = "1.23.8"
 robolectric = "4.16"
+tracey = "0.0.2-RC"
 profileinstaller = "1.4.1"
 benchmark-macro = "1.5.0-alpha04"
 uiautomator = "2.3.0"
@@ -85,6 +86,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 messagebar-kmp = { module = "com.stevdza-san:messagebarkmp", version.ref = "messagebar" }
+tracey = { module = "com.himanshoe:tracey", version.ref = "tracey" }
+tracey-navigation = { module = "com.himanshoe:tracey-navigation", version.ref = "tracey" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmark-macro" }

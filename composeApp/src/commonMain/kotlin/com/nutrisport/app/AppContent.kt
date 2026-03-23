@@ -1,4 +1,4 @@
-package com.nutrisport.data
+package com.nutrisport.app
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
 import com.nutrisport.navigation.SetupNavGraph
+import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.shared.Constants
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.navigation.Screen
@@ -23,6 +24,7 @@ import org.koin.compose.koinInject
 @Preview
 fun AppContent() {
   MaterialTheme {
+    val debugToolkit = koinInject<DebugToolkit>()
     val customerRepository = koinInject<CustomerRepository>()
     val isUserAuthenticated = remember { customerRepository.getCurrentUserId() != null }
     val startDestination = remember { if (isUserAuthenticated) Screen.HomeGraph else Screen.Auth }
@@ -38,9 +40,9 @@ fun AppContent() {
       modifier = Modifier.fillMaxSize(),
       visible = appReady
     ) {
-      SetupNavGraph(
-        startDestination = startDestination
-      )
+      debugToolkit.WrapRootContent {
+        SetupNavGraph(startDestination = startDestination)
+      }
     }
   }
 }

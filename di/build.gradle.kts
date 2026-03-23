@@ -33,6 +33,7 @@ kotlin {
             implementation(project(":feature:adminPanel:manageProduct"))
             implementation(project(":analytics:core"))
             implementation(project(":analytics:firebase"))
+            implementation(project(":navigation"))
             implementation(project(":domain"))
             implementation(project(":network"))
             implementation(project(":database"))

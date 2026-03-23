@@ -75,6 +75,7 @@ analytics → :domain only
 10. **Convention plugins** — always use them. Never duplicate plugin config.
 11. **DTOs never leak** outside `:network`. Map to domain before returning.
 12. **Domain models never leak** into Composables. Map to UI models.
+13. **Debug-only deps via `DebugToolkit`** — never `if (isDebug)` in commonMain. Strategy pattern + DI.
 
 ## Naming
 
@@ -96,6 +97,7 @@ analytics → :domain only
 6. Register ViewModel in `di/KoinModule.kt`
 7. Add module to `settings.gradle.kts`
 8. Add deps: `implementation(project(":domain"))` + `implementation(project(":shared:utils"))` + `implementation(project(":shared:ui"))`
+9. If feature needs debug-only behavior → implement via `DebugToolkit`, not `if (isDebug)`
 
 ## Related
 

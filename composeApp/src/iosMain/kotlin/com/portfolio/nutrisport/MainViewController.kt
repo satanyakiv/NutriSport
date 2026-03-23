@@ -4,7 +4,7 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.nutrisport.analytics.core.DebugAnalyticsProcessor
 import com.nutrisport.analytics.core.NutriSportAnalytics
 import com.nutrisport.analytics.firebase.FirebaseAnalyticsProcessor
-import com.nutrisport.data.AppContent
+import com.nutrisport.app.AppContent
 import com.nutrisport.di.initializeKoin
 import com.nutrisport.shared.util.AppConfig
 import io.github.aakira.napier.DebugAntilog

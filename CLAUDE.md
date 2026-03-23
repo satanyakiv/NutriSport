@@ -20,6 +20,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/clean-arch <module>` — Clean Architecture compliance check
 - `/debug-deps <error>` — dependency/build crash debugger (**USE THIS for any build/compile error**)
 - `/security-audit` — OWASP Mobile Security audit (secrets, auth, encryption, permissions)
+- `/debug-crash <dump.json>` — analyze Tracey crash dump, correlate with code, suggest fix
 
 ## Skills
 
@@ -27,6 +28,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/new-feature <name>` — scaffold feature module with full boilerplate
 - `/kover-analyze [module]` — coverage analysis and prioritized recommendations
 - `/orchestrate-features <cmd>` — parallel feature development orchestration
+- `/replay-session <dump.json>` — reconstruct user journey from Tracey dump, identify failure point
 
 ## Quick Reference
 
@@ -69,6 +71,14 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `nutrisport.kmp.feature` — + Koin + messagebar
 - `nutrisport.kmp.feature.full` — + Coil + navigation + Ktor
 
+### Debug Tooling (Strategy Pattern)
+
+- **DebugToolkit** interface in `:navigation` — polymorphic debug behavior
+- **NoOpDebugToolkit** — release/iOS default (no-op)
+- **TraceyDebugToolkit** — debug: Tracey session recording (`androidApp/src/debug/`)
+- **DebugModuleProvider** — Koin modules per build type (`src/debug/` vs `src/release/`)
+- Add new debug tools → only modify `androidApp/src/debug/`, zero changes in common
+
 ### Build Gotchas
 
 - CMP Compose deps: use `ComposeExtension.dependencies` accessor, NOT direct Maven coordinates
@@ -76,7 +86,10 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `androidLibrary {}` deprecated in AGP 9.1+ → use `android {}` inside `kotlin {}`
 - KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
 - UI tests: `androidHostTest` + Robolectric (not `commonTest`) — CMP compose.uiTest needs Android context
+- Never hardcode `Dispatchers.*` — inject `CoroutineDispatcherProvider`. Hardcoded dispatchers cause flaky tests
 - Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`
+- Debug deps: never `implementation(libs.tracey)` in KMP modules — use `debugImplementation` in androidApp + `DebugToolkit`
+- `DebugModuleProvider` must exist in BOTH `src/debug/` AND `src/release/` (same class, different impl)
 
 ## References
 

@@ -104,6 +104,7 @@ dependencies {
     implementation(project(":analytics:core"))
     implementation(project(":analytics:firebase"))
     implementation(project(":composeApp"))
+    implementation(project(":navigation"))
     implementation(project(":di"))
     implementation(project(":domain"))
     implementation(project(":shared:utils"))
@@ -114,6 +115,9 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.napier)
+    debugImplementation(libs.tracey)
+    debugImplementation(libs.tracey.navigation)
+    debugImplementation(libs.compose.navigation)
     implementation(libs.androidx.profileinstaller)
     baselineProfile(project(":benchmark"))
 }

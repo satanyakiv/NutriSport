@@ -7,6 +7,7 @@ import com.nutrisport.analytics.core.DebugAnalyticsProcessor
 import com.nutrisport.analytics.core.NutriSportAnalytics
 import com.nutrisport.analytics.firebase.FirebaseAnalyticsProcessor
 import com.nutrisport.di.initializeKoin
+import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.shared.Constants
 import com.nutrisport.shared.util.AppConfig
 import io.github.aakira.napier.DebugAntilog
@@ -23,11 +24,13 @@ class NutrisportApplication : Application() {
     }
     initializeKoin(
       useFakeData = BuildConfig.USE_FAKE_DATA,
+      additionalModules = DebugModuleProvider.modules,
       config = { androidContext(this@NutrisportApplication) },
     )
     if (!BuildConfig.USE_FAKE_DATA) {
       Firebase.initialize(this)
     }
+    getKoin().get<DebugToolkit>().initialize()
     initAnalytics()
   }
 

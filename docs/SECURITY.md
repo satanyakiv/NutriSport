@@ -37,7 +37,7 @@ Security measures applied to NutriSport, mapped to OWASP Mobile Top-10 (2024).
 - Added `**/google-services.json`, `**/GoogleService-Info.plist`, `*.keystore`, `*.jks` to `.gitignore`
 - Moved `GOOGLE_WEB_CLIENT_ID` from hardcoded `Constants.kt` to `local.properties` + `BuildConfig`
 - CI workflows inject Firebase configs from GitHub Secrets at build time
-- Created `local.properties.example` and `google-services.json.example` for developer onboarding
+- Created `local.properties.example` for developer onboarding
 
 **Files:** `.gitignore`, `Constants.kt`, `androidApp/build.gradle.kts`, `NutrisportApplication.kt`, CI workflows
 

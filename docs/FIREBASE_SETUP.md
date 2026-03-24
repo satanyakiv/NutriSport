@@ -70,19 +70,65 @@ Storage rules at `storage.rules` restrict image uploads to admin users only. Max
 
 ## Firebase Config Files
 
-Firebase config files (`google-services.json`, `GoogleService-Info.plist`) are **not committed to git**. They must be:
+Firebase config files (`google-services.json`, `GoogleService-Info.plist`) are **not committed to git**. They are distributed via:
 
-1. **Local development:** Place files manually in the expected paths
+1. **Local development:** Stored in `~/Documents/NutriSport/`, copied into the project by a setup script
 2. **CI/CD:** Injected from GitHub Secrets (`GOOGLE_SERVICES_JSON`, `GOOGLE_SERVICE_INFO_PLIST`)
 
-### Expected File Locations
+### Local Development Setup
+
+Source-of-truth files live outside the repository in `~/Documents/NutriSport/`:
 
 ```
-androidApp/google-services.json              — default (fallback)
+~/Documents/NutriSport/
+  debug/
+    google-services.json            — Android debug (com.portfolio.nutrisport.debug)
+    GoogleService-Info.plist         — iOS debug
+  release/
+    google-services.json            — Android release (com.portfolio.nutrisport)
+    GoogleService-Info.plist         — iOS release
+  benchmark/
+    google-services.json            — Android benchmark
+```
+
+**First-time setup:**
+
+1. Create the directory structure:
+   ```bash
+   mkdir -p ~/Documents/NutriSport/{debug,release,benchmark}
+   ```
+2. Download `google-services.json` from [Firebase Console](https://console.firebase.google.com/) (Project Settings > Your apps) for each build variant, or get them from a team member
+3. Place files in the corresponding directories
+4. Run the setup script:
+   ```bash
+   ./scripts/setup-firebase.sh
+   ```
+
+**After `git clean -fdx` or fresh clone** — re-run the script:
+
+```bash
+./scripts/setup-firebase.sh
+```
+
+**Check mode** — verify files are in place without copying:
+
+```bash
+./scripts/setup-firebase.sh --check
+```
+
+### Expected Project Locations
+
+The setup script copies files to these paths:
+
+```
+androidApp/google-services.json              — default (fallback, copy of release)
 androidApp/src/debug/google-services.json    — debug build type
 androidApp/src/release/google-services.json  — release build type
+androidApp/src/benchmark/google-services.json — benchmark build type
 iosApp/iosApp/GoogleService-Info.plist       — iOS app
 ```
+
+All paths are in `.gitignore` — they never appear in `git status`.
 
 ## Related
 

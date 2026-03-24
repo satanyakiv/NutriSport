@@ -2,7 +2,7 @@ package com.nutrisport.navigation.debug
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.rememberNavController as composeRememberNavController
 
 /** Default implementation with no debug instrumentation. Used in release builds and iOS. */
 class NoOpDebugToolkit : DebugToolkit {
@@ -10,7 +10,7 @@ class NoOpDebugToolkit : DebugToolkit {
 
   @Composable
   override fun rememberNavController(): NavHostController =
-    rememberNavController()
+    composeRememberNavController()
 
   @Composable
   override fun WrapRootContent(content: @Composable () -> Unit) = content()

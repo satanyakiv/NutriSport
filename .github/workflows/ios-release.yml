@@ -24,7 +24,7 @@ jobs:
     runs-on: macos-14  # Apple Silicon раннер
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: ./.github/actions/gradle-setup
 
@@ -55,7 +55,7 @@ jobs:
       # Артефакт для діагностики — .ipa зберігається 7 днів
       - name: Upload .ipa artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ios-release-${{ github.ref_name }}
           path: iosApp/build/export/*.ipa

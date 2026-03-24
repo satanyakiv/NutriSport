@@ -75,7 +75,7 @@ analytics → :domain only
 10. **Convention plugins** — always use them. Never duplicate plugin config.
 11. **DTOs never leak** outside `:network`. Map to domain before returning.
 12. **Domain models never leak** into Composables. Map to UI models.
-13. **Debug-only deps via `DebugToolkit`** — never `if (isDebug)` in commonMain. Strategy pattern + DI.
+13. **Build-type deps via Strategy pattern** — never `if (isDebug)` or `if (USE_FAKE_DATA)` in Application/commonMain. Use polymorphic implementations per source set (`src/debug/`, `src/release/`, `src/benchmark/`) wired through `DebugModuleProvider`. Examples: `DebugToolkit`, `FirebaseConfigurator`.
 
 ## Naming
 
@@ -97,7 +97,7 @@ analytics → :domain only
 6. Register ViewModel in `di/KoinModule.kt`
 7. Add module to `settings.gradle.kts`
 8. Add deps: `implementation(project(":domain"))` + `implementation(project(":shared:utils"))` + `implementation(project(":shared:ui"))`
-9. If feature needs debug-only behavior → implement via `DebugToolkit`, not `if (isDebug)`
+9. If feature needs build-type-specific behavior → implement via Strategy pattern (`DebugToolkit`, `FirebaseConfigurator`), not `if (isDebug)`. See [Conventions](conventions.md#build-type-dependencies-strategy-pattern)
 
 ## Related
 

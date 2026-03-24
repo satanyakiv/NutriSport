@@ -59,16 +59,34 @@
 - compileSdk/minSdk stay in each module (AGP limitation in precompiled plugins)
 - Modules with `composeResources/` need `android { androidResources.enable = true }` (CMP-9547; `androidLibrary {}` deprecated in AGP 9.1+)
 
-## Debug Dependencies
+## Build-Type Dependencies (Strategy Pattern)
+
+**Rule: use polymorphism instead of `if/else` for build-type-specific behavior.** No `if (isDebug)`, `if (USE_FAKE_DATA)`, or `BuildConfig.*` checks in `Application.onCreate()` — delegate to Strategy implementations per build type.
+
+### Pattern
+
+1. **Interface** in `androidApp/src/main/` (Android-only) or `:navigation/commonMain/` (KMP) — defines contract
+2. **NoOp implementation** alongside interface — default for builds that don't need the feature
+3. **Build-type implementations** in `androidApp/src/{debug,release,benchmark}/` — concrete behavior
+4. **Wiring** via `DebugModuleProvider` (exists in each source set) — registers impl in Koin
+5. **Usage** in `Application.onCreate()` — `getKoin().get<Interface>().method()` — polymorphic call
+
+### Existing Strategies
+
+| Interface              | Debug                     | Release                     | Benchmark                | Location               |
+| ---------------------- | ------------------------- | --------------------------- | ------------------------ | ---------------------- |
+| `DebugToolkit`         | TraceyDebugToolkit        | NoOpDebugToolkit            | NoOpDebugToolkit         | `:navigation` (KMP)    |
+| `FirebaseConfigurator` | DebugFirebaseConfigurator | ReleaseFirebaseConfigurator | NoOpFirebaseConfigurator | `androidApp/src/main/` |
+
+### Rules
 
 - Debug-only libraries (Tracey, LeakCanary, etc.) — `debugImplementation` in `androidApp` only
-- Never import debug libraries in `commonMain` — use `DebugToolkit` interface
-- `DebugToolkit` interface in `:navigation` — polymorphic debug behavior (Strategy pattern)
-- `NoOpDebugToolkit` — default release/iOS implementation
-- Build-type source sets (`src/debug/`, `src/release/`) for variant-specific code
-- `DebugModuleProvider` in `androidApp` source sets — Koin modules per build type
-- `initializeKoin(additionalModules = DebugModuleProvider.modules)` — wires debug DI
-- No `if (isDebug)` guards for debug tools — use polymorphism
+- Never import debug libraries in `commonMain` — use Strategy interface
+- Build-type source sets: `src/debug/`, `src/release/`, `src/benchmark/` for variant-specific code
+- `DebugModuleProvider` in each source set — Koin modules per build type
+- `initializeKoin(additionalModules = DebugModuleProvider.modules)` — wires DI
+- Adding new build-type behavior → create new Strategy, add to `DebugModuleProvider`, call polymorphically
+- Koin `getOrNull<T>()` for optional dependencies (e.g., `FirebaseAnalyticsProcessor` absent in benchmark)
 
 ## Error Handling
 

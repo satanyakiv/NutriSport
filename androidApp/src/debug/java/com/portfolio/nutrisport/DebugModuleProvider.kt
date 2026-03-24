@@ -7,5 +7,6 @@ import org.koin.dsl.module
 object DebugModuleProvider {
   val modules: List<Module> = listOf(
     module { single<DebugToolkit> { TraceyDebugToolkit() } },
+    module { single<FirebaseConfigurator> { DebugFirebaseConfigurator() } },
   )
 }

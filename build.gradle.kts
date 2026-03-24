@@ -14,7 +14,6 @@ plugins {
     alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.baselineprofile) apply false
-    alias(libs.plugins.firebase.crashlytics) apply false
 }
 
 dependencies {

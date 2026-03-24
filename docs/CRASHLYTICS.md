@@ -38,26 +38,32 @@ Firebase Crashlytics SDK (auto-capture)
 
 ### SDK Setup
 
-Crashlytics is wired in 4 files:
+Crashlytics is wired in 3 files:
 
 ```
 gradle/libs.versions.toml       — plugin version + library entry
-build.gradle.kts (root)          — plugin declaration (apply false)
 androidApp/build.gradle.kts      — plugin applied + dependency
-androidApp/.../NutrisportApplication.kt — collection toggle
+androidApp/.../NutrisportApplication.kt — via FirebaseConfigurator (Strategy pattern)
 ```
 
-### Collection Toggle
+> Note: Crashlytics plugin is NOT declared in root `build.gradle.kts` — only in `androidApp`. Root declaration causes "Google-Services plugin not found" error.
+
+### Collection Toggle (via FirebaseConfigurator Strategy)
+
+Firebase initialization and Crashlytics configuration use the Strategy pattern — zero `if/else` in `NutrisportApplication`:
 
 ```kotlin
-// In NutrisportApplication.onCreate(), after Firebase.initialize():
-FirebaseCrashlytics.getInstance()
-    .setCrashlyticsCollectionEnabled(!AppConfig.isDebug)
+// NutrisportApplication.onCreate():
+getKoin().get<FirebaseConfigurator>().initialize(this)
 ```
 
-- **Debug builds** (`com.portfolio.nutrisport.debug`): collection **disabled** — avoids polluting dashboard with development noise
-- **Release builds** (`com.portfolio.nutrisport`): collection **enabled** — all crashes auto-reported
-- **Benchmark builds**: Firebase not initialized (`USE_FAKE_DATA = true`)
+| Build Type | Implementation                | Firebase Init | Crashlytics                               |
+| ---------- | ----------------------------- | ------------- | ----------------------------------------- |
+| debug      | `DebugFirebaseConfigurator`   | Yes           | **Disabled** — avoids polluting dashboard |
+| release    | `ReleaseFirebaseConfigurator` | Yes           | **Enabled** — all crashes auto-reported   |
+| benchmark  | `NoOpFirebaseConfigurator`    | No            | No — isolated from Firebase               |
+
+Implementations live in `androidApp/src/{debug,release,benchmark}/`, wired via `DebugModuleProvider`.
 
 ### Mapping Files (Deobfuscation)
 

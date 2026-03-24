@@ -8,6 +8,6 @@ import org.koin.dsl.module
 object DebugModuleProvider {
   val modules: List<Module> = listOf(
     module { single<DebugToolkit> { NoOpDebugToolkit() } },
-    module { single<FirebaseConfigurator> { ReleaseFirebaseConfigurator() } },
+    module { single<FirebaseConfigurator> { NoOpFirebaseConfigurator() } },
   )
 }

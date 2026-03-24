@@ -1,9 +1,6 @@
 package com.portfolio.nutrisport
 
 import android.app.Application
-import com.google.firebase.Firebase
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.initialize
 import com.nutrisport.analytics.core.DebugAnalyticsProcessor
 import com.nutrisport.analytics.core.NutriSportAnalytics
 import com.nutrisport.analytics.firebase.FirebaseAnalyticsProcessor
@@ -28,11 +25,7 @@ class NutrisportApplication : Application() {
       additionalModules = DebugModuleProvider.modules,
       config = { androidContext(this@NutrisportApplication) },
     )
-    if (!BuildConfig.USE_FAKE_DATA) {
-      Firebase.initialize(this)
-      FirebaseCrashlytics.getInstance()
-        .setCrashlyticsCollectionEnabled(!AppConfig.isDebug)
-    }
+    getKoin().get<FirebaseConfigurator>().initialize(this)
     getKoin().get<DebugToolkit>().initialize()
     initAnalytics()
   }
@@ -44,8 +37,7 @@ class NutrisportApplication : Application() {
         .setEnabled(AppConfig.isDebug)
         .setLoggingEnabled(AppConfig.isDebug),
     )
-    if (!BuildConfig.USE_FAKE_DATA) {
-      val firebaseProcessor = getKoin().get<FirebaseAnalyticsProcessor>()
+    getKoin().getOrNull<FirebaseAnalyticsProcessor>()?.let { firebaseProcessor ->
       analytics.addProcessor(
         firebaseProcessor
           .setEnabled(!AppConfig.isDebug)

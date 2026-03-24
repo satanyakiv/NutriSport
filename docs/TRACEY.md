@@ -244,7 +244,7 @@ adb pull /data/data/com.portfolio.nutrisport.debug/files/tracey/ ./tracey-dumps/
 - **Tracey iOS support** — library is Android-only as of 0.0.2-RC; iOS uses `NoOpDebugToolkit`
 - **Network request recording** — Tracey captures UI events only, not HTTP traffic
 - **Screenshot replay** — `screenshotPng` is captured but not rendered in HTML report yet
-- **Production crash reporting** — Tracey is debug-only; use Firebase Crashlytics for production
+- **Production crash reporting** — Tracey is debug-only; production crashes are handled by [Firebase Crashlytics](CRASHLYTICS.md) with automated analysis via `/debug-crash-live`
 
 ## Related
 

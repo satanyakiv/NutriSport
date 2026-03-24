@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.baselineprofile)
 }
 
@@ -110,6 +111,7 @@ dependencies {
     implementation(project(":shared:utils"))
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.common)
+    implementation(libs.google.firebase.crashlytics)
     implementation(libs.androidx.activity.compose)
     implementation(libs.splash.screen)
     implementation(libs.koin.android)

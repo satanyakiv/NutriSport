@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$TOOL_OUTPUT\" | grep -q 'FATAL EXCEPTION\\|Process.*has died\\|CRASH'; then echo '[Tracey] Crash detected! Pull dump: adb pull /data/data/com.portfolio.nutrisport.debug/files/tracey/ ./tracey-dumps/'; fi"
+            "command": "if echo \"$TOOL_OUTPUT\" | grep -q 'FATAL EXCEPTION\\|Process.*has died\\|CRASH'; then echo '[Tracey] Crash detected! Pull dump: adb pull /data/data/com.portfolio.nutrisport.debug/files/tracey/ ./tracey-dumps/'; echo '[Crashlytics] Check production impact: /debug-crash-live'; fi"
           }
         ]
       }

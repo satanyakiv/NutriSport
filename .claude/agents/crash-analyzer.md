@@ -77,6 +77,18 @@ Read JSON файл. Витягти:
 - Визначити чи потрібен тест (делегувати на `/gen-test`)
 - Перевірити чи фікс не перетинає architectural boundaries
 
+## Крок 5.5 — Production Impact (Crashlytics)
+
+Якщо Firebase MCP тули доступні:
+
+- `crashlytics_list_events` — пошук matching issue за exception class + top frame
+- Якщо знайдено — додати до звіту:
+  - Event count / affected users / app versions
+  - First seen → last seen (regression window)
+  - Production severity override (якщо affects >1% users → Critical)
+
+Якщо MCP недоступний — пропустити, запропонувати `/debug-crash-live`.
+
 ## Крок 6 — Report Format
 
 ````markdown

@@ -2,6 +2,7 @@ package com.portfolio.nutrisport
 
 import android.app.Application
 import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.initialize
 import com.nutrisport.analytics.core.DebugAnalyticsProcessor
 import com.nutrisport.analytics.core.NutriSportAnalytics
@@ -29,6 +30,8 @@ class NutrisportApplication : Application() {
     )
     if (!BuildConfig.USE_FAKE_DATA) {
       Firebase.initialize(this)
+      FirebaseCrashlytics.getInstance()
+        .setCrashlyticsCollectionEnabled(!AppConfig.isDebug)
     }
     getKoin().get<DebugToolkit>().initialize()
     initAnalytics()

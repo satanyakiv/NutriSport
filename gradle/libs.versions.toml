@@ -33,6 +33,7 @@ uiautomator = "2.3.0"
 baselineprofile = "1.5.0-alpha04"
 messagebar = "1.0.9"
 google = "4.4.4"
+firebase-crashlytics-plugin = "3.0.2"
 splash = "1.2.0"
 firebase-bom = "33.1.2" #don't update. kmpauth uses firebase-auth-ktx, which is absent in later bom version
 
@@ -42,6 +43,7 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 google-firebase-common = { module = "com.google.firebase:firebase-common" }
+google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "splash" }
 compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
 
@@ -107,6 +109,7 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

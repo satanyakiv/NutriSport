@@ -130,7 +130,14 @@ iosApp/iosApp/GoogleService-Info.plist       — iOS app
 
 All paths are in `.gitignore` — they never appear in `git status`.
 
+## Crashlytics
+
+Firebase Crashlytics is integrated for automatic crash reporting in production builds. Setup is minimal — Crashlytics Gradle plugin + native SDK dependency in `androidApp`, with collection disabled in debug builds.
+
+For full details see [CRASHLYTICS.md](CRASHLYTICS.md).
+
 ## Related
 
+- [Crashlytics Documentation](CRASHLYTICS.md) — crash reporting setup, MCP integration, analysis skills
 - [CI Documentation](CI.md) — CI/CD pipeline and secrets configuration
 - [Security Documentation](SECURITY.md) — security fixes and OWASP compliance

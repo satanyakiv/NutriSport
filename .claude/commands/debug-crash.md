@@ -59,6 +59,16 @@ If dump contains Tracey-generated Kotlin test (via `captureAndExportTest()`), sh
 Default: `./tracey-dumps/replay_<sessionId>.json`
 Pull from device: `adb pull /data/data/com.portfolio.nutrisport.debug/files/tracey/ ./tracey-dumps/`
 
+## Crashlytics Correlation
+
+If Firebase MCP tools are available (`crashlytics_list_events`, `crashlytics_get_issue`):
+
+- Search Crashlytics for matching crash signature (exception class + top frame)
+- If found — show production impact: event count, affected users, app versions
+- Suggest `/debug-crash-live` for full production-wide analysis
+
+This connects local Tracey dumps (debug) with production Crashlytics data (release).
+
 ## Rules
 
 - Always Read the dump file first, parse JSON

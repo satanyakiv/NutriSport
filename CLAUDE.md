@@ -21,6 +21,7 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/debug-deps <error>` — dependency/build crash debugger (**USE THIS for any build/compile error**)
 - `/security-audit` — OWASP Mobile Security audit (secrets, auth, encryption, permissions)
 - `/debug-crash <dump.json>` — analyze Tracey crash dump, correlate with code, suggest fix
+- `/debug-crash-live [issue-id]` — live Crashlytics crash analysis via Firebase MCP
 
 ## Skills
 
@@ -78,6 +79,14 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - **TraceyDebugToolkit** — debug: Tracey session recording (`androidApp/src/debug/`)
 - **DebugModuleProvider** — Koin modules per build type (`src/debug/` vs `src/release/`)
 - Add new debug tools → only modify `androidApp/src/debug/`, zero changes in common
+
+### Crash Reporting
+
+- **Firebase Crashlytics** in `androidApp` — automatic crash capture (release only, disabled in debug)
+- **Tracey** in `androidApp/src/debug/` — flight recorder with gestures/navigation/breadcrumbs (debug only)
+- **Firebase MCP plugin** — automated crash analysis from Claude Code (`crashlytics:connect`)
+- `/debug-crash-live` — live Crashlytics analysis via MCP (production crashes)
+- `/debug-crash` — offline Tracey dump analysis (debug crashes, now with Crashlytics correlation)
 
 ### Build Gotchas
 

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: ./.github/actions/gradle-setup
 
@@ -42,7 +42,7 @@ jobs:
             --no-daemon
 
       - name: Upload release APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-apk
           path: androidApp/build/outputs/apk/release/*.apk

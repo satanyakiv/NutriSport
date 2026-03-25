@@ -26,10 +26,10 @@ fun <T> UiState<T>.DisplayResult(
   onLoading: (@Composable () -> Unit)? = null,
   onError: (@Composable (String) -> Unit)? = null,
   onSuccess: @Composable (T) -> Unit,
-  transitionSpec: ContentTransform? = scaleIn(tween(durationMillis = 400))
-    + fadeIn(tween(durationMillis = 800))
-    togetherWith scaleOut(tween(durationMillis = 400))
-    + fadeOut(
+  transitionSpec: ContentTransform? = scaleIn(tween(durationMillis = 400)) +
+    fadeIn(tween(durationMillis = 800))
+    togetherWith scaleOut(tween(durationMillis = 400)) +
+    fadeOut(
       tween(durationMillis = 800),
     ),
   backgroundColor: Color? = null,

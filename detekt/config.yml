@@ -83,6 +83,9 @@ formatting:
     autoCorrect: true
   MaximumLineLength:
     active: false
+  ChainWrapping:
+    active: true
+    autoCorrect: true
   ImportOrdering:
     active: true
     autoCorrect: true

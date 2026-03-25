@@ -31,8 +31,21 @@ android {
         applicationId = "com.portfolio.nutrisport"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = (findProperty("app.versionCode") as? String)?.toIntOrNull() ?: 1
-        versionName = (findProperty("app.versionName") as? String) ?: "1.0-dev"
+        versionCode = (findProperty("app.versionCode") as? String)
+          ?.toIntOrNull()
+            ?: providers
+              .exec { commandLine("sh", rootProject.file("scripts/git-version-code.sh").absolutePath) }
+              .standardOutput
+              .asText
+              .map { it.trim().toIntOrNull() ?: 1 }
+              .getOrElse(1)
+        versionName = (findProperty("app.versionName") as? String)
+            ?: providers
+              .exec { commandLine("sh", rootProject.file("scripts/git-version-name.sh").absolutePath) }
+                .standardOutput
+                .asText
+                .map { it.trim() }
+                .getOrElse("1.0-dev")
     }
     signingConfigs {
         getByName("debug") {

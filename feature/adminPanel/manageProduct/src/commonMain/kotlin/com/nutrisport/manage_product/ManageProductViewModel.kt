@@ -23,10 +23,10 @@ class ManageProductViewModel(
   var screenState by mutableStateOf(ManageProductState())
     private set
   val isFormValid: Boolean
-    get() = screenState.title.isNotBlank()
-      && screenState.description.isNotBlank()
-      && screenState.thumbnail.isNotEmpty()
-      && screenState.price != 0.0
+    get() = screenState.title.isNotBlank() &&
+      screenState.description.isNotBlank() &&
+      screenState.thumbnail.isNotEmpty() &&
+      screenState.price != 0.0
 
   var thumbnailUploaderState: UiState<Unit> by mutableStateOf(UiState.Idle)
     private set

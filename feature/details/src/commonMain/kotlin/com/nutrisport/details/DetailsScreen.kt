@@ -19,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nutrisport.details.component.DetailsTopBar
 import com.nutrisport.details.component.FlavorChip
+import com.nutrisport.details.component.PriceChangeBanner
 import com.nutrisport.details.component.ProductDetailsContent
+import com.nutrisport.details.component.ReconnectedPrompt
+import com.nutrisport.details.model.DetailsScreenState
 import com.nutrisport.details.model.ProductUi
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
@@ -30,20 +33,24 @@ import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
+import com.nutrisport.shared.component.OfflineBanner
 import com.nutrisport.shared.component.PrimaryButton
+import com.nutrisport.shared.domain.ConnectivityStatus
 import com.nutrisport.shared.util.DisplayResult
-import com.nutrisport.shared.util.UiState
 import rememberMessageBarState
 
 @Composable
 fun DetailsScreen(
   goBack: () -> Unit,
-  product: UiState<ProductUi>,
+  state: DetailsScreenState,
   quantity: Int,
   selectedFlavor: String?,
   onUpdateQuantity: (Int) -> Unit,
   onUpdateFlavor: (String) -> Unit,
   onAddItemToCart: (() -> Unit, (String) -> Unit) -> Unit,
+  onRefresh: () -> Unit,
+  onDismissReconnected: () -> Unit,
+  onAcknowledgePriceChange: () -> Unit,
 ) {
   val messageBarState = rememberMessageBarState()
 
@@ -57,54 +64,69 @@ fun DetailsScreen(
       )
     },
   ) { padding ->
-    product.DisplayResult(
-      onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
-      onSuccess = { selectedProduct ->
-        ContentWithMessageBar(
-          contentBackgroundColor = Surface,
-          modifier = Modifier.padding(
-            top = padding.calculateTopPadding(),
-            bottom = padding.calculateBottomPadding(),
-          ),
-          messageBarState = messageBarState,
-          errorMaxLines = 2,
-          errorContainerColor = SurfaceError,
-          errorContentColor = TextWhite,
-          successContainerColor = SurfaceBrand,
-          successContentColor = TextPrimary,
-        ) {
-          Column {
-            Column(
-              modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp)
-                .padding(top = 12.dp),
-            ) {
-              ProductDetailsContent(product = selectedProduct)
-            }
-            BottomSection(
-              product = selectedProduct,
-              selectedFlavor = selectedFlavor,
-              onUpdateFlavor = onUpdateFlavor,
-              onAddToCart = {
-                onAddItemToCart(
-                  { messageBarState.addSuccess("Product added to cart.") },
-                  { message -> messageBarState.addError(message) },
+    Column(modifier = Modifier.padding(top = padding.calculateTopPadding())) {
+      if (state.connectivity == ConnectivityStatus.Unavailable) {
+        OfflineBanner()
+      }
+      ReconnectedPrompt(
+        visible = state.showReconnectedPrompt,
+        onRefresh = onRefresh,
+      )
+      state.product.DisplayResult(
+        onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
+        onSuccess = { selectedProduct ->
+          ContentWithMessageBar(
+            contentBackgroundColor = Surface,
+            modifier = Modifier.padding(
+              bottom = padding.calculateBottomPadding(),
+            ),
+            messageBarState = messageBarState,
+            errorMaxLines = 2,
+            errorContainerColor = SurfaceError,
+            errorContentColor = TextWhite,
+            successContainerColor = SurfaceBrand,
+            successContentColor = TextPrimary,
+          ) {
+            Column {
+              if (selectedProduct.previousPrice != null) {
+                PriceChangeBanner(
+                  previousPrice = selectedProduct.previousPrice,
+                  currentPrice = selectedProduct.formattedPrice,
+                  isPriceIncrease = selectedProduct.isPriceIncrease,
                 )
-              },
-            )
+              }
+              Column(
+                modifier = Modifier
+                  .weight(1f)
+                  .verticalScroll(rememberScrollState())
+                  .padding(horizontal = 24.dp)
+                  .padding(top = 12.dp),
+              ) {
+                ProductDetailsContent(product = selectedProduct)
+              }
+              BottomSection(
+                product = selectedProduct,
+                selectedFlavor = selectedFlavor,
+                onUpdateFlavor = onUpdateFlavor,
+                onAddToCart = {
+                  onAddItemToCart(
+                    { messageBarState.addSuccess("Product added to cart.") },
+                    { message -> messageBarState.addError(message) },
+                  )
+                },
+              )
+            }
           }
-        }
-      },
-      onError = { message ->
-        InfoCard(
-          image = Resources.Image.Cat,
-          title = "Oops!",
-          subtitle = message,
-        )
-      },
-    )
+        },
+        onError = { message ->
+          InfoCard(
+            image = Resources.Image.Cat,
+            title = "Oops!",
+            subtitle = message,
+          )
+        },
+      )
+    }
   }
 }
 

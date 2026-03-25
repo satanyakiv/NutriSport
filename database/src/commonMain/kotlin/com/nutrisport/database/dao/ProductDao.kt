@@ -27,8 +27,17 @@ interface ProductDao {
   @Query("SELECT * FROM products WHERE category = :category")
   fun observeByCategory(category: String): Flow<List<ProductEntity>>
 
+  @Query("SELECT * FROM products WHERE id = :id")
+  suspend fun getById(id: String): ProductEntity?
+
+  @Query("SELECT * FROM products WHERE id IN (:ids)")
+  suspend fun getByIds(ids: List<String>): List<ProductEntity>
+
   @Upsert
   suspend fun upsertAll(products: List<ProductEntity>)
+
+  @Query("UPDATE products SET previouslyKnownPrice = NULL WHERE id = :id")
+  suspend fun clearPreviousPrice(id: String)
 
   @Query("DELETE FROM products")
   suspend fun deleteAll()

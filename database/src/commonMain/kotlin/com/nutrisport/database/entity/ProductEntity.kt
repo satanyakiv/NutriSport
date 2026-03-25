@@ -17,4 +17,5 @@ data class ProductEntity(
   val isPopular: Boolean,
   val isDiscounted: Boolean,
   val isNew: Boolean,
+  val previouslyKnownPrice: Double? = null,
 )

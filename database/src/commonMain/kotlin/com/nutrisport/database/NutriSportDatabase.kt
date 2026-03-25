@@ -22,7 +22,7 @@ import com.nutrisport.database.entity.ProductEntity
     CartItemEntity::class,
     OrderEntity::class,
   ],
-  version = 1,
+  version = 2,
 )
 @TypeConverters(Converters::class)
 @ConstructedBy(NutriSportDatabaseConstructor::class)

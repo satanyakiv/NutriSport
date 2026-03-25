@@ -1,6 +1,7 @@
 package com.nutrisport.shared
 
 import nutrisport.shared.ui.generated.resources.Res
+import nutrisport.shared.ui.generated.resources.ic_alert_triangle
 import nutrisport.shared.ui.generated.resources.ic_back_arrow
 import nutrisport.shared.ui.generated.resources.ic_book
 import nutrisport.shared.ui.generated.resources.ic_cat
@@ -56,7 +57,7 @@ object Resources {
     val VerticalMenu = Res.drawable.ic_vertical_menu
     val Delete = Res.drawable.ic_delete
 
-    //        val Warning = Res.drawable.ic_warning
+    val AlertTriangle = Res.drawable.ic_alert_triangle
     val Weight = Res.drawable.ic_weight
   }
 

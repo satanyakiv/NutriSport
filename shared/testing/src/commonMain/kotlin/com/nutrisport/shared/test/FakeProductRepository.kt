@@ -20,6 +20,8 @@ class FakeProductRepository : ProductRepository {
     flowOf(Either.Right(emptyList()))
   var productsByCategoryFlow: Flow<DomainResult<List<Product>>> =
     flowOf(Either.Right(emptyList()))
+  var refreshResult: DomainResult<Product> = Either.Right(fakeProduct())
+  var acknowledgedProductIds: MutableList<String> = mutableListOf()
 
   override fun readDiscountedProducts() = discountedProducts
   override fun readNewProducts() = newProducts
@@ -31,4 +33,10 @@ class FakeProductRepository : ProductRepository {
   override fun readProductsByIdsFlow(ids: List<String>) = productsByIdsFlow
 
   override fun readProductsByCategoryFlow(category: ProductCategory) = productsByCategoryFlow
+
+  override suspend fun refreshProductById(id: String): DomainResult<Product> = refreshResult
+
+  override suspend fun acknowledgePriceChange(productId: String) {
+    acknowledgedProductIds.add(productId)
+  }
 }

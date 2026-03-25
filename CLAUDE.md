@@ -56,3 +56,4 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ## References
 
 - [Testing Patterns](.claude/references/testing-patterns.md) — Fake repos, test recipes, pitfalls
+- [Offline-First Architecture](docs/OFFLINE_FIRST.md) — SSOT, ConnectivityObserver, sync vs refresh, price tracking

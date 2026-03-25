@@ -22,6 +22,7 @@ data class Product(
   val isPopular: Boolean = false,
   val isDiscounted: Boolean = false,
   val isNew: Boolean = false,
+  val previouslyKnownPrice: Double? = null,
 )
 
 enum class ProductCategory(val title: String) {

@@ -13,4 +13,6 @@ data class ProductUi(
   val isPopular: Boolean,
   val isDiscounted: Boolean,
   val isNew: Boolean,
+  val previousPrice: String? = null,
+  val isPriceIncrease: Boolean = false,
 )

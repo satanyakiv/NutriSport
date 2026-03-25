@@ -86,13 +86,40 @@ class ProductRepositoryImpl(
       .catch { emit(Either.Left(AppError.Network("Error while reading products: ${it.message}"))) }
   }
 
+  override suspend fun refreshProductById(id: String): DomainResult<Product> {
+    return try {
+      val document = productCollection.document(id).get()
+      if (document.exists) {
+        val dto = firebaseMapper.map(document)
+        val currentEntity = productDao.getById(id)
+        val entity = dtoToEntity.map(dto, currentEntity)
+        productDao.upsertAll(listOf(entity))
+        Either.Right(entityToDomain.map(entity))
+      } else {
+        Either.Left(AppError.NotFound("Product $id not found"))
+      }
+    } catch (e: Exception) {
+      Napier.e("Error refreshing product $id: ${e.message}")
+      Either.Left(AppError.Network("Failed to refresh product: ${e.message}"))
+    }
+  }
+
+  override suspend fun acknowledgePriceChange(productId: String) {
+    productDao.clearPreviousPrice(productId)
+  }
+
   private fun syncFromFirebase(query: () -> Query) {
     if (currentUserId() == null) return
     syncScope.launch {
       try {
         query().snapshots.collect { snapshot ->
           val dtos = snapshot.documents.map { firebaseMapper.map(it) }
-          productDao.upsertAll(dtoToEntity.map(dtos))
+          val ids = dtos.map { it.id }
+          val currentEntities = productDao.getByIds(ids).associateBy { it.id }
+          val entities = dtos.map { dto ->
+            dtoToEntity.map(dto, currentEntities[dto.id])
+          }
+          productDao.upsertAll(entities)
         }
       } catch (e: Exception) {
         Napier.e("Firebase sync error: ${e.message}")
@@ -107,7 +134,8 @@ class ProductRepositoryImpl(
         productCollection.document(id).snapshots.collect { document ->
           if (document.exists) {
             val dto = firebaseMapper.map(document)
-            productDao.upsertAll(listOf(dtoToEntity.map(dto)))
+            val currentEntity = productDao.getById(id)
+            productDao.upsertAll(listOf(dtoToEntity.map(dto, currentEntity)))
           }
         }
       } catch (e: Exception) {
@@ -127,7 +155,14 @@ class ProductRepositoryImpl(
             .map { query -> query.documents.map { firebaseMapper.map(it) } }
         }
         combine(chunkFlows) { arrays -> arrays.toList().flatten() }
-          .collect { dtos -> productDao.upsertAll(dtoToEntity.map(dtos)) }
+          .collect { dtos ->
+            val dtoIds = dtos.map { it.id }
+            val currentEntities = productDao.getByIds(dtoIds).associateBy { it.id }
+            val entities = dtos.map { dto ->
+              dtoToEntity.map(dto, currentEntities[dto.id])
+            }
+            productDao.upsertAll(entities)
+          }
       } catch (e: Exception) {
         Napier.e("Firebase sync error: ${e.message}")
       }

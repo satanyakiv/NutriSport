@@ -6,7 +6,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class ProductDtoToEntityMapper {
-  fun map(dto: ProductDto): ProductEntity = ProductEntity(
+  fun map(
+    dto: ProductDto,
+    currentEntity: ProductEntity? = null,
+  ): ProductEntity = ProductEntity(
     id = dto.id,
     createdAt = dto.createdAt,
     title = dto.title,
@@ -19,7 +22,17 @@ class ProductDtoToEntityMapper {
     isPopular = dto.isPopular,
     isDiscounted = dto.isDiscounted,
     isNew = dto.isNew,
+    previouslyKnownPrice = resolvePreviousPrice(dto.price, currentEntity),
   )
 
   fun map(dtos: List<ProductDto>): List<ProductEntity> = dtos.map { map(it) }
+
+  private fun resolvePreviousPrice(
+    newPrice: Double,
+    currentEntity: ProductEntity?,
+  ): Double? {
+    if (currentEntity == null) return null
+    if (currentEntity.price == newPrice) return currentEntity.previouslyKnownPrice
+    return currentEntity.price
+  }
 }

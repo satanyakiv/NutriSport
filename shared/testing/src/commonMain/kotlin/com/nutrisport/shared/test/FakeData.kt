@@ -17,6 +17,7 @@ fun fakeProduct(
   isPopular: Boolean = false,
   isDiscounted: Boolean = false,
   isNew: Boolean = false,
+  previouslyKnownPrice: Double? = null,
 ) = Product(
   id = id,
   title = title,
@@ -29,6 +30,7 @@ fun fakeProduct(
   isPopular = isPopular,
   isDiscounted = isDiscounted,
   isNew = isNew,
+  previouslyKnownPrice = previouslyKnownPrice,
 )
 
 fun fakeCustomer(

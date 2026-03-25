@@ -10,4 +10,5 @@ data class CartItemUi(
   val unitPrice: Double,
   val formattedUnitPrice: String,
   val formattedTotalPrice: String,
+  val formattedPreviousUnitPrice: String? = null,
 )

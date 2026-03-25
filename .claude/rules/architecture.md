@@ -10,12 +10,12 @@ NutriSport is a KMP (Kotlin Multiplatform) project targeting Android + iOS.
 androidApp          — Android entry point (Activity, Application)
 composeApp          — Shared KMP UI entry (AppContent)
 navigation          — NavHost + type-safe routing (SetupNavGraph)
-domain              — Pure domain layer: models, repo interfaces, use cases, Either, AppError, NullSafety
+domain              — Pure domain layer: models, repo interfaces, use cases, Either, AppError, NullSafety, ConnectivityObserver
 shared/utils        — App utilities: Constants, AppConfig, FormatPrice, Log, Screen.kt (routes)
 shared/ui           — Shared UI: composable components, UiState, DisplayResult, resources
 shared/testing      — Test fixtures: fake data factories, fake repositories
-network             — Data layer: Firebase repos, DTOs, mappers to domain
-database            — Room KMP: entities, DAOs, local cache
+network             — Data layer: Firebase repos, DTOs, mappers to domain, ConnectivityObserver impls
+database            — Room KMP: entities, DAOs, local cache, migrations
 di                  — Koin DI configuration (sharedModule + platform modules)
 analytics           — Abstract analytics tracking (CompositeTracker)
 feature/*           — Presentation layer: ViewModels, Screens, UI models

@@ -18,6 +18,7 @@ class ProductEntityToDomainMapper {
     isPopular = entity.isPopular,
     isDiscounted = entity.isDiscounted,
     isNew = entity.isNew,
+    previouslyKnownPrice = entity.previouslyKnownPrice,
   )
 
   fun map(entities: List<ProductEntity>): List<Product> = entities.map { map(it) }

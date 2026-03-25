@@ -10,4 +10,6 @@ interface ProductRepository {
   fun readProductByIdFlow(id: String): Flow<DomainResult<Product>>
   fun readProductsByIdsFlow(ids: List<String>): Flow<DomainResult<List<Product>>>
   fun readProductsByCategoryFlow(category: ProductCategory): Flow<DomainResult<List<Product>>>
+  suspend fun refreshProductById(id: String): DomainResult<Product>
+  suspend fun acknowledgePriceChange(productId: String)
 }

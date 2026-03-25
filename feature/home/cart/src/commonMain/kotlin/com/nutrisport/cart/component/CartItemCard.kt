@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -34,6 +35,7 @@ import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
+import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
@@ -116,15 +118,32 @@ fun CartItemCard(
       }
       Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
       ) {
-        Text(
-          text = cartItemUi.formattedUnitPrice,
-          fontSize = FontSize.EXTRA_REGULAR,
-          color = TextSecondary,
-          fontWeight = FontWeight.Medium,
-          maxLines = 1
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          if (cartItemUi.formattedPreviousUnitPrice != null) {
+            Text(
+              text = cartItemUi.formattedPreviousUnitPrice,
+              fontSize = FontSize.SMALL,
+              color = TextPrimary.copy(alpha = 0.5f),
+              textDecoration = TextDecoration.LineThrough,
+              maxLines = 1,
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+          }
+          Text(
+            text = cartItemUi.formattedUnitPrice,
+            fontSize = FontSize.EXTRA_REGULAR,
+            color = if (cartItemUi.formattedPreviousUnitPrice != null) {
+              SurfaceError
+            } else {
+              TextSecondary
+            },
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+          )
+        }
         QuantityCounter(
           size = QuantityCounterSize.Small,
           value = cartItemUi.quantity,

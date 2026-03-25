@@ -98,3 +98,39 @@
 - No callbacks (`onSuccess`/`onError`) in repository interfaces — return `DomainResult`
 - When searching for third-party KMP libraries → first check https://github.com/terrakok/kmp-awesome
 - Every refactoring must update `.claude/rules/` files if architecture changes
+
+## Build Gotchas
+
+### Gradle / AGP
+
+- Kover #772: `merge { allProjects() }` causes `variantName null` crash with `withHostTest {}` — apply Kover in convention plugin AFTER android, use `dependencies { kover() }` in root
+- `ComposeExtension` is project-level, NOT nested inside `KotlinMultiplatformExtension`
+- `iosMain` source set: use `sourceSets.maybeCreate("iosMain")` in plugins
+- Compose deps in convention plugin: use `ComposeExtension.dependencies` accessor (NOT direct Maven coords)
+- KSP is decoupled from Kotlin version — use latest KSP with current Kotlin
+- `detekt` extension in root build.gradle.kts needs `import io.gitlab.arturbosch.detekt.extensions.DetektExtension`
+- Detekt `maxIssues: -1` (report only) — existing codebase has violations
+- KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
+
+### Firebase
+
+- `firebase-common` in androidApp is USED (Firebase.initialize) — don't remove
+- Crashlytics plugin: do NOT declare in root `build.gradle.kts` with `apply false` — only apply in `androidApp/build.gradle.kts`
+- Crashlytics plugin 2.9.x uses `applicationVariants` removed in AGP 9.1+ — use 3.0.6+
+
+### Room KMP
+
+- `:database` uses `com.android.kotlin.multiplatform.library` via convention plugin
+- Room KMP constructor: `expect object` MUST declare `override fun initialize()` + `@Suppress("KotlinNoActualForExpect")`
+
+### Module-specific
+
+- `feature:adminPanel` needs `firebase-storage` + BOM directly
+- `:di` module needs `room-runtime` + `sqlite-bundled` deps for NutriSportDatabase access
+- `androidApp` needs explicit `implementation(project(":shared:utils"))` for AppConfig
+- Debug build has `applicationIdSuffix = ".debug"` — google-services.json must match
+- Compose Resources in shared:ui generate package `nutrisport.shared.ui.generated.resources`
+
+### Claude Code
+
+- Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`

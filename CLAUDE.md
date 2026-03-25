@@ -33,21 +33,6 @@ KMP project (Android + iOS) with Compose Multiplatform.
 
 ## Quick Reference
 
-### Layers
-
-- **Domain** (`:domain`) — models (no suffix), repository interfaces, use cases, `Either`/`DomainResult`/`AppError`, `NullSafety`
-- **Utilities** (`:shared:utils`) — Constants, AppConfig, FormatPrice, Log, Screen.kt (navigation routes)
-- **Shared UI** (`:shared:ui`) — composable components, `UiState`, `DisplayResult`, resources, colors, fonts
-- **Data** (`:network`) — DTOs (`Dto` suffix), mappers (`.toDomain()`), repository impls
-- **Test Fixtures** (`:shared:testing`) — fake data factories, fake repositories
-- **Presentation** (`:feature/*`) — UI models (`Ui` suffix), mappers (`.toUi()`), ViewModels
-
-### Error Handling
-
-- **Domain/Data**: `DomainResult<T>` = `Either<AppError, T>` — type-safe errors
-- **Presentation**: `UiState<T>` — `Idle`, `Loading`, `Content(DomainResult<T>)`
-- **AppError**: `Network`, `NotFound`, `Unauthorized`, `Unknown`
-
 ### Key Commands
 
 ```bash
@@ -57,48 +42,16 @@ KMP project (Android + iOS) with Compose Multiplatform.
 ./gradlew :composeApp:compileIosMainKotlinMetadata  # iOS compile check
 ./gradlew koverHtmlReport                           # coverage report
 ./gradlew koverVerify                               # check thresholds
-./gradlew detekt                                     # code style check (also runs pre-commit)
+./gradlew detekt                                     # code style check
 ```
-
-### Screen Pattern (Route-Screen)
-
-- **Route**: `{Feature}Route` — DI (koinViewModel), collectAsState, passes to Screen
-- **Screen**: `{Feature}Screen` — pure UI, receives state + callbacks, no DI
-- Navigation → Route → Screen
-
-### Convention Plugins
-
-- `nutrisport.kmp.library` — base KMP + Compose + compose.uiTest + Robolectric
-- `nutrisport.kmp.feature` — + Koin + messagebar
-- `nutrisport.kmp.feature.full` — + Coil + navigation + Ktor
-
-### Debug Tooling (Strategy Pattern)
-
-- **DebugToolkit** interface in `:navigation` — polymorphic debug behavior
-- **NoOpDebugToolkit** — release/iOS default (no-op)
-- **TraceyDebugToolkit** — debug: Tracey session recording (`androidApp/src/debug/`)
-- **DebugModuleProvider** — Koin modules per build type (`src/debug/` vs `src/release/`)
-- Add new debug tools → only modify `androidApp/src/debug/`, zero changes in common
 
 ### Crash Reporting
 
-- **Firebase Crashlytics** in `androidApp` — automatic crash capture (release only, disabled in debug)
-- **Tracey** in `androidApp/src/debug/` — flight recorder with gestures/navigation/breadcrumbs (debug only)
-- **Firebase MCP plugin** — automated crash analysis from Claude Code (`crashlytics:connect`)
-- `/debug-crash-live` — live Crashlytics analysis via MCP (production crashes)
-- `/debug-crash` — offline Tracey dump analysis (debug crashes, now with Crashlytics correlation)
-
-### Build Gotchas
-
-- CMP Compose deps: use `ComposeExtension.dependencies` accessor, NOT direct Maven coordinates
-- Room KMP: `expect object` must declare `override fun initialize()` + `@Suppress("KotlinNoActualForExpect")`
-- `androidLibrary {}` deprecated in AGP 9.1+ → use `android {}` inside `kotlin {}`
-- KLIB resolver duplicate warnings (AndroidX vs JetBrains fork) — unfixable, ignore
-- UI tests: `androidHostTest` + Robolectric (not `commonTest`) — CMP compose.uiTest needs Android context
-- Never hardcode `Dispatchers.*` — inject `CoroutineDispatcherProvider`. Hardcoded dispatchers cause flaky tests
-- Hooks: PreToolUse blocks edits to `google-services.json`, `local.properties`, `*.keystore`
-- Debug deps: never `implementation(libs.tracey)` in KMP modules — use `debugImplementation` in androidApp + `DebugToolkit`
-- `DebugModuleProvider` must exist in BOTH `src/debug/` AND `src/release/` (same class, different impl)
+- **Firebase Crashlytics** in `androidApp` — release only, disabled in debug
+- **Tracey** in `androidApp/src/debug/` — flight recorder (debug only)
+- **Firebase MCP plugin** — `crashlytics:connect` for automated crash analysis
+- `/debug-crash-live` — live Crashlytics analysis via MCP
+- `/debug-crash` — offline Tracey dump analysis
 
 ## References
 

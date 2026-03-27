@@ -138,6 +138,18 @@ jobs:
           </plist>
           PLIST
 
+      - name: Resolve SPM packages and fix nanopb conflict
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project iosApp/iosApp.xcodeproj \
+            -skipPackagePluginValidation
+
+          # nanopb has a FILE called "build" in its repo root; Xcode needs a
+          # DIRECTORY at that path for EagerLinkingTBDs. Replace file with dir.
+          find ~/Library/Developer/Xcode/DerivedData \
+            -path "*/checkouts/nanopb/build" -not -type d \
+            -exec rm {} \; -exec mkdir -p {} \;
+
       - name: Build iOS app for simulator (no signing)
         env:
           OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED: "YES"
@@ -152,7 +164,6 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -skipPackagePluginValidation \
             FRAMEWORK_SEARCH_PATHS="\$(inherited) ${FRAMEWORK_DIR}" \
-            EAGER_LINKING=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \

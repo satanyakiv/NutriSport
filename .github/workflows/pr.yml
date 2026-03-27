@@ -112,7 +112,7 @@ jobs:
 
       - name: Select Xcode 16
         run: |
-          XCODE_PATH=$(ls -d /Applications/Xcode_16* 2>/dev/null | sort -V | tail -1)
+          XCODE_PATH=$(find /Applications -maxdepth 1 -name 'Xcode_16*' -type d | sort -V | tail -1)
           echo "Using Xcode at: $XCODE_PATH"
           sudo xcode-select -s "$XCODE_PATH"
           xcodebuild -version

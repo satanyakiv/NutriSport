@@ -19,7 +19,6 @@ A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production 
 - [Engineering Highlights](#engineering-highlights)
 - [AI-Assisted Development](#ai-assisted-development)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [License](#license)
@@ -270,37 +269,6 @@ Full AI infrastructure: [CLAUDE.md](CLAUDE.md)
 | Tracey                | 0.0.2-RC      | Debug flight recorder                   |
 
 </details>
-
-## Getting Started
-
-### Prerequisites
-
-- **JDK 21** (project uses `jvmToolchain(21)`)
-- **Android Studio** Ladybug or later with KMP plugin
-- **Xcode 16+** for iOS builds
-- Firebase project with `google-services.json` and `GoogleService-Info.plist`
-
-### Quick Start
-
-```bash
-git clone https://github.com/satanyakiv/NutriSport.git
-cd NutriSport
-
-# Place Firebase configs (see docs/FIREBASE_SETUP.md)
-# androidApp/google-services.json
-# iosApp/iosApp/GoogleService-Info.plist
-
-./gradlew assembleDebug          # Android
-# Open iosApp/ in Xcode          # iOS
-```
-
-### Verify
-
-```bash
-./gradlew detekt                  # Code style (strict, zero tolerance)
-./gradlew koverHtmlReport         # Coverage report
-./gradlew :domain:allTests        # Domain tests (~5s)
-```
 
 ## Documentation
 

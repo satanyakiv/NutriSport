@@ -138,18 +138,8 @@ jobs:
           </plist>
           PLIST
 
-      - name: Resolve SPM packages and fix nanopb conflict
-        run: |
-          xcodebuild -resolvePackageDependencies \
-            -project iosApp/iosApp.xcodeproj \
-            -skipPackagePluginValidation
-
-          # nanopb has a FILE called "build" in its repo root; Xcode needs a
-          # DIRECTORY at that path for EagerLinkingTBDs. Replace file with dir.
-          find ~/Library/Developer/Xcode/DerivedData \
-            -path "*/checkouts/nanopb/build" -not -type d \
-            -exec rm {} \; -exec mkdir -p {} \;
-
+      # Use -scheme (not -target) to avoid nanopb BUILD file conflict
+      # on case-insensitive macOS. See: firebase/firebase-ios-sdk#11426
       - name: Build iOS app for simulator (no signing)
         env:
           OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED: "YES"
@@ -159,7 +149,7 @@ jobs:
           set -o pipefail
           xcodebuild build \
             -project iosApp/iosApp.xcodeproj \
-            -target iosApp \
+            -scheme iosApp \
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -skipPackagePluginValidation \

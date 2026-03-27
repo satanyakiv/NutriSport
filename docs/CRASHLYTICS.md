@@ -9,6 +9,7 @@ Firebase Crashlytics for automatic crash reporting in production builds. Integra
 | Firebase Crashlytics SDK  | via BOM 33.1.2 | Native Android crash capture              |
 | Crashlytics Gradle Plugin | 3.0.2          | Mapping file upload for deobfuscation     |
 | Firebase MCP Plugin       | latest         | Automated crash analysis from Claude Code |
+| claude-in-mobile MCP      | latest         | Emulator automation for scenario testing  |
 
 ## Architecture
 
@@ -24,15 +25,21 @@ Firebase Crashlytics SDK (auto-capture)
                                │
                                ├── /debug-crash-live (live analysis)
                                ├── crashlytics:connect (guided workflow)
-                               └── Correlate with Tracey dumps (debug)
+                               ├── Correlate with Tracey dumps (debug)
+                               │
+                               └── claude-in-mobile MCP (local dev)
+                                     │
+                                     ├── Launch emulator + run scenario
+                                     └── Reproduce crash via prompt
 ```
 
-**Two complementary systems:**
+**Three complementary systems:**
 
-| System          | Environment  | Captures                                            | Analysis                                   |
-| --------------- | ------------ | --------------------------------------------------- | ------------------------------------------ |
-| **Tracey**      | Debug only   | Gestures, navigation, breadcrumbs, crash stacktrace | `/debug-crash`, `/replay-session`          |
-| **Crashlytics** | Release only | Crash stacktraces, device info, event counts        | `/debug-crash-live`, `crashlytics:connect` |
+| System               | Environment  | Captures                                            | Analysis                                   |
+| -------------------- | ------------ | --------------------------------------------------- | ------------------------------------------ |
+| **Tracey**           | Debug only   | Gestures, navigation, breadcrumbs, crash stacktrace | `/debug-crash`, `/replay-session`          |
+| **Crashlytics**      | Release only | Crash stacktraces, device info, event counts        | `/debug-crash-live`, `crashlytics:connect` |
+| **claude-in-mobile** | Local dev    | Scenario execution on emulator via Claude prompts   | Crash reproduction, fix verification       |
 
 ## Configuration
 
@@ -119,6 +126,40 @@ Starts a conversational debugging session: prioritizes issues, fetches sample ev
 | `/debug-crash-live` | "analyze crashes", Crashlytics issue ID | Live crash analysis via MCP                                        |
 | `/debug-crash`      | Tracey dump file path                   | Offline crash dump analysis (updated with Crashlytics correlation) |
 | `/replay-session`   | Tracey dump file path                   | Session replay and timeline reconstruction                         |
+
+## Emulator Scenario Testing (claude-in-mobile)
+
+Instead of writing in-code UI tests for every crash reproduction, the `claude-in-mobile` MCP plugin drives an Android emulator directly from Claude prompts during local development. Scenarios are described in natural language — Claude launches the emulator, navigates the app, and executes the steps to reproduce or verify a fix.
+
+### How It Works
+
+```
+Claude prompt ("reproduce checkout crash on empty cart")
+       │
+       ▼
+claude-in-mobile MCP (local machine)
+       │
+       ├── Attach to running emulator (or launch one)
+       ├── Install debug APK
+       ├── Execute scenario: tap, swipe, input, assert
+       ├── Capture screenshots at each step
+       └── Report pass/fail with visual evidence
+```
+
+### Use Cases
+
+| Scenario            | What happens                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| Crash reproduction  | Claude receives a Crashlytics stacktrace, writes a scenario, runs it on emulator to confirm the crash |
+| Fix verification    | After a patch, Claude re-runs the same scenario to verify the crash no longer occurs                  |
+| Exploratory testing | Developer describes a flow in natural language, Claude executes it and reports what happened          |
+
+### Advantages Over In-Code UI Tests
+
+- **No test code to maintain** — scenarios are natural language prompts, not Kotlin/Espresso code
+- **Visual verification** — screenshots at each step, not just assertion pass/fail
+- **Faster authoring** — describe the flow in words instead of writing selectors and waits
+- **Crash correlation** — directly connected to Crashlytics and Tracey analysis pipelines
 
 ## Not Covered (and Why)
 

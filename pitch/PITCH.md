@@ -74,6 +74,13 @@ I brought it down to 2 minutes 30 seconds through a series of targeted changes: 
 
 Everything above — the modularity, the automation, the documentation, the testing discipline — I applied deliberately to one project. As proof that these principles work together at scale.
 
+| Android                                  | iOS                              |
+| ---------------------------------------- | -------------------------------- |
+| ![Android Demo](assets/demo-android.gif) | ![iOS Demo](assets/demo-ios.gif) |
+
+<!-- TODO: replace with real GIFs after recording -->
+<!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->
+
 - **25 independent modules** — features are built without affecting each other. A change to the cart doesn't recompile the product catalog.
 - **Android and iOS from one codebase** — market expansion without doubling the team or maintaining two separate apps.
 - **Offline-first shopping cart** — orders complete even on a bad connection. Prices are validated before checkout so users never pay a stale amount.
@@ -81,13 +88,6 @@ Everything above — the modularity, the automation, the documentation, the test
 - **4 automated pipelines** — from pull request validation to app store release. No manual builds, no human error in deploys.
 - **8 documentation files** — covering CI/CD, testing strategy, security audit, performance, offline architecture, crash reporting. A new developer is productive in under an hour.
 - **AI-enforced architecture standards** — rules, agents, and automated checks that ensure every contributor — human or AI — follows the same engineering standards.
-
-| Android                                  | iOS                              |
-| ---------------------------------------- | -------------------------------- |
-| ![Android Demo](assets/demo-android.gif) | ![iOS Demo](assets/demo-ios.gif) |
-
-<!-- TODO: replace with real GIFs after recording -->
-<!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->
 
 Every engineering decision in this project has a documented reason.
 

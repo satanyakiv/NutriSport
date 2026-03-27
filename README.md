@@ -8,6 +8,14 @@ A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production 
 ![Platform](https://img.shields.io/badge/Platform-Android_%7C_iOS-green)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+## Demo
+
+<!-- TODO: Record side-by-side demo GIF -->
+<!-- Flow: Auth → Home → Add to Cart → Search →
+     Product Details → Add to Cart → Checkout -->
+
+_Demo coming soon — Android and iOS side-by-side._
+
 ---
 
 ## Table of Contents
@@ -43,14 +51,6 @@ Security is table stakes. Client-side authorization bypasses, PII lingering afte
 - **4 CI/CD pipelines** — PR validation with lint + test + coverage, debug deploy to Firebase App Distribution, tag-triggered signed release, iOS via Fastlane + TestFlight.
 - **169 tests across 34 files** — domain use cases at 98% coverage, ViewModels tested with Turbine + Fake repositories, UI smoke tests running on JVM via Robolectric (~30s full run, no emulator).
 - **AI development infrastructure** — `.claude/` directory with agents, commands, skills, rules, and hooks that enforce architecture automatically. Any team member — human or AI — follows the same standards.
-
-## Demo
-
-<!-- TODO: Record side-by-side demo GIF -->
-<!-- Flow: Auth → Home → Add to Cart → Search →
-     Product Details → Add to Cart → Checkout -->
-
-_Demo coming soon — Android and iOS side-by-side._
 
 ## Architecture
 
@@ -162,27 +162,29 @@ Auto-versioning from git tags. All tests run on JVM — no emulator in CI. [Full
 169 tests across 34 files. All JVM — full run takes ~30 seconds, no emulator.
 
 <!-- coverage:start -->
-| Package | Line coverage |
-| ------- | ------------- |
-| domain:usecase | 98.8% |
-| feature:productsOverview | 90.3% |
-| feature:details | 90.2% |
-| feature:cart | 85.0% |
-| domain:models | 84.0% |
-| analytics:core | 77.4% |
-| shared:utils | 76.2% |
-| feature:profile | 65.0% |
-| analytics:firebase | 45.2% |
-| feature:categories:search | 31.9% |
-| feature:adminPanel | 30.0% |
-| feature:manageProduct | 22.2% |
-| feature:auth | 13.5% |
-| feature:checkout | 10.4% |
-| feature:home | 9.5% |
-| network | 0.0% |
-| feature:paymentCompleted | 0.0% |
+
+| Package                   | Line coverage |
+| ------------------------- | ------------- |
+| domain:usecase            | 98.8%         |
+| feature:productsOverview  | 90.3%         |
+| feature:details           | 90.2%         |
+| feature:cart              | 85.0%         |
+| domain:models             | 84.0%         |
+| analytics:core            | 77.4%         |
+| shared:utils              | 76.2%         |
+| feature:profile           | 65.0%         |
+| analytics:firebase        | 45.2%         |
+| feature:categories:search | 31.9%         |
+| feature:adminPanel        | 30.0%         |
+| feature:manageProduct     | 22.2%         |
+| feature:auth              | 13.5%         |
+| feature:checkout          | 10.4%         |
+| feature:home              | 9.5%          |
+| network                   | 0.0%          |
+| feature:paymentCompleted  | 0.0%          |
 
 > Overall line coverage: 36.7%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-03-27.
+
 <!-- coverage:end -->
 
 Stack: `kotlin.test` + `Turbine` + `Mokkery` + `Assertk` + `Robolectric` + `Kover`. [Full testing docs](docs/TESTING.md)

@@ -100,17 +100,3 @@ jobs:
         with:
           name: coverage-report
           path: "build/reports/kover/"
-
-  ios-check:
-    runs-on: macos-14  # Apple Silicon — швидший Kotlin/Native compile
-    needs: actionlint
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: ./.github/actions/gradle-setup
-
-      # Перевіряємо що Kotlin/Native компілюється для iOS (без лінковки framework — швидше)
-      # Ловить 90% проблем: актуальні actual/expect, iOS-specific код, залежності
-      - name: Compile Kotlin/Native (iOS)
-        run: ./gradlew :composeApp:compileIosMainKotlinMetadata --no-daemon

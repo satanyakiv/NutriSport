@@ -3,7 +3,6 @@ package com.portfolio.categories_search.component
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,15 +54,11 @@ internal fun CategorySearchTopBar(
                 color = TextPrimary,
               )
             },
-            trailingIcon = {
+            leadingIcon = {
               IconButton(
-                modifier = Modifier.size(14.dp),
                 onClick = {
-                  if (searchQuery.isNotEmpty()) {
-                    onSearchQueryChange("")
-                  } else {
-                    onSearchBarVisibilityChange(false)
-                  }
+                  onSearchQueryChange("")
+                  onSearchBarVisibilityChange(false)
                 },
               ) {
                 Icon(

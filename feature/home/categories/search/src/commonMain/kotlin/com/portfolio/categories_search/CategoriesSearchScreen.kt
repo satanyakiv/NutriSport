@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,7 +36,7 @@ fun CategorySearchScreen(
   searchQuery: String,
   onSearchQueryChange: (String) -> Unit,
 ) {
-  var searchBarVisible by mutableStateOf(false)
+  var searchBarVisible by rememberSaveable { mutableStateOf(false) }
 
   Scaffold(
     containerColor = Surface,

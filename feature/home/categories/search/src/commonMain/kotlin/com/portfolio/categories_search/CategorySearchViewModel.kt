@@ -44,7 +44,7 @@ class CategorySearchViewModel(
 
   @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
   val filteredProducts = searchQuery
-    .debounce(500)
+    .debounce(1000)
     .flatMapLatest { query ->
       if (query.isBlank()) {
         products

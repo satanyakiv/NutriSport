@@ -4,7 +4,7 @@ description: >-
   Pull live crash data from Firebase Crashlytics via MCP, correlate with
   source code, and generate an analysis report with proposed fix.
   Use when user says "analyze crashes", "check crashlytics",
-  "що крашиться в проді", "crashlytics issue", "production crashes",
+  "what's crashing in production", "crashlytics issue", "production crashes",
   or provides a Crashlytics issue ID.
 ---
 

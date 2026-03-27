@@ -6,18 +6,18 @@ $ARGUMENTS
 
 ## Process
 
-1. **PARSE** — зчитати Tracey JSON replay file:
+1. **PARSE** — read the Tracey JSON replay file:
    - Crash event + stacktrace
-   - Останні 10-15 подій перед крашем (timeline)
+   - Last 10-15 events before the crash (timeline)
    - Screen transitions (SCREEN events), gesture events (CLICK/SWIPE/SCROLL), breadcrumbs (LOG)
    - Device info, session ID, isCrashPayload flag
 
-2. **CORRELATE** — для кожного stacktrace frame:
-   - Glob/Grep до source file + read relevant lines
-   - Визначити module + architectural layer (domain/network/feature/navigation)
-   - Для SCREEN events → знайти destination в `navigation/.../NavGraph.kt`
-   - Для LOG events → знайти `Tracey.log()` виклик у ViewModel
-   - Для gesture events → знайти Screen composable що був активний
+2. **CORRELATE** — for each stacktrace frame:
+   - Glob/Grep to source file + read relevant lines
+   - Determine module + architectural layer (domain/network/feature/navigation)
+   - For SCREEN events → find destination in `navigation/.../NavGraph.kt`
+   - For LOG events → find `Tracey.log()` call in ViewModel
+   - For gesture events → find the Screen composable that was active
 
 3. **ANALYZE** — root cause classification:
    | Category | Indicators | Fix Layer |

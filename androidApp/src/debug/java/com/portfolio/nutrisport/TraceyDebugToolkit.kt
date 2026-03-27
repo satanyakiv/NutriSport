@@ -16,7 +16,7 @@ class TraceyDebugToolkit : DebugToolkit {
     Tracey.install(
       TraceyConfig(
         enabled = true,
-        showOverlay = true,
+        showOverlay = false,
         bufferDurationSeconds = 30,
         maxEvents = 500,
         trackLifecycle = true,

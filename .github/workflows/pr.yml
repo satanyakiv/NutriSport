@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: "**/build/reports/tests/"
@@ -96,7 +96,74 @@ jobs:
         run: ./gradlew koverHtmlReport --no-daemon
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report
           path: "build/reports/kover/"
+
+  ios-simulator-build:
+    runs-on: macos-14  # Apple Silicon — matches iosSimulatorArm64 target
+    needs: actionlint
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ./.github/actions/gradle-setup
+
+      - name: Select Xcode 16
+        run: |
+          XCODE_PATH=$(find /Applications -maxdepth 1 -name 'Xcode_16*' -type d | sort -V | tail -1)
+          echo "Using Xcode at: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH"
+          xcodebuild -version
+
+      - name: Link Kotlin/Native debug framework (iosSimulatorArm64)
+        run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 --no-daemon
+
+      - name: Inject placeholder GoogleService-Info.plist
+        run: |
+          cat > iosApp/iosApp/GoogleService-Info.plist << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key>        <string>placeholder</string>
+            <key>GCM_SENDER_ID</key>  <string>000000000000</string>
+            <key>PLIST_VERSION</key>   <string>1</string>
+            <key>BUNDLE_ID</key>       <string>com.portfolio.nutrisport.NutriSport</string>
+            <key>PROJECT_ID</key>      <string>placeholder</string>
+            <key>GOOGLE_APP_ID</key>   <string>1:000000000000:ios:0000000000000000</string>
+          </dict>
+          </plist>
+          PLIST
+
+      # Use -scheme (not -target) to avoid nanopb BUILD file conflict
+      # on case-insensitive macOS. See: firebase/firebase-ios-sdk#11426
+      - name: Build iOS app for simulator (no signing)
+        env:
+          OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED: "YES"
+        run: |
+          FRAMEWORK_DIR="$(pwd)/composeApp/build/bin/iosSimulatorArm64/debugFramework"
+
+          set -o pipefail
+          xcodebuild build \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -skipPackagePluginValidation \
+            FRAMEWORK_SEARCH_PATHS="\$(inherited) ${FRAMEWORK_DIR}" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM="" \
+            2>&1 | tee "$RUNNER_TEMP/xcodebuild.log" | xcbeautify --quiet
+
+      - name: Upload xcodebuild log
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: xcodebuild-log-${{ github.run_id }}
+          path: ${{ runner.temp }}/xcodebuild.log
+          retention-days: 7

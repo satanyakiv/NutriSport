@@ -1,6 +1,6 @@
 # CI/CD
 
-NutriSport uses GitHub Actions for continuous integration and delivery. There are three workflows for Android and two for iOS.
+NutriSport uses GitHub Actions for continuous integration and delivery. There are three workflows for Android and one for iOS.
 
 ## Workflows
 
@@ -14,16 +14,16 @@ trigger: pull_request → main
                   ┌──────────────────────────────────────────────────────┐
                   │                    actionlint                        │
                   │          (only when .github/** changed)              │
-                  └──────────┬───────────────────────────────────────────┘
-                             │
-               Android (ubuntu-latest)
-                             │
-                             ▼
-                    ┌──────────────┐
-                    │     lint     │
-                    │   (detekt)   │
-                    └──────┬───────┘
-                           │
+                  └──────────┬───────────────────────────┬───────────────┘
+                             │                           │
+               Android (ubuntu-latest)        iOS (macos-14)
+                             │                           │
+                             ▼                           ▼
+                    ┌──────────────┐       ┌───────────────────────┐
+                    │     lint     │       │ ios-simulator-build   │
+                    │   (detekt)   │       │ (K/Native link +      │
+                    └──────┬───────┘       │  xcodebuild, no sign) │
+                           │               └───────────────────────┘
                            ▼
                     ┌──────────────┐
                     │    build     │
@@ -43,13 +43,17 @@ trigger: pull_request → main
                     └──────────────┘
 ```
 
-> iOS build validation runs in a separate workflow (`ios-build.yml`) — see below.
+**Android pipeline** (sequential, on `ubuntu-latest`):
 
 1. **actionlint** — validates GitHub Actions workflow syntax (only when `.github/` files changed)
 2. **lint** — Detekt static analysis
 3. **build** — `assembleDebug`
 4. **test** — JVM unit tests via `testAndroidHostTest`, uploads test reports as artifacts
 5. **coverage** — Kover HTML report, uploaded as artifact
+
+**iOS pipeline** (parallel with Android, on `macos-14`):
+
+6. **ios-simulator-build** — links Kotlin/Native debug framework (`linkDebugFrameworkIosSimulatorArm64`), then runs `xcodebuild` for simulator without signing. Validates K/Native linking, Swift-Kotlin interop, SPM resolution, and Xcode build config. No secrets required — uses placeholder `GoogleService-Info.plist`. Uploads `xcodebuild.log` on failure.
 
 ### Main branch CI (`debug.yml`)
 
@@ -84,39 +88,6 @@ trigger: tag v*
 ```
 
 Required secrets: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `FIREBASE_APP_ID`, `FIREBASE_SERVICE_ACCOUNT`.
-
-### iOS Simulator Build (`ios-build.yml`)
-
-Runs on every PR to `main`. Validates the full iOS build pipeline without signing. No secrets required.
-
-```
-trigger: pull_request → main
-
-  ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-  │ Gradle: link     │────▶│ xcodebuild       │────▶│ Upload log       │
-  │ K/Native debug   │     │ simulator build   │     │ (on failure)     │
-  │ framework        │     │ (no signing)      │     │                  │
-  └──────────────────┘     └──────────────────┘     └──────────────────┘
-```
-
-1. **Link K/Native framework** — `linkDebugFrameworkIosSimulatorArm64` compiles and links the full `ComposeApp.framework` for the iOS Simulator (Apple Silicon)
-2. **xcodebuild** — builds the iOS app for simulator with signing disabled (`CODE_SIGNING_REQUIRED=NO`). Resolves and compiles SPM dependencies (Firebase, Google Sign-In). Uses `OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES` to skip redundant Gradle invocation from Xcode
-3. **Upload log** — raw `xcodebuild.log` uploaded as artifact on failure (7-day retention)
-
-**What it validates:**
-
-- Kotlin/Native framework links successfully (catches linking errors missed by metadata-only compile)
-- Swift-Kotlin interop works (Xcode can consume the `ComposeApp` framework)
-- SPM dependencies resolve and compile (Firebase iOS SDK, Google Sign-In, etc.)
-- Xcode build configuration is valid
-
-**What it does NOT do:**
-
-- No code signing — no Apple Developer account needed
-- No TestFlight upload — simulator build only
-- No runtime tests — compile-time validation only
-
-Uses a placeholder `GoogleService-Info.plist` for compilation (the real file is gitignored).
 
 ### iOS Release (`ios-release.yml`)
 
@@ -156,10 +127,9 @@ Ruby dependencies are declared in the root `Gemfile`.
   actions/
     gradle-setup/action.yml     — JDK 21 + Gradle setup
   workflows/
-    pr.yml                      — PR checks (Android lint + build + test + coverage)
+    pr.yml                      — PR checks (Android + iOS simulator build)
     debug.yml                   — main branch CI + Firebase deploy
     release.yml                 — Android release (tag-triggered)
-    ios-build.yml               — iOS simulator build (PR + main, no signing)
     ios-release.yml             — iOS release (manual, requires Apple Developer Program)
 fastlane/
   Appfile                       — Apple identifiers
@@ -183,7 +153,7 @@ iosApp/
 | `KEY_ALIAS`                | `release.yml`              | Signing key alias                 |
 | `KEY_PASSWORD`             | `release.yml`              | Signing key password              |
 
-`ios-build.yml` requires **no secrets** — it builds for simulator without signing.
+The `ios-simulator-build` job in `pr.yml` requires **no secrets** — it builds for simulator without signing.
 
 ### iOS Release (not configured)
 

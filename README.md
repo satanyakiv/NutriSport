@@ -150,10 +150,9 @@ graph TD
 
 | Workflow                                               | Trigger      | Pipeline                                                                  |
 | ------------------------------------------------------ | ------------ | ------------------------------------------------------------------------- |
-| [`pr.yml`](.github/workflows/pr.yml)                   | Pull request | Detekt → Build → Test → Kover coverage                                    |
+| [`pr.yml`](.github/workflows/pr.yml)                   | Pull request | Detekt → Build → Test → Coverage + iOS simulator build                    |
 | [`debug.yml`](.github/workflows/debug.yml)             | Push to main | Lint → Build → Test → Firebase App Distribution                           |
 | [`release.yml`](.github/workflows/release.yml)         | Git tag `v*` | Signed APK → Firebase App Distribution                                    |
-| [`ios-build.yml`](.github/workflows/ios-build.yml)     | Pull request | K/Native link → xcodebuild simulator (no signing)                         |
 | [`ios-release.yml`](.github/workflows/ios-release.yml) | Manual       | K/Native → Fastlane Match → TestFlight (requires Apple Developer Program) |
 
 Auto-versioning from git tags. Android tests run on JVM — no emulator in CI. [Full CI/CD docs](docs/CI.md)

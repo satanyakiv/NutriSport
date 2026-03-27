@@ -87,10 +87,10 @@ Required secrets: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASS
 
 ### iOS Simulator Build (`ios-build.yml`)
 
-Runs on every PR and push to `main`. Validates the full iOS build pipeline without signing. No secrets required.
+Runs on every PR to `main`. Validates the full iOS build pipeline without signing. No secrets required.
 
 ```
-trigger: pull_request + push → main
+trigger: pull_request → main
 
   ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
   │ Gradle: link     │────▶│ xcodebuild       │────▶│ Upload log       │

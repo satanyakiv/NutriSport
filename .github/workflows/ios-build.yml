@@ -1,8 +1,6 @@
 name: iOS Simulator Build
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 

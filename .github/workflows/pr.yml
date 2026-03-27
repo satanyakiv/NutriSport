@@ -120,14 +120,6 @@ jobs:
       - name: Link Kotlin/Native debug framework (iosSimulatorArm64)
         run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 --no-daemon
 
-      - name: Cache SPM packages
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/spm-cache
-          key: spm-${{ hashFiles('iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: |
-            spm-
-
       - name: Inject placeholder GoogleService-Info.plist
         run: |
           cat > iosApp/iosApp/GoogleService-Info.plist << 'PLIST'
@@ -151,7 +143,6 @@ jobs:
           OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED: "YES"
         run: |
           FRAMEWORK_DIR="$(pwd)/composeApp/build/bin/iosSimulatorArm64/debugFramework"
-          mkdir -p "$RUNNER_TEMP/spm-cache"
 
           set -o pipefail
           xcodebuild build \
@@ -160,7 +151,6 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -skipPackagePluginValidation \
-            -clonedSourcePackagesDirPath "$RUNNER_TEMP/spm-cache" \
             FRAMEWORK_SEARCH_PATHS="\$(inherited) ${FRAMEWORK_DIR}" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \

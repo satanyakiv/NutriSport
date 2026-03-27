@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: "**/build/reports/tests/"
@@ -96,7 +96,7 @@ jobs:
         run: ./gradlew koverHtmlReport --no-daemon
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report
           path: "build/reports/kover/"
@@ -170,7 +170,7 @@ jobs:
 
       - name: Upload xcodebuild log
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: xcodebuild-log-${{ github.run_id }}
           path: ${{ runner.temp }}/xcodebuild.log

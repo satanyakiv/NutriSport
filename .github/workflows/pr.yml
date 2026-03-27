@@ -110,6 +110,13 @@ jobs:
 
       - uses: ./.github/actions/gradle-setup
 
+      - name: Select Xcode 16
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode_16* 2>/dev/null | sort -V | tail -1)
+          echo "Using Xcode at: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH"
+          xcodebuild -version
+
       - name: Link Kotlin/Native debug framework (iosSimulatorArm64)
         run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 --no-daemon
 
@@ -144,6 +151,7 @@ jobs:
           OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED: "YES"
         run: |
           FRAMEWORK_DIR="$(pwd)/composeApp/build/bin/iosSimulatorArm64/debugFramework"
+          mkdir -p "$RUNNER_TEMP/spm-cache"
 
           set -o pipefail
           xcodebuild build \

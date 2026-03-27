@@ -48,22 +48,47 @@ All tests run on **JVM** — no emulator, no device, no iOS simulator required. 
 
 ## Coverage (Kover)
 
-Convention plugin applies Kover after android configuration. Root `build.gradle.kts` merges 19 modules via `dependencies { kover(project(...)) }`. Generated code, Compose resources, and DI modules are excluded.
+Convention plugin applies Kover after android configuration. Root `build.gradle.kts` merges modules via `dependencies { kover(project(...)) }`.
 
-Meaningful packages (report 2026-03-08):
+<!-- coverage:start -->
 
-| Package             | Line % |
-| ------------------- | ------ |
-| `domain.usecase`    | 98%    |
-| `admin_panel`       | 100%   |
-| `details`           | 96.6%  |
-| `products_overview` | 86.7%  |
-| `profile`           | 83.9%  |
-| `cart`              | 82.8%  |
-| `shared.domain`     | 76.5%  |
-| `categories_search` | 75.8%  |
+| Package                   | Line coverage |
+| ------------------------- | ------------- |
+| domain:usecase            | 98.8%         |
+| feature:productsOverview  | 90.3%         |
+| feature:details           | 90.1%         |
+| feature:cart              | 85.0%         |
+| domain:models             | 84.0%         |
+| analytics:core            | 77.4%         |
+| shared:utils              | 77.3%         |
+| feature:profile           | 65.0%         |
+| feature:categories:search | 46.8%         |
+| analytics:firebase        | 45.2%         |
+| feature:adminPanel        | 30.0%         |
+| feature:manageProduct     | 22.2%         |
+| feature:auth              | 13.5%         |
+| feature:home              | 9.5%          |
+| network                   | 0.0%          |
+| feature:paymentCompleted  | 0.0%          |
+| feature:checkout          | 0.0%          |
 
-> Overall 18% is misleading — the denominator includes generated Compose resources, DI wiring, and platform code that inflates the total line count.
+> Overall line coverage: 37.1%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
+
+**Report:** 2026-03-27 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
+
+### What Kover Excludes
+
+| Category       | Patterns                                                          |
+| -------------- | ----------------------------------------------------------------- |
+| UI composables | `*Screen*`, `*Preview*`, `*ComposableSingletons*`, `component.*`  |
+| Generated code | `Resources*`, `*BuildConfig*`                                     |
+| Infrastructure | `di.*`, `navigation.*`, `database.*` (DAOs, entities, converters) |
+| Platform       | `MainActivity*`, `NutrisportApplication*`                         |
+| Design tokens  | `Alpha*`, `Colors*`, `Fonts*`, `Constants*`                       |
+
+Exclusions configured in root `build.gradle.kts`.
+
+<!-- coverage:end -->
 
 ## Running Tests
 

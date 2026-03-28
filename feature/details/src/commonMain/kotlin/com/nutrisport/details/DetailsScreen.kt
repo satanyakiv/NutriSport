@@ -64,7 +64,7 @@ fun DetailsScreen(
       )
     },
   ) { padding ->
-    Column(modifier = Modifier.padding(top = padding.calculateTopPadding())) {
+    Column(modifier = Modifier.fillMaxSize().padding(top = padding.calculateTopPadding())) {
       if (state.connectivity == ConnectivityStatus.Unavailable) {
         OfflineBanner()
       }

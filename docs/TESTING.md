@@ -55,25 +55,25 @@ Convention plugin applies Kover after android configuration. Root `build.gradle.
 | ------- | ------------- |
 | domain:usecase | 98.8% |
 | feature:productsOverview | 90.3% |
-| feature:details | 90.2% |
+| feature:details | 90.1% |
 | feature:cart | 85.0% |
 | domain:models | 84.0% |
 | analytics:core | 77.4% |
-| shared:utils | 76.2% |
+| shared:utils | 77.3% |
 | feature:profile | 65.0% |
+| feature:categories:search | 46.4% |
 | analytics:firebase | 45.2% |
-| feature:categories:search | 31.9% |
 | feature:adminPanel | 30.0% |
 | feature:manageProduct | 22.2% |
 | feature:auth | 13.5% |
-| feature:checkout | 10.4% |
 | feature:home | 9.5% |
 | network | 0.0% |
 | feature:paymentCompleted | 0.0% |
+| feature:checkout | 0.0% |
 
-> Overall line coverage: 36.7%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
+> Overall line coverage: 37.1%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
 
-**Report:** 2026-03-27 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
+**Report:** 2026-03-29 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
 
 ### What Kover Excludes
 

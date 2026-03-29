@@ -158,29 +158,27 @@ Auto-versioning from git tags. Android tests run on JVM — no emulator in CI. [
 169 tests across 34 files. All JVM — full run takes ~30 seconds, no emulator.
 
 <!-- coverage:start -->
+| Package | Line coverage |
+| ------- | ------------- |
+| domain:usecase | 98.8% |
+| feature:productsOverview | 90.3% |
+| feature:details | 90.1% |
+| feature:cart | 85.0% |
+| domain:models | 84.0% |
+| analytics:core | 77.4% |
+| shared:utils | 77.3% |
+| feature:profile | 65.0% |
+| feature:categories:search | 46.4% |
+| analytics:firebase | 45.2% |
+| feature:adminPanel | 30.0% |
+| feature:manageProduct | 22.2% |
+| feature:auth | 13.5% |
+| feature:home | 9.5% |
+| network | 0.0% |
+| feature:paymentCompleted | 0.0% |
+| feature:checkout | 0.0% |
 
-| Package                   | Line coverage |
-| ------------------------- | ------------- |
-| domain:usecase            | 98.8%         |
-| feature:productsOverview  | 90.3%         |
-| feature:details           | 90.2%         |
-| feature:cart              | 85.0%         |
-| domain:models             | 84.0%         |
-| analytics:core            | 77.4%         |
-| shared:utils              | 76.2%         |
-| feature:profile           | 65.0%         |
-| analytics:firebase        | 45.2%         |
-| feature:categories:search | 31.9%         |
-| feature:adminPanel        | 30.0%         |
-| feature:manageProduct     | 22.2%         |
-| feature:auth              | 13.5%         |
-| feature:checkout          | 10.4%         |
-| feature:home              | 9.5%          |
-| network                   | 0.0%          |
-| feature:paymentCompleted  | 0.0%          |
-
-> Overall line coverage: 36.7%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-03-27.
-
+> Overall line coverage: 37.1%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-03-29.
 <!-- coverage:end -->
 
 Stack: `kotlin.test` + `Turbine` + `Mokkery` + `Assertk` + `Robolectric` + `Kover`. [Full testing docs](docs/TESTING.md)

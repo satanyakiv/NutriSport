@@ -74,9 +74,9 @@ I brought it down to 2 minutes 30 seconds through a series of targeted changes: 
 
 Everything above — the modularity, the automation, the documentation, the testing discipline — I applied deliberately to one project. As proof that these principles work together at scale.
 
-| Android                                  | iOS                              |
-| ---------------------------------------- | -------------------------------- |
-| ![Android Demo](assets/demo-android.gif) | ![iOS Demo](assets/demo-ios.gif) |
+| Android                                     | iOS                                 |
+| ------------------------------------------- | ----------------------------------- |
+| ![Android Demo](../assets/demo-android.gif) | ![iOS Demo](../assets/demo-ios.gif) |
 
 <!-- TODO: replace with real GIFs after recording -->
 <!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->

@@ -46,9 +46,9 @@
 
 Ось що я вже побудував — можете подивитись.
 
-| Android                                  | iOS                              |
-| ---------------------------------------- | -------------------------------- |
-| ![Android Demo](assets/demo-android.gif) | ![iOS Demo](assets/demo-ios.gif) |
+| Android                                     | iOS                                 |
+| ------------------------------------------- | ----------------------------------- |
+| ![Android Demo](../assets/demo-android.gif) | ![iOS Demo](../assets/demo-ios.gif) |
 
 <!-- TODO: replace with real GIFs after recording -->
 <!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->

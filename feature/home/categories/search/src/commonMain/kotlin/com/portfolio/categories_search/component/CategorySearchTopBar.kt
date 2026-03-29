@@ -13,7 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.BorderIdle
@@ -35,13 +39,16 @@ internal fun CategorySearchTopBar(
   onSearchBarVisibilityChange: (Boolean) -> Unit,
   onBack: () -> Unit,
 ) {
+  val focusRequester = remember { FocusRequester() }
+
   AnimatedContent(targetState = searchBarVisible) { visible ->
     if (visible) {
+      LaunchedEffect(Unit) { focusRequester.requestFocus() }
       SearchBar(
         modifier = Modifier.padding(horizontal = 12.dp).fillMaxWidth(),
         inputField = {
           SearchBarDefaults.InputField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
             query = searchQuery,
             onQueryChange = onSearchQueryChange,
             expanded = false,

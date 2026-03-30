@@ -91,6 +91,8 @@ Everything above — the modularity, the automation, the documentation, the test
 
 Every engineering decision in this project has a documented reason.
 
+**Want to see it running?** [Email me](mailto:yakiv.bondar@gmail.com) — I'll add your Google account to the testers list and send a debug APK.
+
 [View the source on GitHub](https://github.com/satanyakiv/NutriSport)
 
 ---
@@ -104,7 +106,5 @@ Code quality becomes consistent — not because everyone agrees on style, but be
 ## Let's Talk
 
 If your team is building or scaling a mobile e-commerce product and needs someone who thinks about systems, not just features — let's talk.
-
-<!-- TODO: add real email and LinkedIn -->
 
 [Email](mailto:yakiv.bondar@gmail.com) · [LinkedIn](https://www.linkedin.com/in/yakivbondar) · [GitHub](https://github.com/satanyakiv/NutriSport)

@@ -12,10 +12,23 @@ A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production 
 
 ![Android Demo](assets/demo-android.gif)
 
+## Try It
+
+The app uses Firebase with restricted access — only approved Google accounts can sign in.
+
+**Want to test it?** [Email me](mailto:yakiv.bondar@gmail.com) or [open an issue](https://github.com/satanyakiv/NutriSport/issues) — I'll add your Google account within 24 hours.
+
+What happens behind the scenes:
+
+1. Your email gets added to the Google Cloud OAuth test users list
+2. Your account gets authorized in Firebase Auth
+3. You receive a debug APK via Firebase App Distribution
+
 ---
 
 ## Table of Contents
 
+- [Try It](#try-it)
 - [Why E-Commerce Is Hard](#why-e-commerce-is-hard)
 - [The Solution](#the-solution)
 - [Demo](#demo)
@@ -28,6 +41,8 @@ A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production 
 - [License](#license)
 
 ---
+
+ю
 
 ## Why E-Commerce Is Hard
 

@@ -7,6 +7,33 @@ automated quality, full documentation.
 
 ---
 
+## NutriSport — Proof of Concept
+
+Everything above — the modularity, the automation, the documentation, the testing discipline — I applied deliberately to one project. As proof that these principles work together at scale.
+
+| Android                                     | iOS                                 |
+| ------------------------------------------- | ----------------------------------- |
+| ![Android Demo](../assets/demo-android.gif) | ![iOS Demo](../assets/demo-ios.gif) |
+
+<!-- TODO: replace with real GIFs after recording -->
+<!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->
+
+- **25 independent modules** — features are built without affecting each other. A change to the cart doesn't recompile the product catalog.
+- **Android and iOS from one codebase** — market expansion without doubling the team or maintaining two separate apps.
+- **Offline-first shopping cart** — orders complete even on a bad connection. Prices are validated before checkout so users never pay a stale amount.
+- **169 automated tests** — changes don't break payments silently. The full test suite runs in 30 seconds, no device or emulator needed.
+- **4 automated pipelines** — from pull request validation to app store release. No manual builds, no human error in deploys.
+- **8 documentation files** — covering CI/CD, testing strategy, security audit, performance, offline architecture, crash reporting. A new developer is productive in under an hour.
+- **AI-enforced architecture standards** — rules, agents, and automated checks that ensure every contributor — human or AI — follows the same engineering standards.
+
+Every engineering decision in this project has a documented reason.
+
+**Want to see it running?** [Email me](mailto:yakiv.bondar@gmail.com) — I'll add your Google account to the testers list and send a debug APK.
+
+[View the source on GitHub](https://github.com/satanyakiv/NutriSport)
+
+---
+
 [Why e-commerce is hard](#i-build-e-commerce-apps-that-dont-break-when-the-business-changes) ·
 [What I do](#what-i-actually-do) ·
 [Three stories](#three-stories) ·
@@ -67,33 +94,6 @@ On a subscription e-commerce product, the CI build took 5 minutes. That sounds r
 I brought it down to 2 minutes 30 seconds through a series of targeted changes: parallel test execution, a Gradle and build tools upgrade, incremental builds, configuration cache, and restructuring modules so they compiled independently. Then I migrated the dependency injection framework from one that slowed compilation to one that didn't — and added a consistency check so the migration couldn't introduce regressions.
 
 5 developers multiplied by 10 builds multiplied by 2.5 minutes saved — that's 125 minutes returned to actual work, every single day. Not a feature. Not a redesign. An engineering decision that paid for itself in the first week.
-
----
-
-## NutriSport — Proof of Concept
-
-Everything above — the modularity, the automation, the documentation, the testing discipline — I applied deliberately to one project. As proof that these principles work together at scale.
-
-| Android                                     | iOS                                 |
-| ------------------------------------------- | ----------------------------------- |
-| ![Android Demo](../assets/demo-android.gif) | ![iOS Demo](../assets/demo-ios.gif) |
-
-<!-- TODO: replace with real GIFs after recording -->
-<!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->
-
-- **25 independent modules** — features are built without affecting each other. A change to the cart doesn't recompile the product catalog.
-- **Android and iOS from one codebase** — market expansion without doubling the team or maintaining two separate apps.
-- **Offline-first shopping cart** — orders complete even on a bad connection. Prices are validated before checkout so users never pay a stale amount.
-- **169 automated tests** — changes don't break payments silently. The full test suite runs in 30 seconds, no device or emulator needed.
-- **4 automated pipelines** — from pull request validation to app store release. No manual builds, no human error in deploys.
-- **8 documentation files** — covering CI/CD, testing strategy, security audit, performance, offline architecture, crash reporting. A new developer is productive in under an hour.
-- **AI-enforced architecture standards** — rules, agents, and automated checks that ensure every contributor — human or AI — follows the same engineering standards.
-
-Every engineering decision in this project has a documented reason.
-
-**Want to see it running?** [Email me](mailto:yakiv.bondar@gmail.com) — I'll add your Google account to the testers list and send a debug APK.
-
-[View the source on GitHub](https://github.com/satanyakiv/NutriSport)
 
 ---
 

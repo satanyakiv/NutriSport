@@ -37,7 +37,6 @@ import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.TextPrimary
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GoogleButton(
@@ -104,14 +103,4 @@ fun GoogleButton(
       )
     }
   }
-}
-
-@Composable
-@Preview
-private fun Preview() {
-  GoogleButton(
-    modifier = Modifier,
-    loading = false,
-    onClicked = {}
-  )
 }

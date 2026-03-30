@@ -16,10 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.FontSize
-import com.nutrisport.shared.Resources
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun InfoCard(
@@ -53,15 +51,4 @@ fun InfoCard(
       textAlign = TextAlign.Center,
     )
   }
-}
-
-@Suppress("UnusedPrivateMember")
-@Preview
-@Composable
-private fun InfoCardPreview() {
-  InfoCard(
-    image = Resources.Image.ShoppingCart,
-    title = "Title",
-    subtitle = "unum",
-  )
 }

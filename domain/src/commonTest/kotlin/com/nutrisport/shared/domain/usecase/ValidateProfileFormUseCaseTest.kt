@@ -13,10 +13,10 @@ class ValidateProfileFormUseCaseTest {
     private fun validForm() = mapOf(
         "firstName" to "John",
         "lastName" to "Doe",
-        "city" to "Belgrade",
-        "postalCode" to 11000,
-        "address" to "Main Street 1",
-        "phoneNumber" to PhoneNumber(dialCode = 381, number = "612345678"),
+        "city" to "Kyiv",
+        "postalCode" to 1001,
+        "address" to "Khreshchatyk 1",
+        "phoneNumber" to PhoneNumber(dialCode = 380, number = "501234567"),
     )
 
     private fun invokeWith(
@@ -80,6 +80,6 @@ class ValidateProfileFormUseCaseTest {
 
     @Test
     fun `should return false when phone number too short`() {
-        assertThat(invokeWith(phoneNumber = PhoneNumber(381, "1234"))).isFalse()
+        assertThat(invokeWith(phoneNumber = PhoneNumber(380, "1234"))).isFalse()
     }
 }

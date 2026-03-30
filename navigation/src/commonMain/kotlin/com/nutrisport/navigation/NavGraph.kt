@@ -1,5 +1,7 @@
 package com.nutrisport.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -28,6 +30,10 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
   NavHost(
     navController = navController,
     startDestination = startDestination,
+    enterTransition = { EnterTransition.None },
+    exitTransition = { ExitTransition.None },
+    popEnterTransition = { EnterTransition.None },
+    popExitTransition = { ExitTransition.None },
   ) {
     authDestination(navController)
     homeGraphDestination(navController)

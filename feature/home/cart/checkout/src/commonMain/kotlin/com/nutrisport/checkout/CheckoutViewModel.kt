@@ -29,7 +29,7 @@ data class CheckoutScreenState(
   val city: String? = null,
   val postalCode: Int? = null,
   val address: String? = null,
-  val country: Country = Country.Serbia,
+  val country: Country = Country.Ukraine,
   val phoneNumber: PhoneNumber? = null,
   val cart: List<com.nutrisport.shared.domain.CartItem> = emptyList(),
 )
@@ -75,7 +75,7 @@ class CheckoutViewModel(
               address = fetchedCustomer.address,
               phoneNumber = fetchedCustomer.phoneNumber,
               country = Country.entries.firstOrNull { it.dialCode == fetchedCustomer.phoneNumber?.dialCode }
-                ?: Country.Serbia,
+                ?: Country.Ukraine,
               cart = fetchedCustomer.cart
             )
             screenReady = UiState.Content(Either.Right(Unit))
@@ -115,10 +115,11 @@ class CheckoutViewModel(
   }
 
   fun updatePhoneNumber(value: String) {
+    val digitsOnly = value.filter { it.isDigit() }
     screenState = screenState.copy(
       phoneNumber = PhoneNumber(
         dialCode = screenState.country.dialCode,
-        number = value
+        number = digitsOnly
       )
     )
   }

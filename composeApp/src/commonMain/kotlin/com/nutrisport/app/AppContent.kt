@@ -17,11 +17,9 @@ import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.shared.Constants
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.navigation.Screen
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
-@Preview
 fun AppContent() {
   MaterialTheme {
     val debugToolkit = koinInject<DebugToolkit>()

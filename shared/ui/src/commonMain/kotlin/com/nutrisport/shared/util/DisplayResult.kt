@@ -7,8 +7,6 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +24,8 @@ fun <T> UiState<T>.DisplayResult(
   onLoading: (@Composable () -> Unit)? = null,
   onError: (@Composable (String) -> Unit)? = null,
   onSuccess: @Composable (T) -> Unit,
-  transitionSpec: ContentTransform? = scaleIn(tween(durationMillis = 400)) +
-    fadeIn(tween(durationMillis = 800))
-    togetherWith scaleOut(tween(durationMillis = 400)) +
-    fadeOut(
-      tween(durationMillis = 800),
-    ),
+  transitionSpec: ContentTransform? = fadeIn(tween(durationMillis = 200))
+    togetherWith fadeOut(tween(durationMillis = 200)),
   backgroundColor: Color? = null,
 ) {
   AnimatedContent(

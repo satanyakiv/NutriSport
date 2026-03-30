@@ -24,9 +24,9 @@ import nutrisport.shared.ui.generated.resources.ic_paypal
 import nutrisport.shared.ui.generated.resources.ic_plus
 import nutrisport.shared.ui.generated.resources.ic_right_arrow
 import nutrisport.shared.ui.generated.resources.ic_search
-import nutrisport.shared.ui.generated.resources.ic_serbia
 import nutrisport.shared.ui.generated.resources.ic_shopping_cart
 import nutrisport.shared.ui.generated.resources.ic_shopping_cart_image
+import nutrisport.shared.ui.generated.resources.ic_ukraine
 import nutrisport.shared.ui.generated.resources.ic_unlock
 import nutrisport.shared.ui.generated.resources.ic_usa
 import nutrisport.shared.ui.generated.resources.ic_user
@@ -72,6 +72,6 @@ object Resources {
   object Flag {
     val India = Res.drawable.ic_india
     val Usa = Res.drawable.ic_usa
-    val Serbia = Res.drawable.ic_serbia
+    val Ukraine = Res.drawable.ic_ukraine
   }
 }

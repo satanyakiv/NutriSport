@@ -58,6 +58,7 @@ fun ProductCard(
   ) {
     AsyncImage(
       modifier = Modifier
+        .padding(start = 12.dp)
         .size(120.dp)
         .clip(RoundedCornerShape(12.dp))
         .border(

@@ -97,9 +97,9 @@ fun HomeGraphScreen(
     modifier = Modifier
       .fillMaxSize()
       .background(animatedBackground)
-      .systemBarsPadding()
   ) {
     CustomDrawer(
+      modifier = Modifier.systemBarsPadding(),
       customer = customer,
       onProfileClick = navigateToProfile,
       onContactUsClick = {},

@@ -162,12 +162,12 @@ class AdminRepositoryImpl(
   }
 
   override fun searchProductByTitle(query: String): Flow<DomainResult<List<Product>>> {
-    currentUserId() ?: return flowOf(Either.Left(AppError.Unauthorized()))
+    if (currentUserId() == null) return flowOf(Either.Left(AppError.Unauthorized()))
     val queryText = query.lowercase().trim()
     return productCollection
       .orderBy("title")
-      .startAt(queryText)
-      .endAt(queryText + "\uf8ff")
+      .startAtFieldValues { add(queryText) }
+      .endAtFieldValues { add(queryText + "\uf8ff") }
       .toProductDtoListFlow(productMapper, errorMessage = "Error while searching products")
       .map { result ->
         result.map { dtos -> dtoToDomain.map(dtos) }

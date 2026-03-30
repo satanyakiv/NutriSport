@@ -22,6 +22,7 @@ import com.nutrisport.shared.util.UiState
 
 @Composable
 fun CustomDrawer(
+  modifier: Modifier = Modifier,
   customer: UiState<Customer>,
   onProfileClick: () -> Unit,
   onContactUsClick: () -> Unit,
@@ -29,11 +30,11 @@ fun CustomDrawer(
   onAdminPanelClick: () -> Unit,
 ) {
   Column(
-    modifier = Modifier.fillMaxWidth(0.6f)
+    modifier = modifier.fillMaxWidth(0.6f)
       .fillMaxHeight()
       .padding(horizontal = 12.dp),
   ) {
-    Spacer(modifier = Modifier.height(50.dp))
+    Spacer(modifier = Modifier.height(12.dp))
     Text(
       modifier = Modifier.fillMaxWidth(),
       text = "NUTRISPORT",

@@ -1,5 +1,7 @@
 package com.nutrisport.home.component
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +34,10 @@ internal fun HomeNavHost(
       modifier = Modifier.weight(1f),
       navController = navController,
       startDestination = Screen.ProductsOverview,
+      enterTransition = { EnterTransition.None },
+      exitTransition = { ExitTransition.None },
+      popEnterTransition = { EnterTransition.None },
+      popExitTransition = { ExitTransition.None },
     ) {
       composable<Screen.ProductsOverview> {
         ProductsOverviewRoute(goToDetails = navigateToDetails)

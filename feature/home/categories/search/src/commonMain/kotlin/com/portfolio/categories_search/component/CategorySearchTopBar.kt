@@ -7,7 +7,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarColors
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -76,7 +75,7 @@ internal fun CategorySearchTopBar(
             },
           )
         },
-        colors = SearchBarColors(
+        colors = SearchBarDefaults.colors(
           containerColor = SurfaceLighter,
           dividerColor = BorderIdle,
         ),
@@ -112,7 +111,7 @@ internal fun CategorySearchTopBar(
             )
           }
         },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
           containerColor = Surface,
           scrolledContainerColor = Surface,
           navigationIconContentColor = IconPrimary,

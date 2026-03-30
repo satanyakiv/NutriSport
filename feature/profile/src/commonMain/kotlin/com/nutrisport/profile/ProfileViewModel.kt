@@ -25,7 +25,7 @@ data class ProfileScreenState(
   val city: String? = null,
   val postalCode: Int? = null,
   val address: String? = null,
-  val country: Country = Country.Serbia,
+  val country: Country = Country.Ukraine,
   val phoneNumber: PhoneNumber? = null,
 )
 
@@ -68,7 +68,7 @@ class ProfileViewModel(
               address = fetchedCustomer.address,
               phoneNumber = fetchedCustomer.phoneNumber,
               country = Country.entries.firstOrNull { it.dialCode == fetchedCustomer.phoneNumber?.dialCode }
-                ?: Country.Serbia
+                ?: Country.Ukraine
             )
             screenReady = UiState.Content(Either.Right(Unit))
           }
@@ -107,10 +107,11 @@ class ProfileViewModel(
   }
 
   fun updatePhoneNumber(value: String) {
+    val digitsOnly = value.filter { it.isDigit() }
     screenState = screenState.copy(
       phoneNumber = PhoneNumber(
         dialCode = screenState.country.dialCode,
-        number = value
+        number = digitsOnly
       )
     )
   }

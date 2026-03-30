@@ -15,9 +15,6 @@ Everything above — the modularity, the automation, the documentation, the test
 | ------------------------------------------- | ----------------------------------- |
 | ![Android Demo](../assets/demo-android.gif) | ![iOS Demo](../assets/demo-ios.gif) |
 
-<!-- TODO: replace with real GIFs after recording -->
-<!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->
-
 - **25 independent modules** — features are built without affecting each other. A change to the cart doesn't recompile the product catalog.
 - **Android and iOS from one codebase** — market expansion without doubling the team or maintaining two separate apps.
 - **Offline-first shopping cart** — orders complete even on a bad connection. Prices are validated before checkout so users never pay a stale amount.

@@ -35,3 +35,6 @@ node_modules/
 # Tracey crash dumps (may contain PII hashes)
 tracey-dumps/
 /firebase-debug.log
+
+# Source video files (too large for git, only GIFs tracked)
+assets/*.mov

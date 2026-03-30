@@ -10,7 +10,9 @@ A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production 
 
 ## Demo
 
-![Android Demo](assets/demo-android.gif)
+| Android                                  | iOS                              |
+| ---------------------------------------- | -------------------------------- |
+| ![Android Demo](assets/demo-android.gif) | ![iOS Demo](assets/demo-ios.gif) |
 
 ## Try It
 

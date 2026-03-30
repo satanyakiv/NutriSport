@@ -16,9 +16,6 @@
 | ------------------------------------------- | ----------------------------------- |
 | ![Android Demo](../assets/demo-android.gif) | ![iOS Demo](../assets/demo-ios.gif) |
 
-<!-- TODO: replace with real GIFs after recording -->
-<!-- Flow: Auth → Home → Add to Cart → Search → Product Details → Add to Cart → Checkout -->
-
 **NutriSport** — інтернет-магазин спортивного харчування. Android та iPhone з одного проєкту. Каталог, пошук, кошик, оформлення замовлення, профіль покупця, адмін-панель. Працює офлайн, перевіряється автоматично, оновлюється без ручної роботи.
 
 **Хочете побачити наживо?** [Напишіть мені](mailto:yakiv.bondar@gmail.com) — додам ваш Google-акаунт до списку тестувальників і надішлю додаток.

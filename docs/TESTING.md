@@ -73,7 +73,7 @@ Convention plugin applies Kover after android configuration. Root `build.gradle.
 
 > Overall line coverage: 37.1%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
 
-**Report:** 2026-03-29 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
+**Report:** 2026-03-30 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
 
 ### What Kover Excludes
 

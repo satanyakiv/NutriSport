@@ -81,7 +81,12 @@ subprojects {
 
     tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         exclude { element ->
-            element.file.path.contains("/build/generated/")
+            element.file.invariantSeparatorsPath.contains("/build/generated/")
+        }
+    }
+    tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
+        exclude { element ->
+            element.file.invariantSeparatorsPath.contains("/build/generated/")
         }
     }
 

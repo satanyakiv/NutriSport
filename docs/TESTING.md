@@ -56,10 +56,10 @@ Convention plugin applies Kover after android configuration. Root `build.gradle.
 | domain:usecase | 98.8% |
 | feature:productsOverview | 90.3% |
 | feature:details | 90.1% |
-| feature:cart | 85.0% |
+| feature:cart | 86.6% |
 | domain:models | 84.0% |
 | analytics:core | 77.4% |
-| shared:utils | 77.3% |
+| shared:utils | 76.9% |
 | feature:profile | 65.0% |
 | feature:categories:search | 46.4% |
 | analytics:firebase | 45.2% |
@@ -71,7 +71,7 @@ Convention plugin applies Kover after android configuration. Root `build.gradle.
 | feature:paymentCompleted | 0.0% |
 | feature:checkout | 0.0% |
 
-> Overall line coverage: 37.1%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
+> Overall line coverage: 37.5%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
 
 **Report:** 2026-03-30 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
 

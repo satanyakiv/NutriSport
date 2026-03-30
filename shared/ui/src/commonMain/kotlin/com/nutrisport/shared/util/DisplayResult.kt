@@ -39,7 +39,11 @@ fun <T> UiState<T>.DisplayResult(
       .background(color = backgroundColor ?: Color.Unspecified),
     targetState = this,
     transitionSpec = {
-      transitionSpec ?: (EnterTransition.None togetherWith ExitTransition.None)
+      if (initialState::class == targetState::class) {
+        EnterTransition.None togetherWith ExitTransition.None
+      } else {
+        transitionSpec ?: (EnterTransition.None togetherWith ExitTransition.None)
+      }
     },
     label = "Content Animation",
   ) { state ->

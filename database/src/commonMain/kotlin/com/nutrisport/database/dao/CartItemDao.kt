@@ -2,6 +2,7 @@ package com.nutrisport.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import com.nutrisport.database.entity.CartItemEntity
 import kotlinx.coroutines.flow.Flow
@@ -23,4 +24,12 @@ interface CartItemDao {
 
   @Query("DELETE FROM cart_items WHERE customerId = :customerId")
   suspend fun deleteAllByCustomerId(customerId: String)
+
+  @Transaction
+  suspend fun replaceAllByCustomerId(customerId: String, cartItems: List<CartItemEntity>) {
+    deleteAllByCustomerId(customerId)
+    if (cartItems.isNotEmpty()) {
+      upsertAll(cartItems)
+    }
+  }
 }

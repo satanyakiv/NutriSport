@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class CustomerRepositoryImpl(
@@ -179,10 +178,9 @@ class CustomerRepositoryImpl(
               .collection("privateData")
               .document("role")
               .get()
-            val isAdmin = privateDataDocument.get<Boolean>("isAdmin") ?: false
+            val isAdmin = privateDataDocument.get<Boolean>("isAdmin")
             val dto = customerMapper.map(document, isAdmin)
             customerDao.upsert(dtoToEntity.map(dto))
-            cartItemDao.deleteAllByCustomerId(userId)
             val cartEntities = dto.cart.map { cartItem ->
               CartItemEntity(
                 id = cartItem.id,
@@ -192,9 +190,7 @@ class CustomerRepositoryImpl(
                 quantity = cartItem.quantity,
               )
             }
-            if (cartEntities.isNotEmpty()) {
-              cartItemDao.upsertAll(cartEntities)
-            }
+            cartItemDao.replaceAllByCustomerId(userId, cartEntities)
           }
         }
       } catch (e: Exception) {

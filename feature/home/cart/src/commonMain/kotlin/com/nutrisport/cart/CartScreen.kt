@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nutrisport.cart.component.CartItemCard
@@ -56,25 +57,30 @@ fun CartScreen(
               items = data,
               key = { it.cartItemId }
             ) { cartItemUi ->
-              CartItemCard(
-                cartItemUi = cartItemUi,
-                onMinusClick = { quantity ->
+              val onMinus = remember(cartItemUi.cartItemId) {
+                {
+                    quantity: Int ->
                   onUpdateQuantity(
                     cartItemUi.cartItemId,
                     quantity,
                     {},
                     { messageBarState.addError(it) },
                   )
-                },
-                onPlusClick = { quantity ->
+                }
+              }
+              val onPlus = remember(cartItemUi.cartItemId) {
+                {
+                    quantity: Int ->
                   onUpdateQuantity(
                     cartItemUi.cartItemId,
                     quantity,
                     {},
                     { messageBarState.addError(it) },
                   )
-                },
-                onDeleteClick = {
+                }
+              }
+              val onDelete = remember(cartItemUi.cartItemId, cartItemUi.title) {
+                {
                   onDeleteItem(
                     cartItemUi.cartItemId,
                     cartItemUi.title,
@@ -82,6 +88,12 @@ fun CartScreen(
                     { messageBarState.addError(it) },
                   )
                 }
+              }
+              CartItemCard(
+                cartItemUi = cartItemUi,
+                onMinusClick = onMinus,
+                onPlusClick = onPlus,
+                onDeleteClick = onDelete,
               )
             }
           }

@@ -193,7 +193,7 @@ Auto-versioning from git tags. Android tests run on JVM — no emulator in CI. [
 | feature:paymentCompleted | 0.0% |
 | feature:checkout | 0.0% |
 
-> Overall line coverage: 37.4%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-03-30.
+> Overall line coverage: 37.4%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-03-31.
 <!-- coverage:end -->
 
 Stack: `kotlin.test` + `Turbine` + `Mokkery` + `Assertk` + `Robolectric` + `Kover`. [Full testing docs](docs/TESTING.md)

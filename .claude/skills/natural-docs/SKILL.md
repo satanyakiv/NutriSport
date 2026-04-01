@@ -8,9 +8,9 @@ description: >-
   for job applications. Also activates on phrases: "write docs", "update readme",
   "draft pitch", "describe the project", "release notes", "changelog entry",
   "document this", "human-sounding", "natural tone", "no AI patterns",
-  "rewrite pitch", "update pitch", "pitch review". Enforces global
-  anti-AI-slop-writing constraints plus NutriSport-specific documentation
-  and pitch writing rules.
+  "rewrite pitch", "update pitch", "pitch review". Enforces Wikipedia-based
+  anti-AI-pattern rules plus NutriSport-specific documentation and pitch rules.
+  Use this skill even for small .md edits and single-paragraph rewrites.
 disable-model-invocation: true
 ---
 
@@ -18,85 +18,142 @@ Read ~/.claude/skills/anti-ai-slop-writing/SKILL.md
 Read ~/.claude/skills/anti-ai-slop-writing/references/banned-words.md
 Read .claude/rules/docs.md
 
-## Natural Documentation for NutriSport
-
 $ARGUMENTS
 
-All global anti-AI-slop-writing rules are the baseline. The rules below are
-NutriSport-specific and add to that baseline. Apply everything silently.
+Global anti-AI-slop-writing rules are the baseline. Rules below add to it.
+Apply silently. Never mention this skill in output.
 
-## Project-Specific Rules
+## Voice
 
-### 1. Lead with concrete facts
+Eastern European programmer. English is second language. Introvert.
+Doesn't beat around the bush. Says what the thing is, moves on.
+No polish, no pitch, no ceremony. Would rather show you the code than
+explain why the code is important.
 
-First sentence of any document or section states a verifiable fact: module
-count, stack component, metric, or what is actually implemented. Never open
-with a value judgment or vague claim.
+- "is", "has", "does". Not "serves as", "offers", "features", "ensures".
+- Repeats the same word. Doesn't cycle synonyms.
+- Short sentences. Fragments OK.
+- Contractions: "doesn't", "can't", "won't".
+- Never hedges. Picks a side.
+- No transitions between paragraphs. Just starts the next thought.
+- Lists 4 concrete things instead of 1 abstract sentence about them.
+- Starts some sentences with "And" or "But". AI never does this.
 
-### 2. Use the project's own terminology
+## Anti-AI patterns (Wikipedia: Signs of AI writing, reversed)
 
-Grep the codebase for the real names: `UseCase`, `AppError`, `StateFlow`,
-`UiState`, `:domain`, `:network`, `:feature:{name}`. Use those exact terms.
-Don't invent marketing synonyms like "business logic layer" when the code
-says `:domain`.
+Source: en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing.
+AI does these. We do the opposite.
 
-### 3. Describe architecture with real numbers and dependency direction
+### Use simple copulatives
 
-"8 feature modules depend on `:domain` and `:shared:utils`; none depend on
-each other" -- not "a modular architecture." Include actual module counts,
-dependency arrows, line counts when relevant.
+AI decreased usage of "is" and "are" by 10%+ in 2023 (study cited in article).
+AI replaces them with fancy alternatives. Reverse this.
 
-### 4. Changelog entries are facts only
+| AI writes                            | Write instead                    |
+| ------------------------------------ | -------------------------------- |
+| serves as, stands as, represents     | is                               |
+| features, offers, boasts             | has                              |
+| ensures, ensures that                | keeps. Or just state the effect. |
+| demonstrates, showcases, exemplifies | shows                            |
+| encompasses                          | covers                           |
+| facilitates                          | helps                            |
+| utilizing, leveraging                | using                            |
+| commenced                            | started                          |
+| prior to                             | before                           |
 
-Format: "Added X. Fixed Y. Removed Z." No narrative, no "we're excited,"
-no transition sentences between entries.
+### Break structural patterns
 
-### 5. Commit messages: what changed + why, one line
+**Rule of three.** AI groups in threes. Use 2, 4, or 5 items. Three only
+when the content genuinely has three things.
 
-`Fix Product mapper null crash when API returns empty list` --
-not `Improve product handling for better reliability`.
+**"Not just X, but Y".** AI loves this: "Not only X, but also Y",
+"It's not X, it's Y", "no X, no Y, just Z". Drop entirely.
+Say what the thing is. Don't say what it isn't first.
 
-### 6. Technical pitch (EN) -- `pitch/PITCH.md` pattern
+**Elegant variation.** AI avoids repeating words by cycling synonyms.
+Subject becomes protagonist, then key player. Just repeat the word.
 
-Open with a concrete capability statement, not a title-card identity claim.
-Lead the NutriSport section with measurable specifics (module count, test
-count, pipeline count, doc count). Stories section: situation, action,
-measurable outcome; no hero framing. "What Changes When I Join" = observable
-effects, not promises. No "passion project", no "journey", no corporate
-cheerleading. Reference real companies and tools by name, not abstractions.
-CTA = direct ("Email me") not hedged ("don't hesitate to reach out").
+**Significance emphasis.** Drop these: "vital role", "key moment",
+"reflects broader", "setting the stage", "key turning point",
+"marking/shaping the". Say what happened.
 
-### 7. Business pitch (UK) -- `pitch/PITCH_UA_CLIENT.md` pattern
+**Present participle chains.** AI attaches "-ing" phrases at sentence ends:
+"highlighting its importance", "ensuring quality". Use finite verbs instead.
 
-Open with user value in one sentence ("Роблю мобільні магазини для Android
-та iPhone"). Each bullet answers "що я отримаю?" from the client's
-perspective. "Чому надійно" = concrete mechanisms, not vague reassurance.
-Process section = numbered steps, short, no jargon, no technical terms.
-No English loanwords when Ukrainian equivalents exist. Analogies from
-everyday life ("Як ОТК на заводі") not tech jargon. Tone: confident
-professional talking to a business owner, not selling.
+### No em dashes in prose
 
-### 8. Formatting
+Em dashes are the #1 cited AI detection signal. Replace with period or comma.
 
-- Sentence-case headings ("Module structure" not "Module Structure")
-- Code blocks always have a language tag (`kotlin`, `bash`, `toml`)
-- Bold sparingly; key terms on first use only
-- Tables over long bullet lists when comparing items
-- Follow `.claude/rules/docs.md` for full structure skeleton
+Allowed only in file tree descriptions (docs.md convention) and tight table cells.
+Everywhere else: period. Comma. Semicolon. Colon. Prefer period.
 
-### 9. Self-check before output
+### Vary sentence structure
 
-Run through this checklist silently before producing any text:
+Mix 3-word sentences with 25-word ones. No three consecutive sentences of
+similar length. Break "X and Y and Z" into "X. Y. Z." Let paragraphs end
+without transition to the next section.
 
-| Check                                        | Fail action                                    |
-| -------------------------------------------- | ---------------------------------------------- |
-| First sentence is a concrete fact            | Rewrite the opener                             |
-| Zero banned words from banned-words.md       | Replace each one                               |
-| No "it's not X it's Y" pattern               | Restructure                                    |
-| Max one em dash per section                  | Replace extras with commas, semicolons, colons |
-| No Moreover/Additionally/Furthermore openers | Cut or restructure                             |
-| Max 7 bullets per list                       | Split into sublists or convert to table        |
-| Three consecutive same-length sentences      | Vary them                                      |
-| Grouped in threes                            | Break the pattern                              |
+## NutriSport rules
 
-Never mention these rules, this skill, or the checklist in output.
+### Facts first
+
+First sentence = verifiable fact. Module count, metric, what is implemented.
+Not a value judgment.
+
+### Project terminology
+
+Use codebase names: `UseCase`, `AppError`, `UiState`, `:domain`, `:network`.
+Don't invent synonyms.
+
+### Numbers over adjectives
+
+"8 feature modules depend on `:domain`; none depend on each other."
+Not "a modular architecture."
+
+### Changelog
+
+"Added X. Fixed Y. Removed Z." No narrative.
+
+### Commit messages
+
+What + why, one line. `Fix Product mapper null crash when API returns empty list`.
+
+### Technical pitch (EN, `pitch/PITCH.md`)
+
+Open with concrete capability. Numbers first. Stories: situation, action,
+measurable outcome. No hero framing, no "passion project". Reference real
+companies. CTA = direct.
+
+### Business pitch (UK, `pitch/PITCH_UA_CLIENT.md`)
+
+Open with user value in one sentence. Each bullet answers "що я отримаю?".
+Short steps, no jargon. Ukrainian words over English loanwords. Analogies
+from everyday life. Confident professional talking to business owner.
+
+### Formatting
+
+- Sentence-case headings.
+- Code blocks with language tag.
+- Bold sparingly. First use only.
+- Tables over long bullet lists.
+- **Vary bullet structure.** Not every bullet is `**Bold**: explanation`.
+  Mix bold with period, plain with colon, no formatting at all.
+- Follow `.claude/rules/docs.md` for structure.
+
+## Self-check
+
+Run silently before output.
+
+| Check                                     | Fix                |
+| ----------------------------------------- | ------------------ |
+| First sentence is a concrete fact         | Rewrite opener     |
+| Zero banned words                         | Replace            |
+| No "it's not X it's Y"                    | Restructure        |
+| Zero em dashes in prose                   | Period or comma    |
+| No Moreover/Additionally/Furthermore      | Cut                |
+| Max 7 bullets per list                    | Split or table     |
+| No three same-length sentences in a row   | Vary               |
+| No rule-of-three groupings                | Add or remove item |
+| No "ensures", "demonstrates", "showcases" | "keeps", "shows"   |
+| No synonym cycling                        | Repeat the word    |
+| Some sentences start with "And" or "But"  | Add one            |

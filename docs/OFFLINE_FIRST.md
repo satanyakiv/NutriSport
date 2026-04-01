@@ -47,7 +47,7 @@ NutriSport uses an offline-first pattern where the local Room database is the **
 | **Passive Sync**   | Automatic   | `syncScope.launch { snapshots.collect {} }` | Fire-and-forget |
 | **Active Refresh** | User action | `suspend fun refreshProductById(id)`        | `DomainResult`  |
 
-Passive sync runs in a `CoroutineScope(SupervisorJob() + Dispatchers.IO)` — errors are logged but never crash the UI. Active refresh is a one-shot suspend function that the ViewModel awaits.
+Passive sync runs in a `CoroutineScope(SupervisorJob() + Dispatchers.IO)`. Errors are logged but never crash the UI. Active refresh is a one-shot suspend function that the ViewModel awaits.
 
 ## ConnectivityObserver
 
@@ -85,7 +85,7 @@ Database-level tracking via `previouslyKnownPrice` field on `ProductEntity`:
 ```
 
 - `ProductDtoToEntityMapper.resolvePreviousPrice()` handles the logic
-- UI compares `price` vs `previouslyKnownPrice` — if different, shows `PriceChangeBanner`
+- UI compares `price` vs `previouslyKnownPrice`. If different, shows `PriceChangeBanner`
 - User acknowledges → `ProductDao.clearPreviousPrice(id)` sets field to `NULL`
 
 **Room Migration v1 → v2** adds the `previouslyKnownPrice` column:

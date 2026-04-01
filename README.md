@@ -1,6 +1,6 @@
 # NutriSport
 
-A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production engineering — offline-first architecture, CI/CD to both stores, OWASP-hardened security, and AI-assisted development — at portfolio scale.
+KMP e-commerce app with 25 modules. Offline-first, CI/CD to both stores, OWASP-hardened, AI-assisted development.
 
 [![CI](https://github.com/satanyakiv/NutriSport/actions/workflows/pr.yml/badge.svg)](https://github.com/satanyakiv/NutriSport/actions/workflows/pr.yml)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-7F52FF?logo=kotlin&logoColor=white)
@@ -16,9 +16,9 @@ A 25-module Kotlin Multiplatform e-commerce app built to demonstrate production 
 
 ## Try It
 
-The app uses Firebase with restricted access — only approved Google accounts can sign in.
+The app uses Firebase with restricted access. Only approved Google accounts can sign in.
 
-**Want to test it?** [Email me](mailto:yakiv.bondar@gmail.com) or [open an issue](https://github.com/satanyakiv/NutriSport/issues) — I'll add your Google account within 24 hours.
+**Want to test it?** [Email me](mailto:yakiv.bondar@gmail.com) or [open an issue](https://github.com/satanyakiv/NutriSport/issues). I'll add your Google account within 24 hours.
 
 What happens behind the scenes:
 
@@ -46,26 +46,26 @@ What happens behind the scenes:
 
 ## Why E-Commerce Is Hard
 
-Requirements mutate constantly. A new promo rule, a changed discount tier, an edge case in cart validation — in e-commerce, the business logic layer takes more hits than any other part of the system. If it is tangled with platform code, every change becomes a surgery.
+Requirements change all the time. New promo rule, changed discount, edge case in cart, seasonal campaign. In e-commerce the business logic takes more hits than anything else. Tangled with platform code = every change is painful.
 
-Data is never clean. Prices go stale mid-session, inventory updates while the user is checking out, and network drops during payment. An app that only works online is an app that loses orders. Offline-first is not a nice-to-have — it is the difference between a completed checkout and an abandoned cart.
+Data is never clean. Prices go stale mid-session, inventory changes during checkout, network drops during payment. Online-only app loses orders. Offline-first fixes that.
 
-Security is table stakes. Client-side authorization bypasses, PII lingering after sign-out, cleartext traffic — one finding in production and users lose trust. OWASP is not a checkbox exercise; it is an engineering constraint that shapes every layer.
+Security matters. Client-side auth bypasses, PII left after sign-out, cleartext traffic, missing backup protection. One bug in production and users stop trusting the app. OWASP is an engineering constraint.
 
-**Most portfolio apps demonstrate UI skills. This one demonstrates the engineering discipline that keeps an e-commerce product alive after launch.**
+**This project shows what keeps an e-commerce product running after launch.**
 
 ## The Solution
 
-- **Clean Architecture across 25 KMP modules** — domain logic changes without recompiling platform or UI layers. 3 convention plugins enforce consistency across every module.
-- **Offline-first with Room as single source of truth** — UI always reads from local cache, Firebase syncs in background, price tracking catches mid-session changes at checkout.
-- **OWASP-hardened** — server-side admin auth via Firestore rules, HTTPS-only network config, Room + cart cleared on sign-out, zero secrets in git.
-- **4 CI/CD pipelines** — PR validation with lint + test + coverage, debug deploy to Firebase App Distribution, tag-triggered signed release, iOS via Fastlane + TestFlight.
-- **169 tests across 34 files** — domain use cases at 98% coverage, ViewModels tested with Turbine + Fake repositories, UI smoke tests running on JVM via Robolectric (~30s full run, no emulator).
-- **AI development infrastructure** — `.claude/` directory with agents, commands, skills, rules, and hooks that enforce architecture automatically. Any team member — human or AI — follows the same standards.
+- 25 KMP modules with Clean Architecture. Domain logic changes without recompiling platform or UI. 3 convention plugins keep everything consistent.
+- **Offline-first**: Room is the single source of truth. UI reads from local cache, Firebase syncs in background. Price tracking catches mid-session changes at checkout.
+- OWASP-hardened: server-side admin auth via Firestore rules, HTTPS-only, Room + cart cleared on sign-out, no secrets in git.
+- **4 CI/CD pipelines.** PR validation (lint + test + coverage), debug deploy to Firebase App Distribution, tag-triggered signed release, iOS via Fastlane + TestFlight.
+- 169 tests across 34 files. Domain use cases at 98% coverage. ViewModels tested with Turbine + Fake repositories. UI smoke tests on JVM via Robolectric, ~30s full run, no emulator.
+- `.claude/` directory: 3 agents, 7 commands, 8 skills, 8 rules, 3 hooks. Anyone joining the project (human or AI) follows the same standards.
 
 ## Architecture
 
-Business logic changes weekly in e-commerce. Clean Architecture ensures those changes stay in the domain layer — no platform recompilation, no UI side effects, every layer testable in isolation.
+Business logic changes weekly in e-commerce. Clean Architecture keeps those changes in the domain layer. No platform recompilation, no UI side effects. Every layer is testable in isolation.
 
 ```mermaid
 graph TD
@@ -166,34 +166,35 @@ graph TD
 | [`release.yml`](.github/workflows/release.yml)         | Git tag `v*` | Signed APK → Firebase App Distribution                                    |
 | [`ios-release.yml`](.github/workflows/ios-release.yml) | Manual       | K/Native → Fastlane Match → TestFlight (requires Apple Developer Program) |
 
-Auto-versioning from git tags. Android tests run on JVM — no emulator in CI. [Full CI/CD docs](docs/CI.md)
+Auto-versioning from git tags. Android tests run on JVM. No emulator in CI. [Full CI/CD docs](docs/CI.md)
 
 ### Testing
 
-169 tests across 34 files. All JVM — full run takes ~30 seconds, no emulator.
+169 tests across 34 files. All JVM. Full run takes ~30 seconds, no emulator.
 
 <!-- coverage:start -->
-| Package | Line coverage |
-| ------- | ------------- |
-| domain:usecase | 98.8% |
-| feature:productsOverview | 90.3% |
-| feature:details | 90.1% |
-| feature:cart | 86.6% |
-| domain:models | 84.0% |
-| analytics:core | 77.4% |
-| shared:utils | 76.4% |
-| feature:profile | 64.2% |
-| feature:categories:search | 46.4% |
-| analytics:firebase | 45.2% |
-| feature:adminPanel | 30.0% |
-| feature:manageProduct | 22.2% |
-| feature:auth | 14.7% |
-| feature:home | 9.2% |
-| network | 0.0% |
-| feature:paymentCompleted | 0.0% |
-| feature:checkout | 0.0% |
 
-> Overall line coverage: 37.4%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-03-31.
+| Package                   | Line coverage |
+| ------------------------- | ------------- |
+| domain:usecase            | 98.8%         |
+| feature:productsOverview  | 90.3%         |
+| feature:details           | 90.1%         |
+| feature:cart              | 86.6%         |
+| domain:models             | 84.0%         |
+| analytics:core            | 77.4%         |
+| shared:utils              | 76.4%         |
+| feature:profile           | 64.2%         |
+| feature:categories:search | 46.4%         |
+| analytics:firebase        | 45.2%         |
+| feature:adminPanel        | 30.0%         |
+| feature:manageProduct     | 22.2%         |
+| feature:auth              | 14.7%         |
+| feature:home              | 9.2%          |
+| network                   | 0.0%          |
+| feature:paymentCompleted  | 0.0%          |
+| feature:checkout          | 0.0%          |
+
+> Overall line coverage: 37.4%. Low aggregate reflects untested generated code, UI composables, and data layer. Tested packages average 80%+. Report: 2026-03-31.
 <!-- coverage:end -->
 
 Stack: `kotlin.test` + `Turbine` + `Mokkery` + `Assertk` + `Robolectric` + `Kover`. [Full testing docs](docs/TESTING.md)
@@ -219,25 +220,25 @@ Crash reporting: Firebase Crashlytics in release builds, [Tracey flight recorder
 
 ## AI-Assisted Development
 
-The `.claude/` directory is not a collection of prompts — it is a **development standards encoded as executable constraints**. Architecture rules, testing patterns, security policies, and development workflows are encoded as executable constraints. Any engineer joining the project — human or AI — works under the same standards from day one.
+`.claude/` directory has architecture rules, testing patterns, security policies, development workflows. Anyone joining the project (human or AI) follows the same standards.
 
 ### Infrastructure
 
-| Component     | Count | Examples                                                                                            |
-| ------------- | ----- | --------------------------------------------------------------------------------------------------- |
-| Agents        | 3     | Architecture reviewer, OWASP security auditor, Crash analyzer                                       |
-| Commands      | 6     | `/fix` (TDD), `/refactor`, `/clean-arch`, `/debug-deps`, `/security-audit`, `/debug-crash`          |
-| Skills        | 7     | Test generation, Feature scaffolding, Coverage analysis, Feature orchestration, Live crash analysis |
-| Rules         | 8     | Architecture, Conventions, Testing, Models, Error handling, Docs, Prompts, Plan mode                |
-| Feature plans | 13    | Orchestrated across 5 parallel groups with conflict matrix                                          |
-| Hooks         | 2     | PreToolUse blocks editing secrets files; PostToolUse auto-detects crashes in logs                   |
+| Component     | Count | Examples                                                                                                                                          |
+| ------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agents        | 3     | Architecture reviewer, OWASP security auditor, Crash analyzer                                                                                     |
+| Commands      | 7     | `/fix` (TDD), `/refactor`, `/clean-arch`, `/debug-deps`, `/security-audit`, `/debug-crash`, `/natural-docs`                                       |
+| Skills        | 8     | Test generation, Feature scaffolding, Coverage analysis, Feature orchestration, Live crash analysis, Session replay, Remote Compose, Natural docs |
+| Rules         | 8     | Architecture, Conventions, Testing, Models, Error handling, Docs, Prompts, Plan mode                                                              |
+| Feature plans | 13    | Orchestrated across 5 parallel groups with conflict matrix                                                                                        |
+| Hooks         | 3     | PreToolUse blocks editing secrets files; PostToolUse auto-detects crashes in logs; Notification on permission prompt                              |
 
 ### What This Means in Practice
 
-- **Architecture enforcement** — `/clean-arch` validates dependency flow and layer boundaries before code review happens
-- **Automated TDD** — `/fix` follows Red-Green-Refactor: reproduce issue → write failing test → minimal fix → verify
-- **Live crash triage** — Crashlytics MCP integration fetches production crash data, correlates stacktraces with source code, suggests fixes
-- **Parallel feature development** — orchestrator defines 5 execution groups with a conflict matrix; git worktrees isolate parallel work on shared files
+- `/clean-arch` validates dependency flow and layer boundaries before code review
+- **Automated TDD**: `/fix` does Red-Green-Refactor. Reproduce issue, write failing test, minimal fix, verify.
+- Crashlytics MCP fetches production crashes, correlates with source code, suggests fixes
+- Orchestrator has 5 execution groups with conflict matrix. Git worktrees isolate parallel work on shared files.
 
 Full AI infrastructure: [CLAUDE.md](CLAUDE.md)
 

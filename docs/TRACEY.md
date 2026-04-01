@@ -2,9 +2,9 @@
 
 ## Overview
 
-Tracey (`com.himanshoe:tracey:0.0.2-RC`) is a flight recorder for Compose. It continuously records the last 30 seconds of app events into a ring buffer. On crash — saves a JSON session dump to disk, and on next launch — dispatches it to reporters.
+Tracey (`com.himanshoe:tracey:0.0.2-RC`) is a flight recorder for Compose. It records the last 30 seconds of app events into a ring buffer. On crash it saves a JSON session dump to disk. On next launch it dispatches the dump to reporters.
 
-**Purpose:** Replace vague bug descriptions ("I tapped here, went there, crashed") with structured session dumps containing gesture paths, navigation history, and crash stacktraces.
+Replaces vague bug descriptions ("I tapped here, went there, crashed") with structured session dumps: gesture paths, navigation history, crash stacktraces, lifecycle events.
 
 ## Stack
 
@@ -41,7 +41,7 @@ Thread-safe `ArrayDeque` protected by `Mutex`:
 
 - `add(event)` — appends event + **lazy pruning**: removes events older than `maxDurationMs` (30s) or exceeding `maxEvents` (500)
 - `snapshot()` — suspending safe copy of the buffer (for manual capture)
-- `snapshotUnsafe()` — synchronous copy **without mutex** — used by crash handler because the process is dying and coroutine context is unavailable
+- `snapshotUnsafe()` — synchronous copy **without mutex**. Used by crash handler because the process is dying and coroutine context is unavailable
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -86,13 +86,12 @@ Walks from deepest node at `(x, y)` up to root, collecting ancestor labels.
 
 ### 4. TraceyHost (`TraceyHost.kt`)
 
-Root composable wrapper with three responsibilities:
+Root composable wrapper. Does 4 things:
 
-1. **Screenshot capture** — `GraphicsLayer.record { drawContent() }` enables `toImageBitmap()` for PNG snapshots
+1. **Screenshot capture** — `GraphicsLayer.record { drawContent() }` gives you `toImageBitmap()` for PNG snapshots
 2. **Recording modifier** — attaches `recordingEngine.modifier()` (pointerInput) to root `Box`
 3. **Debug overlay** — when `showOverlay = true`, renders live event log + gesture trails on Canvas
-
-Wiring: `recordingEngine.onEventRecorded = overlayState::addEvent` — each event simultaneously goes to the buffer AND the overlay.
+4. **Event wiring** — `recordingEngine.onEventRecorded = overlayState::addEvent`. Each event goes to both the buffer and the overlay
 
 ### 5. Crash Handling (`CrashHandler.kt`)
 
@@ -127,7 +126,7 @@ Tracey.install()
 
 - Adds `OnDestinationChangedListener` to `NavController`
 - Records `InteractionEvent.ScreenView(route)` on each navigation
-- Cleanup via `DisposableEffect` — listener removed automatically on disposal
+- Cleanup via `DisposableEffect`. Listener removed automatically on disposal
 
 ### 7. Reporter System
 
@@ -137,7 +136,7 @@ interface TraceyReporter {
 }
 ```
 
-`ReporterDispatcher` calls all reporters **concurrently** in supervised coroutines — one reporter failure does not block others. Errors are swallowed and logged.
+`ReporterDispatcher` calls all reporters **concurrently** in supervised coroutines. One reporter failure does not block others. Errors are swallowed and logged.
 
 **Built-in reporters:**
 
@@ -210,7 +209,7 @@ data class TraceyConfig(
 
 ## NutriSport Integration
 
-Tracey is integrated via **Strategy pattern + build-type DI** — zero impact on release/iOS builds. See architecture details in the main [CLAUDE.md](../CLAUDE.md) and commit `21b5253`.
+Tracey is integrated via **Strategy pattern + build-type DI**. Zero impact on release/iOS builds. See architecture details in the main [CLAUDE.md](../CLAUDE.md) and commit `21b5253`.
 
 ```
 DebugToolkit (interface, :navigation/commonMain)

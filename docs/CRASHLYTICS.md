@@ -1,6 +1,6 @@
 # Crashlytics
 
-Firebase Crashlytics for automatic crash reporting in production builds. Integrated directly in `androidApp` without abstractions — Crashlytics auto-captures all unhandled exceptions.
+Firebase Crashlytics for automatic crash reporting in production builds. Integrated directly in `androidApp` without abstractions. Crashlytics auto-captures all unhandled exceptions.
 
 ## Stack
 
@@ -33,7 +33,7 @@ Firebase Crashlytics SDK (auto-capture)
                                      └── Reproduce crash via prompt
 ```
 
-**Three complementary systems:**
+**Complementary systems:**
 
 | System               | Environment  | Captures                                            | Analysis                                   |
 | -------------------- | ------------ | --------------------------------------------------- | ------------------------------------------ |
@@ -53,11 +53,11 @@ androidApp/build.gradle.kts      — plugin applied + dependency
 androidApp/.../NutrisportApplication.kt — via FirebaseConfigurator (Strategy pattern)
 ```
 
-> Note: Crashlytics plugin is NOT declared in root `build.gradle.kts` — only in `androidApp`. Root declaration causes "Google-Services plugin not found" error.
+> Note: Crashlytics plugin is NOT declared in root `build.gradle.kts`. Only in `androidApp`. Root declaration causes "Google-Services plugin not found" error.
 
 ### Collection Toggle (via FirebaseConfigurator Strategy)
 
-Firebase initialization and Crashlytics configuration use the Strategy pattern — zero `if/else` in `NutrisportApplication`:
+Firebase initialization and Crashlytics configuration use the Strategy pattern. Zero `if/else` in `NutrisportApplication`:
 
 ```kotlin
 // NutrisportApplication.onCreate():
@@ -74,7 +74,7 @@ Implementations live in `androidApp/src/{debug,release,benchmark}/`, wired via `
 
 ### Mapping Files (Deobfuscation)
 
-The Crashlytics Gradle plugin automatically uploads ProGuard/R8 mapping files during `assembleRelease`. This enables readable stacktraces in the Firebase Console.
+The Crashlytics Gradle plugin automatically uploads ProGuard/R8 mapping files during `assembleRelease`. Stacktraces become readable in the Firebase Console.
 
 Existing ProGuard rule covers GitLive Firebase classes:
 
@@ -84,7 +84,7 @@ Existing ProGuard rule covers GitLive Firebase classes:
 
 ## Firebase MCP Plugin
 
-Enables automated crash analysis directly from Claude Code.
+Automates crash analysis from Claude Code.
 
 ### Setup
 
@@ -129,7 +129,7 @@ Starts a conversational debugging session: prioritizes issues, fetches sample ev
 
 ## Emulator Scenario Testing (claude-in-mobile)
 
-Instead of writing in-code UI tests for every crash reproduction, the `claude-in-mobile` MCP plugin drives an Android emulator directly from Claude prompts during local development. Scenarios are described in natural language — Claude launches the emulator, navigates the app, and executes the steps to reproduce or verify a fix.
+Instead of writing in-code UI tests for every crash reproduction, the `claude-in-mobile` MCP plugin drives an Android emulator directly from Claude prompts during local development. Scenarios are described in natural language. Claude launches the emulator, navigates the app, runs the steps to reproduce or verify a fix.
 
 ### How It Works
 

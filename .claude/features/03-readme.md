@@ -6,7 +6,7 @@ Depends on: none
 
 ## Context
 
-No comprehensive README exists. A portfolio project needs a polished README with architecture diagram (Mermaid), tech stack, screenshots placeholder, and setup instructions.
+No proper README exists. A portfolio project needs a polished README with architecture diagram (Mermaid), tech stack, screenshots placeholder, and setup instructions.
 
 ## Files to Create
 

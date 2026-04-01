@@ -1,6 +1,6 @@
 # Performance
 
-NutriSport uses Baseline Profiles for AOT compilation of hot paths, reducing cold startup time and improving scroll/navigation jank. A dedicated `:benchmark` module generates profiles against real Compose UI using fake data — no Firebase dependency, fully deterministic and offline.
+NutriSport uses Baseline Profiles for AOT compilation of hot paths. Cold startup gets faster, scroll and navigation jank drops. A dedicated `:benchmark` module generates profiles against real Compose UI using fake data. No Firebase dependency, fully deterministic and offline.
 
 Compose stability optimizations (`@Immutable`, `ImmutableList`) are planned but not yet implemented.
 
@@ -46,7 +46,7 @@ BaselineProfileRule.collect() / MacrobenchmarkRule.measureRepeated()
 baseline-prof.txt (generated in androidApp/src/release/generated/)
 ```
 
-**Why fake data:** the benchmark build type sets `USE_FAKE_DATA=true`, which swaps real Firebase repositories for in-memory fakes from `:shared:testing`. This ensures deterministic results, no network dependency, and exercises the same Compose UI code paths that real users hit.
+**Why fake data:** the benchmark build type sets `USE_FAKE_DATA=true`, which swaps real Firebase repositories for in-memory fakes from `:shared:testing`. Results are deterministic. No network dependency. And the same Compose UI code paths that real users hit get exercised.
 
 ## Module Structure
 
@@ -106,7 +106,7 @@ Both use `StartupMode.COLD` with `pressHome()` in setup block.
 ./gradlew :androidApp:assembleBenchmark
 ```
 
-> **Note:** all benchmark commands require a physical device or emulator. They are not part of CI — see "Not Covered" section.
+> **Note:** all benchmark commands require a physical device or emulator. They are not part of CI. See "Not Covered" section.
 
 ## Build Types
 
@@ -116,7 +116,7 @@ Both use `StartupMode.COLD` with `pressHome()` in setup block.
 | `release`   | —         | release | no         | `false`         | yes      | yes         |
 | `benchmark` | `release` | debug   | no         | **`true`**      | **no**   | yes         |
 
-The `benchmark` type inherits R8/shrinkResources from `release` but uses debug signing (required by `BaselineProfileRule`) and enables fake data to eliminate Firebase as a variable.
+The `benchmark` type inherits R8/shrinkResources from `release` but uses debug signing (required by `BaselineProfileRule`) and switches to fake data to eliminate Firebase as a variable.
 
 ## Compose Stability (Planned)
 
@@ -155,7 +155,7 @@ implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$version")
 
 ## Not Covered
 
-- **Warm/Hot startup benchmarks** — cold start is the primary metric; warm/hot show diminishing returns
+- **Warm/Hot startup benchmarks** — cold start is what we measure; warm/hot show diminishing returns
 - **Frame timing / jank metrics** — fake data set (6 products) is too small for meaningful scroll perf data
 - **iOS profiling** — no Baseline Profile equivalent on iOS; Instruments profiling is manual-only
 - **CI-integrated benchmarks** — requires a physical device or emulator with API 28+; not available in GitHub Actions runners

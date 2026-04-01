@@ -1,4 +1,4 @@
-# 02 — Comprehensive Tests
+# 02 — Full Test Coverage
 
 Status: IDLE
 Group: E (runs LAST — covers all new code)
@@ -11,6 +11,7 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 ## Files to Create
 
 ### Mapper Tests
+
 - [ ] `network/src/commonTest/.../mapper/ProductMapperTest.kt`
 - [ ] `network/src/commonTest/.../mapper/CustomerMapperTest.kt`
 - [ ] `network/src/commonTest/.../mapper/CartItemMapperTest.kt`
@@ -19,6 +20,7 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 - [ ] `feature/cart/src/commonTest/.../mapper/CartItemUiMapperTest.kt`
 
 ### ViewModel Tests
+
 - [ ] `feature/home/src/commonTest/.../HomeViewModelTest.kt`
 - [ ] `feature/cart/src/commonTest/.../CartViewModelTest.kt`
 - [ ] `feature/details/src/commonTest/.../DetailsViewModelTest.kt`
@@ -26,6 +28,7 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 - [ ] `feature/profile/src/commonTest/.../ProfileViewModelTest.kt`
 
 ### UseCase Tests
+
 - [ ] `domain/src/commonTest/.../usecase/CalculateCartTotalUseCaseTest.kt`
 - [ ] `domain/src/commonTest/.../usecase/EnrichCartWithProductsUseCaseTest.kt`
 - [ ] `domain/src/commonTest/.../usecase/ValidateProfileFormUseCaseTest.kt`
@@ -34,6 +37,7 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 - [ ] `domain/src/commonTest/.../usecase/ObserveEnrichedCartUseCaseTest.kt`
 
 ### Fake Data Factories
+
 - [ ] `shared/testing/src/commonMain/.../FakeData.kt` — fakeProduct(), fakeCustomer(), etc.
 
 ## Files to Modify
@@ -43,6 +47,7 @@ Current test coverage is minimal. Need mapper tests, ViewModel tests, use case t
 ## Dependencies (libs)
 
 All already in convention plugins:
+
 - `kotlin.test`
 - `turbine`
 - `mokkery`

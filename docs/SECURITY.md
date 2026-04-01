@@ -64,7 +64,7 @@ Security measures applied to NutriSport, mapped to OWASP Mobile Top-10 (2024).
 
 ## M5 — Network Security
 
-**Vulnerability:** No `network_security_config.xml` — cleartext traffic not explicitly blocked.
+**Vulnerability:** No `network_security_config.xml`. Cleartext traffic not explicitly blocked.
 
 **Fix:**
 

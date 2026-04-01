@@ -104,13 +104,13 @@ Source-of-truth files live outside the repository in `~/Documents/NutriSport/`:
    ./scripts/setup-firebase.sh
    ```
 
-**After `git clean -fdx` or fresh clone** — re-run the script:
+**After `git clean -fdx` or fresh clone**, re-run the script:
 
 ```bash
 ./scripts/setup-firebase.sh
 ```
 
-**Check mode** — verify files are in place without copying:
+**Check mode**, verify files are in place without copying:
 
 ```bash
 ./scripts/setup-firebase.sh --check
@@ -128,13 +128,19 @@ androidApp/src/benchmark/google-services.json — benchmark build type
 iosApp/iosApp/GoogleService-Info.plist       — iOS app
 ```
 
-All paths are in `.gitignore` — they never appear in `git status`.
+All paths are in `.gitignore`. They never appear in `git status`.
 
 ## Crashlytics
 
-Firebase Crashlytics is integrated for automatic crash reporting in production builds. Setup is minimal — Crashlytics Gradle plugin + native SDK dependency in `androidApp`, with collection disabled in debug builds.
+Firebase Crashlytics is integrated for automatic crash reporting in production builds. Setup is minimal. Crashlytics Gradle plugin + native SDK dependency in `androidApp`, collection disabled in debug builds.
 
 For full details see [CRASHLYTICS.md](CRASHLYTICS.md).
+
+## Not Covered (and Why)
+
+- **Firebase Emulator Suite** — not used locally, tests use fake repositories from `:shared:testing`
+- **Remote Config** — planned as feature flag infrastructure, not yet implemented
+- **Firebase Analytics setup** — covered separately in `analytics:firebase` module, not documented here
 
 ## Related
 

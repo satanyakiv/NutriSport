@@ -53,7 +53,7 @@ trigger: pull_request → main
 
 **iOS pipeline** (parallel with Android, on `macos-14`):
 
-6. **ios-simulator-build** — links Kotlin/Native debug framework (`linkDebugFrameworkIosSimulatorArm64`), then runs `xcodebuild` for simulator without signing. Validates K/Native linking, Swift-Kotlin interop, SPM resolution, and Xcode build config. No secrets required — uses placeholder `GoogleService-Info.plist`. Uploads `xcodebuild.log` on failure.
+6. **ios-simulator-build** — links Kotlin/Native debug framework (`linkDebugFrameworkIosSimulatorArm64`), then runs `xcodebuild` for simulator without signing. Validates K/Native linking, Swift-Kotlin interop, SPM resolution, and Xcode build config. No secrets required. Uses placeholder `GoogleService-Info.plist`. Uploads `xcodebuild.log` on failure.
 
 ### Main branch CI (`debug.yml`)
 
@@ -91,7 +91,7 @@ Required secrets: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASS
 
 ### iOS Release (`ios-release.yml`)
 
-**Currently disabled.** Manual-only workflow (`workflow_dispatch`) with confirmation gate — requires typing "release" to execute.
+**Currently disabled.** Manual-only workflow (`workflow_dispatch`) with confirmation gate. Requires typing "release" to execute.
 
 ```
 trigger: manual (workflow_dispatch, type "release" to confirm)
@@ -153,7 +153,7 @@ iosApp/
 | `KEY_ALIAS`                | `release.yml`              | Signing key alias                 |
 | `KEY_PASSWORD`             | `release.yml`              | Signing key password              |
 
-The `ios-simulator-build` job in `pr.yml` requires **no secrets** — it builds for simulator without signing.
+The `ios-simulator-build` job in `pr.yml` requires **no secrets**. It builds for simulator without signing.
 
 ### iOS Release (not configured)
 
@@ -164,3 +164,16 @@ The `ios-simulator-build` job in `pr.yml` requires **no secrets** — it builds 
 | `APP_STORE_CONNECT_KEY_ID`      | `ios-release.yml` | App Store Connect API key ID            |
 | `APP_STORE_CONNECT_ISSUER_ID`   | `ios-release.yml` | App Store Connect API issuer ID         |
 | `APP_STORE_CONNECT_KEY_CONTENT` | `ios-release.yml` | `.p8` key file content (base64)         |
+
+## Not Covered (and Why)
+
+- **Google Play Store deployment** — manual upload via Play Console, automated publishing not configured
+- **Test results in PR comments** — artifacts uploaded but not posted as PR comments
+- **Dependency vulnerability scanning** — no automated checks, Renovate planned on roadmap
+- **Branch protection rules** — configured in GitHub settings, not documented here
+
+## Related
+
+- [Testing Guide](TESTING.md) — test stack, coverage, running tests
+- [Security](SECURITY.md) — secrets management referenced in CI
+- [Firebase Setup](FIREBASE_SETUP.md) — config file injection in CI

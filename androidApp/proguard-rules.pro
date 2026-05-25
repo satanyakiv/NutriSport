@@ -11,6 +11,18 @@
 -keep class dev.gitlive.firebase.** { *; }
 -dontwarn dev.gitlive.firebase.**
 
+# ---- Google Firebase ComponentRegistrar ----
+# Firebase Crashlytics / Common / Installations register components via the SPI
+# file META-INF/com.google.firebase.components.ComponentRegistrar. R8 full-mode
+# (AGP 8+ default) strips the no-arg constructors of those Registrars because
+# nothing references them directly. They are instantiated reflectively at
+# FirebaseInitProvider start-up. Without this keep, Crashlytics never initialises
+# in release and uncaught crashes are silently dropped before reaching Console.
+# Firebase BoM does NOT ship this rule in its consumer ProGuard files.
+-keep class * implements com.google.firebase.components.ComponentRegistrar {
+    <init>();
+}
+
 # ---- KMPAuth ----
 -keep class com.mmk.kmpauth.** { *; }
 -dontwarn com.mmk.kmpauth.**

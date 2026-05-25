@@ -11,4 +11,5 @@ actual object AppConfig {
       false
     }
   actual val enableLogging: Boolean = isDebug
+  actual val sentryEnvironment: String = if (isDebug) "debug" else "production"
 }

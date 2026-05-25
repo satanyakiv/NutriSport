@@ -36,6 +36,8 @@ google = "4.4.4"
 firebase-crashlytics-plugin = "3.0.6"
 splash = "1.2.0"
 firebase-bom = "33.1.2" #don't update. kmpauth uses firebase-auth-ktx, which is absent in later bom version
+sentryKmp = "0.26.0"
+sentryAndroidGradle = "6.8.1"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -116,3 +118,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
+sentry-kmp = { id = "io.sentry.kotlin.multiplatform.gradle", version.ref = "sentryKmp" }
+sentry-android = { id = "io.sentry.android.gradle", version.ref = "sentryAndroidGradle" }

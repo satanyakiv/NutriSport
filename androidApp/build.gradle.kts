@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.sentry.android)
 }
 
 kotlin {
@@ -139,4 +140,19 @@ dependencies {
 
 baselineProfile {
     dexLayoutOptimization = true
+}
+
+// Sentry Android Gradle plugin: uploads the R8 mapping only. The SDK itself comes from
+// the sentry-kotlin-multiplatform plugin in :composeApp, so autoInstallation is disabled.
+// Upload runs only when SENTRY_AUTH_TOKEN is present (CI), so local debug builds skip it.
+sentry {
+    org.set(System.getenv("SENTRY_ORG") ?: "nutrisport")
+    projectName.set(System.getenv("SENTRY_PROJECT") ?: "nutrisport")
+    authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
+    url.set(System.getenv("SENTRY_URL") ?: "https://de.sentry.io")
+    autoUploadProguardMapping.set(System.getenv("SENTRY_AUTH_TOKEN") != null)
+    autoInstallation { enabled.set(false) }
+    tracingInstrumentation { enabled.set(false) }
+    uploadNativeSymbols.set(false)
+    telemetry.set(false)
 }

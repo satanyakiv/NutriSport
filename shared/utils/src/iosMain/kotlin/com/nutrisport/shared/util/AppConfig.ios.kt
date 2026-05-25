@@ -6,4 +6,5 @@ import kotlin.experimental.ExperimentalNativeApi
 actual object AppConfig {
   actual val isDebug: Boolean = Platform.isDebugBinary
   actual val enableLogging: Boolean = isDebug
+  actual val sentryEnvironment: String = if (isDebug) "debug" else "production"
 }

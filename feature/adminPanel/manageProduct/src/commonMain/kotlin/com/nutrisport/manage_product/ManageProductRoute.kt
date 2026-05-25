@@ -8,14 +8,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ManageProductRoute(
   id: String?,
-  goBack: () -> Unit,
 ) {
   val viewModel = koinViewModel<ManageProductViewModel>()
   val photoPicker = koinInject<PhotoPicker>()
 
   ManageProductScreen(
     id = id,
-    goBack = goBack,
+    goBack = viewModel::goBack,
     screenState = viewModel.screenState,
     isFormValid = viewModel.isFormValid,
     thumbnailUploaderState = viewModel.thumbnailUploaderState,

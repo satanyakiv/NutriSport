@@ -12,6 +12,7 @@ import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.ConnectivityStatus
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.ProductRepository
+import com.nutrisport.shared.domain.navigation.Router
 import com.nutrisport.shared.domain.usecase.ObserveProductWithConnectivityUseCase
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +29,10 @@ class DetailsViewModel(
   private val customerRepository: CustomerRepository,
   private val productToUiMapper: ProductToUiMapper,
   private val savedStateHandle: SavedStateHandle,
+  private val router: Router,
 ) : ViewModel() {
+  fun goBack() = router.back()
+
   private val productId = savedStateHandle.get<String>("id").orEmpty()
   private var wasOffline = false
 

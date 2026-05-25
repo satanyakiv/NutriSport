@@ -8,6 +8,7 @@ import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
 import com.nutrisport.shared.test.FakeCustomerRepository
+import com.nutrisport.shared.test.FakeRouter
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
@@ -44,6 +45,7 @@ class ProfileViewModelTest {
             customerRepository = fakeCustomerRepo,
             updateCustomerUseCase = UpdateCustomerUseCase(fakeCustomerRepo),
             validateProfileFormUseCase = ValidateProfileFormUseCase(),
+            router = FakeRouter(),
         )
     }
 

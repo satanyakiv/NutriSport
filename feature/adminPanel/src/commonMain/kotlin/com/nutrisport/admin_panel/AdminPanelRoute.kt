@@ -6,17 +6,14 @@ import androidx.compose.runtime.getValue
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AdminPanelRoute(
-  goBack: () -> Unit,
-  goToManageProduct: (String?) -> Unit,
-) {
+fun AdminPanelRoute() {
   val viewModel = koinViewModel<AdminPanelViewModel>()
   val products by viewModel.filteredProducts.collectAsState()
   val searchQuery by viewModel.searchQuery.collectAsState()
 
   AdminPanelScreen(
-    goBack = goBack,
-    goToManageProduct = goToManageProduct,
+    goBack = viewModel::goBack,
+    goToManageProduct = viewModel::goToManageProduct,
     products = products,
     searchQuery = searchQuery,
     onSearchQueryChange = viewModel::updateSearchQuery,

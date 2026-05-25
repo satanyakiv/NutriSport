@@ -16,6 +16,7 @@ import com.nutrisport.shared.domain.usecase.ObserveProductWithConnectivityUseCas
 import com.nutrisport.shared.test.FakeConnectivityObserver
 import com.nutrisport.shared.test.FakeCustomerRepository
 import com.nutrisport.shared.test.FakeProductRepository
+import com.nutrisport.shared.test.FakeRouter
 import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
@@ -66,6 +67,7 @@ class DetailsViewModelTest {
       customerRepository = fakeCustomerRepo,
       productToUiMapper = ProductToUiMapper(),
       savedStateHandle = savedState,
+      router = FakeRouter(),
     )
   }
 

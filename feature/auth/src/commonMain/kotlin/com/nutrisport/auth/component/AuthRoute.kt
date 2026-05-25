@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AuthRoute(goToHome: () -> Unit) {
+fun AuthRoute() {
   val viewModel = koinViewModel<AuthViewModel>()
   AuthScreen(
-    goToHome = goToHome,
+    goToHome = viewModel::goToHome,
     onCreateCustomer = viewModel::createCustomer,
   )
 }

@@ -9,6 +9,7 @@ import assertk.assertions.isNotNull
 import androidx.lifecycle.SavedStateHandle
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.test.FakeProductRepository
+import com.nutrisport.shared.test.FakeRouter
 import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
@@ -43,7 +44,7 @@ class CategorySearchViewModelTest {
             productsByCategoryFlow = flowOf(Either.Right(products))
         }
         val savedState = SavedStateHandle(mapOf("category" to "Protein"))
-        return CategorySearchViewModel(repo, savedState)
+        return CategorySearchViewModel(repo, savedState, FakeRouter())
     }
 
     @Test

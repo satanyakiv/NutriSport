@@ -11,11 +11,13 @@ import com.nutrisport.database.di.databaseModule
 import com.nutrisport.details.di.detailsModule
 import com.nutrisport.home.di.homeModule
 import com.nutrisport.manage_product.di.manageProductModule
+import com.nutrisport.navigation.DefaultRouter
 import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.navigation.debug.NoOpDebugToolkit
 import com.nutrisport.products_overview.di.productsOverviewModule
 import com.nutrisport.profile.di.profileModule
 import com.nutrisport.shared.domain.di.domainModule
+import com.nutrisport.shared.domain.navigation.Router
 import com.portfolio.categories_search.di.categorySearchModule
 import com.portfolio.payment_completed.di.paymentModule
 import org.koin.core.KoinApplication
@@ -29,6 +31,10 @@ private val debugToolkitFallback = module {
   single<DebugToolkit> { NoOpDebugToolkit() }
 }
 
+private val routerModule = module {
+  single<Router> { DefaultRouter() }
+}
+
 fun initializeKoin(
   useFakeData: Boolean = false,
   additionalModules: List<Module> = emptyList(),
@@ -39,6 +45,7 @@ fun initializeKoin(
     modules(
       buildList {
         add(debugToolkitFallback)
+        add(routerModule)
         addAll(additionalModules)
         add(targetModule)
         add(analyticsCoreModule)

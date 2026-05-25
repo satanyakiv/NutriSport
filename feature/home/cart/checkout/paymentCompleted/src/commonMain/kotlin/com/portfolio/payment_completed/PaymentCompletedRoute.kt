@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun PaymentCompletedRoute(navigateBack: () -> Unit) {
+fun PaymentCompletedRoute() {
   val viewModel = koinViewModel<PaymentViewModel>()
   PaymentCompletedScreen(
     screenState = viewModel.screenState,
-    navigateBack = navigateBack,
+    navigateBack = viewModel::navigateBack,
   )
 }

@@ -7,6 +7,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.nutrisport.shared.domain.Product
+import com.nutrisport.shared.test.FakeRouter
 import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,7 @@ class AdminPanelViewModelTest {
     fun `should show all products when search is empty`() = runTest(testDispatcher) {
         // Arrange
         val products = listOf(fakeProduct(id = "1", title = "WHEY"), fakeProduct(id = "2", title = "CREATINE"))
-        val viewModel = AdminPanelViewModel(FakeAdminRepository(products))
+        val viewModel = AdminPanelViewModel(FakeAdminRepository(products), FakeRouter())
 
         // Act & Assert
         viewModel.filteredProducts.test {
@@ -58,7 +59,7 @@ class AdminPanelViewModelTest {
         // Arrange
         val allProducts = listOf(fakeProduct(id = "1", title = "WHEY"), fakeProduct(id = "2", title = "CREATINE"))
         val searchResults = listOf(fakeProduct(id = "1", title = "WHEY"))
-        val viewModel = AdminPanelViewModel(FakeAdminRepository(allProducts, searchResults))
+        val viewModel = AdminPanelViewModel(FakeAdminRepository(allProducts, searchResults), FakeRouter())
 
         // Assert — subscribe first (WhileSubscribed requires active collector)
         viewModel.filteredProducts.test {

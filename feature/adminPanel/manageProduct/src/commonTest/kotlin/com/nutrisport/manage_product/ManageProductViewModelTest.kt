@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import androidx.lifecycle.SavedStateHandle
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.test.FakeRouter
 import com.nutrisport.shared.test.fakeProduct
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
@@ -52,7 +53,7 @@ class ManageProductViewModelTest {
 
     private fun createViewModel(productId: String = ""): ManageProductViewModel {
         val savedState = SavedStateHandle(mapOf("id" to productId))
-        return ManageProductViewModel(fakeAdminRepo, savedState)
+        return ManageProductViewModel(fakeAdminRepo, savedState, FakeRouter())
     }
 
     @Test

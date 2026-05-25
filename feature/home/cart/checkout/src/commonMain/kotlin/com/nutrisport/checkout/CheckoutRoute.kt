@@ -6,14 +6,12 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CheckoutRoute(
   totalAmount: Double,
-  navigateBack: () -> Unit,
-  navigateToPaymentCompleted: (Boolean?, String?) -> Unit,
 ) {
   val viewModel = koinViewModel<CheckoutViewModel>()
   CheckoutScreen(
     totalAmount = totalAmount,
-    navigateBack = navigateBack,
-    navigateToPaymentCompleted = navigateToPaymentCompleted,
+    navigateBack = viewModel::navigateBack,
+    navigateToPaymentCompleted = viewModel::navigateToPaymentCompleted,
     screenState = viewModel.screenState,
     isFormValid = viewModel.isFormValid,
     onCountrySelect = viewModel::updateCountry,

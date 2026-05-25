@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.domain.ProductRepository
+import com.nutrisport.shared.domain.navigation.Router
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +24,12 @@ import kotlinx.coroutines.flow.stateIn
 class CategorySearchViewModel(
   private val productRepository: ProductRepository,
   private val savedStateHandle: SavedStateHandle,
+  private val router: Router,
 ) : ViewModel() {
+  fun navigateToDetails(id: String) = router.navigateTo(Screen.Details(id))
+
+  fun navigateBack() = router.back()
+
   private val products = productRepository.readProductsByCategoryFlow(
     category = ProductCategory.valueOf(
       savedStateHandle.get<String>("category") ?: ProductCategory.Protein.name

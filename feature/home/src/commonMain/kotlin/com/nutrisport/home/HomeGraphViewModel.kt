@@ -3,6 +3,8 @@ package com.nutrisport.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.navigation.Router
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.domain.usecase.CalculateCartTotalUseCase
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
 import com.nutrisport.shared.domain.usecase.SignOutUseCase
@@ -22,7 +24,22 @@ class HomeGraphViewModel(
   private val observeEnrichedCartUseCase: ObserveEnrichedCartUseCase,
   private val calculateCartTotalUseCase: CalculateCartTotalUseCase,
   private val signOutUseCase: SignOutUseCase,
+  private val router: Router,
 ) : ViewModel() {
+  fun navigateToAuth() = router.replaceWith(Screen.Auth)
+
+  fun navigateToProfile() = router.navigateTo(Screen.Profile)
+
+  fun navigateToAdminPanel() = router.navigateTo(Screen.AdminPanel)
+
+  fun navigateToDetails(id: String) = router.navigateTo(Screen.Details(id))
+
+  fun navigateToCategorySearch(category: String) =
+    router.navigateTo(Screen.CategorySearch(category))
+
+  fun navigateToCheckout(totalAmount: Double) =
+    router.navigateTo(Screen.Checkout(totalAmount))
+
   val customer = customerRepository.readCustomerFlow()
     .map { UiState.Content(it) }
     .onStart<UiState<com.nutrisport.shared.domain.Customer>> { emit(UiState.Loading) }

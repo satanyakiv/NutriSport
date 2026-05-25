@@ -3,8 +3,8 @@ package com.nutrisport.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
+import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
@@ -17,15 +17,49 @@ import com.nutrisport.manage_product.ManageProductRoute
 import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.profile.ProfileRoute
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.domain.navigation.NavigationCommand
+import com.nutrisport.shared.domain.navigation.Router
 import com.nutrisport.shared.navigation.Screen
 import com.portfolio.categories_search.CategoriesSearchRoute
 import com.portfolio.payment_completed.PaymentCompletedRoute
 import org.koin.compose.koinInject
 
+/**
+ * Root navigation graph. Owns the bridging from [Router.commands] to the live
+ * `NavController`. ViewModels emit [NavigationCommand]s through the [Router] and
+ * the collector below translates each into a framework call, so no feature module
+ * ever touches the `NavController` directly. See `.claude/rules/navigation.md`.
+ *
+ * The bottom-bar switching inside `HomeGraph` is a SEPARATE, nested `HomeNavHost`
+ * and intentionally does NOT go through the [Router] — it is local tab state, not
+ * app-level navigation.
+ */
 @Composable
 fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
   val debugToolkit = koinInject<DebugToolkit>()
+  val router = koinInject<Router>()
   val navController = debugToolkit.rememberNavController()
+
+  LaunchedEffect(navController, router) {
+    router.commands.collect { command ->
+      when (command) {
+        is NavigationCommand.NavigateTo -> navController.navigate(command.destination)
+        is NavigationCommand.Replace -> navController.navigate(command.destination) {
+          launchSingleTop = true
+          popUpTo(0) { inclusive = true }
+        }
+        NavigationCommand.Back -> navController.popBackStack()
+        is NavigationCommand.PopUpTo -> navController.popBackStack(
+          route = command.destination,
+          inclusive = command.inclusive,
+        )
+        NavigationCommand.PopToRoot -> navController.popBackStack(
+          navController.graph.findStartDestination().id,
+          inclusive = false,
+        )
+      }
+    }
+  }
 
   NavHost(
     navController = navController,
@@ -35,121 +69,21 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
     popEnterTransition = { EnterTransition.None },
     popExitTransition = { ExitTransition.None },
   ) {
-    authDestination(navController)
-    homeGraphDestination(navController)
-    profileDestination(navController)
-    adminDestinations(navController)
-    detailsDestination(navController)
-    categorySearchDestination(navController)
-    checkoutDestinations(navController)
-  }
-}
-
-private fun NavGraphBuilder.authDestination(navController: NavController) {
-  composable<Screen.Auth> {
-    AuthRoute(
-      goToHome = {
-        navController.navigate(Screen.HomeGraph) {
-          popUpTo<Screen.Auth> { inclusive = true }
-        }
-      },
-    )
-  }
-}
-
-private fun NavGraphBuilder.homeGraphDestination(navController: NavController) {
-  composable<Screen.HomeGraph> {
-    HomeGraphRoute(
-      navigateToAuth = {
-        navController.navigate(Screen.Auth) {
-          popUpTo<Screen.HomeGraph> { inclusive = true }
-        }
-      },
-      navigateToProfile = {
-        navController.navigate(Screen.Profile)
-      },
-      navigateToAdminPanel = {
-        navController.navigate(Screen.AdminPanel)
-      },
-      navigateToDetails = { productId ->
-        navController.navigate(Screen.Details(id = productId))
-      },
-      navigateToCategorySearch = { categoryName ->
-        navController.navigate(Screen.CategorySearch(categoryName))
-      },
-      navigateToCheckout = { totalAmount ->
-        navController.navigate(Screen.Checkout(totalAmount))
-      },
-    )
-  }
-}
-
-private fun NavGraphBuilder.profileDestination(navController: NavController) {
-  composable<Screen.Profile> {
-    ProfileRoute(
-      goBack = { navController.navigateUp() },
-    )
-  }
-}
-
-private fun NavGraphBuilder.adminDestinations(navController: NavController) {
-  composable<Screen.AdminPanel> {
-    AdminPanelRoute(
-      goBack = { navController.navigateUp() },
-      goToManageProduct = { id ->
-        navController.navigate(Screen.ManageProduct(id = id))
-      },
-    )
-  }
-  composable<Screen.ManageProduct> {
-    val id = it.toRoute<Screen.ManageProduct>().id
-    ManageProductRoute(
-      id = id,
-      goBack = { navController.navigateUp() },
-    )
-  }
-}
-
-private fun NavGraphBuilder.detailsDestination(navController: NavController) {
-  composable<Screen.Details> {
-    DetailsRoute(
-      goBack = { navController.navigateUp() },
-    )
-  }
-}
-
-private fun NavGraphBuilder.categorySearchDestination(navController: NavController) {
-  composable<Screen.CategorySearch> {
-    val category = ProductCategory.valueOf(it.toRoute<Screen.CategorySearch>().category)
-    CategoriesSearchRoute(
-      category = category,
-      navigateToDetails = { id ->
-        navController.navigate(Screen.Details(id))
-      },
-      navigateBack = { navController.navigateUp() },
-    )
-  }
-}
-
-private fun NavGraphBuilder.checkoutDestinations(navController: NavController) {
-  composable<Screen.Checkout> {
-    val totalAmount = it.toRoute<Screen.Checkout>().totalAmount
-    CheckoutRoute(
-      totalAmount = totalAmount,
-      navigateBack = { navController.navigateUp() },
-      navigateToPaymentCompleted = { isSuccess, error ->
-        navController.navigate(Screen.PaymentCompleted(isSuccess, error))
-      },
-    )
-  }
-  composable<Screen.PaymentCompleted> {
-    PaymentCompletedRoute(
-      navigateBack = {
-        navController.navigate(Screen.HomeGraph) {
-          launchSingleTop = true
-          popUpTo(0) { inclusive = true }
-        }
-      },
-    )
+    composable<Screen.Auth> { AuthRoute() }
+    composable<Screen.HomeGraph> { HomeGraphRoute() }
+    composable<Screen.Profile> { ProfileRoute() }
+    composable<Screen.AdminPanel> { AdminPanelRoute() }
+    composable<Screen.ManageProduct> {
+      ManageProductRoute(id = it.toRoute<Screen.ManageProduct>().id)
+    }
+    composable<Screen.Details> { DetailsRoute() }
+    composable<Screen.CategorySearch> {
+      val category = ProductCategory.valueOf(it.toRoute<Screen.CategorySearch>().category)
+      CategoriesSearchRoute(category = category)
+    }
+    composable<Screen.Checkout> {
+      CheckoutRoute(totalAmount = it.toRoute<Screen.Checkout>().totalAmount)
+    }
+    composable<Screen.PaymentCompleted> { PaymentCompletedRoute() }
   }
 }

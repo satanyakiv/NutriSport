@@ -6,12 +6,12 @@ import androidx.compose.runtime.getValue
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DetailsRoute(goBack: () -> Unit) {
+fun DetailsRoute() {
   val viewModel = koinViewModel<DetailsViewModel>()
   val screenState by viewModel.screenState.collectAsState()
 
   DetailsScreen(
-    goBack = goBack,
+    goBack = viewModel::goBack,
     state = screenState,
     quantity = viewModel.quantity,
     selectedFlavor = viewModel.selectedFlavor,

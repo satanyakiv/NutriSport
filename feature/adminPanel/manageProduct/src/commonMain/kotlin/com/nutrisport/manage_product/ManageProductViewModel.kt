@@ -7,6 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.AdminRepository
+import com.nutrisport.shared.domain.navigation.Router
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.domain.PlatformFile
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.AppError
@@ -17,7 +19,10 @@ import kotlinx.coroutines.launch
 class ManageProductViewModel(
   private val adminRepository: AdminRepository,
   private val savedStateHandle: SavedStateHandle,
+  private val router: Router,
 ) : ViewModel() {
+  fun goBack() = router.back()
+
   private val productId = savedStateHandle.get<String>("id").orEmpty()
 
   var screenState by mutableStateOf(ManageProductState())

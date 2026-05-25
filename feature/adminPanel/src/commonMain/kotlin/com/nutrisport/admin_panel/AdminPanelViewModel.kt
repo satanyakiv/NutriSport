@@ -3,6 +3,8 @@ package com.nutrisport.admin_panel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.AdminRepository
+import com.nutrisport.shared.domain.navigation.Router
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -17,7 +19,12 @@ import kotlinx.coroutines.flow.stateIn
 
 class AdminPanelViewModel(
   private val adminRepository: AdminRepository,
+  private val router: Router,
 ) : ViewModel() {
+  fun goBack() = router.back()
+
+  fun goToManageProduct(id: String?) = router.navigateTo(Screen.ManageProduct(id))
+
   private val allProducts = adminRepository.readLastTenProducts()
     .map { UiState.Content(it) }
     .onStart<UiState<List<com.nutrisport.shared.domain.Product>>> { emit(UiState.Loading) }

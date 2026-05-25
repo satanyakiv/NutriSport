@@ -12,6 +12,8 @@ import com.nutrisport.shared.domain.Order
 import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductRepository
+import com.nutrisport.shared.domain.navigation.Router
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
@@ -32,8 +34,11 @@ class PaymentViewModel(
   private val customerRepository: CustomerRepository,
   private val orderRepository: OrderRepository,
   private val productRepository: ProductRepository,
+  private val router: Router,
 ) : ViewModel() {
   var screenState: UiState<Unit> by mutableStateOf(UiState.Loading)
+
+  fun navigateBack() = router.replaceWith(Screen.HomeGraph)
 
   private val customer = customerRepository.readCustomerFlow()
     .map { UiState.Content(it) }

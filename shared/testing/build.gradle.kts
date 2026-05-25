@@ -11,6 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":domain"))
+            implementation(project(":shared:utils"))
             implementation(libs.kotlinx.coroutines.test)
         }
     }

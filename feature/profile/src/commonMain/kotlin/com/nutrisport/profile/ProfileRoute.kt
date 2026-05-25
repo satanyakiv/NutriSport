@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ProfileRoute(goBack: () -> Unit) {
+fun ProfileRoute() {
   val viewModel = koinViewModel<ProfileViewModel>()
   ProfileScreen(
-    goBack = goBack,
+    goBack = viewModel::goBack,
     screenReady = viewModel.screenReady,
     screenState = viewModel.screenState,
     isFormValid = viewModel.isFormValid,

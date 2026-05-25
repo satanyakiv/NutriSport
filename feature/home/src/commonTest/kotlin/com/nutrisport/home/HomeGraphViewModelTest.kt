@@ -2,16 +2,20 @@ package com.nutrisport.home
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.nutrisport.shared.domain.Customer
+import com.nutrisport.shared.domain.navigation.NavigationCommand
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.domain.usecase.CalculateCartTotalUseCase
 import com.nutrisport.shared.domain.usecase.EnrichCartWithProductsUseCase
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
 import com.nutrisport.shared.domain.usecase.SignOutUseCase
 import com.nutrisport.shared.test.FakeCustomerRepository
 import com.nutrisport.shared.test.FakeProductRepository
+import com.nutrisport.shared.test.FakeRouter
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
@@ -44,12 +48,13 @@ class HomeGraphViewModelTest {
     private fun createViewModel(
         customerRepo: FakeCustomerRepository = FakeCustomerRepository(),
         productRepo: FakeProductRepository = FakeProductRepository(),
+        router: FakeRouter = FakeRouter(),
     ): HomeGraphViewModel {
         val enrichUseCase = EnrichCartWithProductsUseCase()
         val observeUseCase = ObserveEnrichedCartUseCase(customerRepo, productRepo, enrichUseCase)
         val calculateUseCase = CalculateCartTotalUseCase()
         val signOutUseCase = SignOutUseCase(customerRepo)
-        return HomeGraphViewModel(customerRepo, observeUseCase, calculateUseCase, signOutUseCase)
+        return HomeGraphViewModel(customerRepo, observeUseCase, calculateUseCase, signOutUseCase, router)
     }
 
     @Test
@@ -105,5 +110,19 @@ class HomeGraphViewModelTest {
         advanceUntilIdle()
 
         assertThat(errorMessage).isEqualTo("Sign out failed")
+    }
+
+    @Test
+    fun `should record navigation commands when nav methods are called`() = runTest(testDispatcher) {
+        val router = FakeRouter()
+        val viewModel = createViewModel(router = router)
+
+        viewModel.navigateToProfile()
+        viewModel.navigateToAuth()
+
+        assertThat(router.recordedCommands).containsExactly(
+            NavigationCommand.NavigateTo(Screen.Profile),
+            NavigationCommand.Replace(Screen.Auth),
+        )
     }
 }

@@ -37,7 +37,7 @@ androidApp / iosApp
 
 feature modules → :domain + :shared:utils + :shared:ui (never depend on each other)
 network → :domain + :database (never :shared:ui)
-shared:testing → :domain
+shared:testing → :domain + :shared:utils (FakeRouter references Screen)
 di → :domain + :network + :database + all features
 navigation → :domain + features
 analytics → :domain only

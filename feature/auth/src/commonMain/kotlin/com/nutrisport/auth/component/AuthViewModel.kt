@@ -3,11 +3,16 @@ package com.nutrisport.auth.component
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.navigation.Router
+import com.nutrisport.shared.navigation.Screen
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
   private val customerRepository: CustomerRepository,
+  private val router: Router,
 ) : ViewModel() {
+  fun goToHome() = router.replaceWith(Screen.HomeGraph)
+
   fun createCustomer(
     uid: String,
     displayName: String?,

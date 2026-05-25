@@ -9,8 +9,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CategoriesSearchRoute(
   category: ProductCategory,
-  navigateToDetails: (String) -> Unit,
-  navigateBack: () -> Unit,
 ) {
   val viewModel = koinViewModel<CategorySearchViewModel>()
   val filteredProducts by viewModel.filteredProducts.collectAsState()
@@ -18,8 +16,8 @@ fun CategoriesSearchRoute(
 
   CategorySearchScreen(
     category = category,
-    navigateToDetails = navigateToDetails,
-    navigateBack = navigateBack,
+    navigateToDetails = viewModel::navigateToDetails,
+    navigateBack = viewModel::navigateBack,
     filteredProducts = filteredProducts,
     searchQuery = searchQuery,
     onSearchQueryChange = viewModel::updateSearchQuery,

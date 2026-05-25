@@ -14,6 +14,7 @@ kotlin {
     commonMain.dependencies {
       implementation(libs.kotlinx.serialization)
       implementation(libs.koin.core)
+      implementation(project(":shared:utils"))
     }
     commonTest.dependencies {
       implementation(project(":shared:testing"))

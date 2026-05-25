@@ -19,6 +19,7 @@ database            — Room KMP: entities, DAOs, local cache, migrations
 di                  — Koin DI configuration (sharedModule + platform modules)
 analytics           — Abstract analytics tracking (CompositeTracker)
 feature/*           — Presentation layer: ViewModels, Screens, UI models
+core/*              — Cross-feature UI artefacts (UI models, mappers, composables) reused by 2+ features (e.g. :core:deeplink)
 build-logic/        — Convention plugins (library, feature, feature.full)
 ```
 
@@ -40,6 +41,7 @@ shared:testing → :domain
 di → :domain + :network + :database + all features
 navigation → :domain + features
 analytics → :domain only
+core/* → :domain + :shared:ui + :shared:utils (never :feature:*)
 ```
 
 ### Clean Architecture Layers
@@ -52,6 +54,7 @@ analytics → :domain only
 | Data          | `:network`        | DTOs (`Dto`), mappers, repo implementations, Firebase                                |
 | Test Fixtures | `:shared:testing` | Fake data factories, fake repositories                                               |
 | Presentation  | `:feature/*`      | UI models (`Ui`), ViewModels, Screens                                                |
+| Cross-Feature | `:core/*`         | UI models, mappers, composables shared by 2+ features (e.g. `:core:deeplink`)        |
 
 ### Convention Plugins
 
@@ -76,6 +79,7 @@ analytics → :domain only
 11. **DTOs never leak** outside `:network`. Map to domain before returning.
 12. **Domain models never leak** into Composables. Map to UI models.
 13. **Build-type deps via Strategy pattern** — never `if (isDebug)` or `if (USE_FAKE_DATA)` in Application/commonMain. Use polymorphic implementations per source set (`src/debug/`, `src/release/`, `src/benchmark/`) wired through `DebugModuleProvider`. Examples: `DebugToolkit`, `FirebaseConfigurator`.
+14. **`:core:*` is the cross-feature track.** When a UI artefact (`Ui` model, mapper, list/card composable) is used by 2+ `:feature:*` modules, it lives in `:core:<name>` (applies `nutrisport.kmp.feature`). `:core:*` may depend on `:domain` + `:shared:ui` + `:shared:utils`, and MUST NOT depend on any `:feature:*`. Never inline-share by having one feature depend on another.
 
 ## Naming
 

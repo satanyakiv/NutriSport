@@ -2,16 +2,16 @@
 
 ## Model Naming & Mapping
 
-| Layer       | Suffix         | Example            | Location                               |
-|-------------|----------------|--------------------|----------------------------------------|
-| Domain      | (none)         | `Product`          | `domain/.../domain/Product.kt`         |
-| Data (DTO)  | `Dto`          | `ProductDto`       | `network/.../dto/ProductDto.kt`        |
-| Data Mapper | `Mapper`       | `ProductMapper`    | `network/.../mapper/ProductMapper.kt`  |
-| UI Model    | `Ui`           | `ProductUi`        | `feature/.../model/ProductUi.kt`       |
+| Layer       | Suffix         | Example             | Location                                  |
+| ----------- | -------------- | ------------------- | ----------------------------------------- |
+| Domain      | (none)         | `Product`           | `domain/.../domain/Product.kt`            |
+| Data (DTO)  | `Dto`          | `ProductDto`        | `network/.../dto/ProductDto.kt`           |
+| Data Mapper | `Mapper`       | `ProductMapper`     | `network/.../mapper/ProductMapper.kt`     |
+| UI Model    | `Ui`           | `ProductUi`         | `feature/.../model/ProductUi.kt`          |
 | UI Mapper   | `ToUiMapper`   | `ProductToUiMapper` | `feature/.../mapper/ProductToUiMapper.kt` |
-| Error       | `AppError`     | `AppError.Network` | `domain/.../util/AppError.kt`          |
-| Result      | `DomainResult` | `DomainResult<T>`  | `domain/.../util/AppError.kt`          |
-| UI State    | `UiState`      | `UiState<T>`       | `shared/ui/.../util/UiState.kt`        |
+| Error       | `AppError`     | `AppError.Network`  | `domain/.../util/AppError.kt`             |
+| Result      | `DomainResult` | `DomainResult<T>`   | `domain/.../util/AppError.kt`             |
+| UI State    | `UiState`      | `UiState<T>`        | `shared/ui/.../util/UiState.kt`           |
 
 ### Mapper Rules
 
@@ -24,6 +24,7 @@
 7. **UI-dependent enum extensions** live in `:shared:ui` — `Country.flag`, `ProductCategory.color`.
 8. **Domain→UI mapping in ViewModel only.** `mapper.map()` calls happen in ViewModel (inside `.map {}` on flows or in action methods), never in Composable functions. Screens receive `UiState<XxxUi>`, not `UiState<DomainModel>`.
 9. **Mapper DI:** All mappers registered as `factory {}` in Koin, injected via constructor.
+10. **Cross-feature UI models / mappers** — when a `*Ui` model or `*ToUiMapper` is consumed by 2+ `:feature:*` modules, hoist it to `:core:<name>`. The naming suffix (`Ui`, `ToUiMapper`) does NOT change, only the module. See [architecture.md](architecture.md) Rule 14.
 
 ## Use Cases
 
@@ -63,7 +64,7 @@ class SignOutUseCase(private val customerRepository: CustomerRepository) {
 ### Existing Use Cases
 
 | UseCase                         | Dependencies                                   | Returns                         | Purpose                        |
-|---------------------------------|------------------------------------------------|---------------------------------|--------------------------------|
+| ------------------------------- | ---------------------------------------------- | ------------------------------- | ------------------------------ |
 | `CalculateCartTotalUseCase`     | none                                           | `Double`                        | Cart total                     |
 | `EnrichCartWithProductsUseCase` | none                                           | `List<Pair<CartItem, Product>>` | Pair cart items with products  |
 | `ValidateProfileFormUseCase`    | none                                           | `Boolean`                       | Validate profile/checkout form |

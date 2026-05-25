@@ -75,6 +75,42 @@ module/
 - **Commands use full Gradle paths** — `:module:task` not just `task`
 - **Code examples reference real project code** — not hypothetical/generic
 
+## Infrastructure portfolio (`docs/infrastructure/`)
+
+A documentation track that treats the project as an interview portfolio piece: every infra decision is captured as a measured before/after entry.
+
+**Files:**
+
+```
+docs/infrastructure/
+  README.md                 — entry point + portfolio narrative + index
+  ai-workforce.md           — Claude Code skills, hooks, agents, prompt engineering
+  token-economy.md          — rtk, prompt caching, image budget, MCP-call reduction
+  wall-clock-economy.md     — Robolectric, parallel agents, gradle daemon
+  reliability-and-safety.md — fail-safe hooks, fallbacks, fake-data discipline
+  process-and-workflow.md   — plan-mode, weekly reviews, English policy
+  lessons-learned.md        — anti-patterns, abandoned experiments
+  WEEKLY_LOG.md             — chronological journal of weekly reviews
+  templates/entry.md        — entry skeleton (6 fields)
+```
+
+**Entry skeleton (6 mandatory fields):**
+
+```markdown
+## YYYY-MM-DD — <Short title>
+
+**Problem.** What hurt (1-2 sentences).
+**Solution.** What was done (2-4 sentences, reference real files / commands).
+**Measurement.** Numbers, before → after. If none yet, `qualitative only — to be measured by <date>` and defer.
+**Status.** experimental | stable | abandoned.
+**Tradeoff.** What got worse / what to re-check later.
+**References.** [Plan](path) · [Docs](path) · [Commits](sha…sha)
+```
+
+**Cadence.** Driven by the `infra-weekly` skill: scans the last 7 days of commits + diffed infra files, drafts entries, updates `WEEKLY_LOG.md`. The `Measurement` field is mandatory; entries without numbers go to `WEEKLY_LOG.md` "deferred" until measured.
+
+**Differs from `docs/PERFORMANCE.md`** — that file is a quantitative benchmark log (raw numbers, no narrative). Portfolio entries link back to it for measurements.
+
 ## Source of Truth Principle
 
 Before writing ANY doc:

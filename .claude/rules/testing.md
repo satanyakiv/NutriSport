@@ -72,6 +72,20 @@ fun `should return products when repository succeeds`() = runTest {
 - Simple data classes without logic
 - Platform-specific code (instrumented tests if needed)
 
+## Mokkery vs test double — when to use which
+
+The project uses both. Pick based on what you're testing.
+
+| Scenario                                                       | Approach                                               | Why                                                                |
+| -------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| **ViewModel test** mocking a Repository                        | Mokkery `every { repo.X() } returns ...`               | Fast, built-in `verify { }`, minimal setup                         |
+| **Repository test** mocking a Firebase data source / DataStore | Test double (`Fake*` in `:shared:testing`)             | Stateful — track calls, swap responses mid-test                    |
+| **Test** needing multiple Flow emissions on demand             | Test double `Fake*Repository` with `MutableSharedFlow` | Mokkery's `returns flowOf(...)` emits once; a Fake emits on demand |
+| **UseCase test** (no deps)                                     | Pure unit test, no doubles                             | UseCase is a pure function                                         |
+| **UseCase test** with one repo dep                             | Mokkery on the repo                                    | Minimal setup                                                      |
+
+**Rule of thumb:** if the test reacts to multiple emissions or simulates stateful behavior over time, use a Fake. If it's a one-shot answer (`returns X`), use Mokkery. Fakes live in `:shared:testing/src/commonMain/` (cross-module) or the module's own `commonTest/.../Fake*.kt`. Never inline a Fake inside a test class.
+
 ## UI Tests (compose.uiTest + Robolectric)
 
 Live in `androidHostTest` (not `commonTest`). Use Robolectric for Android context on JVM — no emulator needed, ~2-5s per module. Same Compose Testing API (`onNodeWithText`, `onNodeWithTag`, etc.).

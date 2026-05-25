@@ -11,7 +11,13 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - [Conventions](.claude/rules/conventions.md) — code style, Compose, coroutines, Git
 - [Prompts](.claude/rules/prompts.md) — string resources and constants
 - [Plan Mode](.claude/rules/plan-mode.md) — feature plan files, status markers, orchestration
-- [Documentation](.claude/rules/docs.md) — docs/ file style, structure, formatting conventions
+- [Documentation](.claude/rules/docs.md) — docs/ file style, structure, formatting conventions, infrastructure portfolio
+- [Methodology](.claude/rules/methodology.md) — when to invoke superpowers skills (auto-invoke matrix + skip-zones)
+- [Preview](.claude/rules/preview.md) — inline `@Preview` discipline, `NutriSportPreview` helper, region markers
+- [Fake Data](.claude/rules/fake-data.md) — deterministic fakes, `useFakeData` toggle
+- [CI Budget](.claude/rules/ci-budget.md) — reproduce CI steps locally before paying for a run
+- [Bash Output](.claude/rules/bash-output.md) — rtk allowlist + fallback for verbose gradle/find output
+- [Media Budget](.claude/rules/media-budget.md) — Claude image limit (20/30 MB), screenshot discipline
 
 ## Commands
 

@@ -22,6 +22,22 @@
 - Simple screens without ViewModel — skip Route, use Screen directly
 - New features → Route-Screen. Existing → migrate during refactoring
 
+## Image assets
+
+**Drawables are WebP, not PNG.** Every bitmap committed to `*/composeResources/drawable/` ships as `.webp` (lossy quality 75 for opaque images, lossless for transparency that bands).
+
+```bash
+# One-off conversion of every PNG under a directory:
+find <dir> -name "*.png" -not -path "*/build/*" -print0 \
+  | xargs -0 -I {} sh -c 'cwebp -q 75 -quiet "{}" -o "${1%.png}.webp" && rm "{}"' _ {}
+```
+
+- **YES**: `feature/*/src/commonMain/composeResources/drawable/`, `shared/ui/src/commonMain/composeResources/drawable/`.
+- **NO**: `androidApp/src/main/res/mipmap-*/ic_launcher.png` — Google Play requires PNG launcher icons.
+- **NO**: `iosApp/iosApp/Assets.xcassets/**/*.png` — Xcode doesn't support WebP in asset catalogues.
+
+Compose Resources references drawables by basename (`Res.drawable.my_image`), so renaming `.png` → `.webp` needs no Kotlin/import changes. Never commit both versions.
+
 ## Coroutines
 
 - ViewModels use `viewModelScope`

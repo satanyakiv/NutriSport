@@ -39,7 +39,7 @@ sealed class UiState<out T> {
 val customer = customerRepository.readCustomerFlow()
     .map { UiState.Content(it) }
     .onStart { emit(UiState.Loading) }
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), UiState.Loading)
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Loading)
 
 // One-shot operations: fold the result
 val result = repository.updateCustomer(customer)
@@ -57,3 +57,4 @@ result.fold(
 - Never swallow exceptions silently
 - Log errors before wrapping into `Either.Left(AppError.*)`
 - **No callbacks** (`onSuccess`/`onError`) in repository interfaces — return `DomainResult`
+- **`SharingStarted.WhileSubscribed(5_000)`** — default for `stateIn`. Keeps the upstream alive 5 seconds after the last collector disappears, surviving Activity recreation without leaking. Never use `WhileSubscribed()` with no timeout — recreations re-subscribe instantly and the cold flow restarts.

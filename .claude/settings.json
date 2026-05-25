@@ -20,6 +20,42 @@
             "command": "if echo \"$TOOL_OUTPUT\" | grep -q 'FATAL EXCEPTION\\|Process.*has died\\|CRASH'; then echo '[Tracey] Crash detected! Pull dump: adb pull /data/data/com.portfolio.nutrisport.debug/files/tracey/ ./tracey-dumps/'; echo '[Crashlytics] Check production impact: /debug-crash-live'; fi"
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR:-$PWD}/.claude/hooks/auto-append-memory.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR:-$PWD}/.claude/hooks/navigation-compile-gate.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR:-$PWD}/.claude/hooks/skill-frontmatter-check.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR:-$PWD}/.claude/hooks/gradle-output-notice.sh"
+          }
+        ]
       }
     ],
     "Notification": [

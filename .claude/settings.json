@@ -9,6 +9,15 @@
             "command": "if echo \"$TOOL_INPUT\" | grep -qE 'google-services\\.json|local\\.properties|\\.keystore'; then echo 'BLOCKED: sensitive file' >&2; exit 1; fi"
           }
         ]
+      },
+      {
+        "matcher": "mcp__figma-dev-mode__.*|mcp__figma-desktop__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR:-$PWD}/.claude/hooks/figma-budget-guard.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [

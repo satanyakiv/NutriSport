@@ -36,6 +36,15 @@ KMP project (Android + iOS) with Compose Multiplatform.
 - `/kover-analyze [module]` — coverage analysis and prioritized recommendations
 - `/orchestrate-features <cmd>` — parallel feature development orchestration
 - `/replay-session <dump.json>` — reconstruct user journey from Tracey dump, identify failure point
+- `/feature <desc|figma-url>` — end-to-end feature pipeline (per-screen Figma handoff + scaffold + tests)
+- `/figma-handoff` — translate a Figma frame into Compose Multiplatform against the `:shared:ui` design system
+- `/figma-mcp-budget` — Figma MCP rate-limit discipline (Pro plan: 10/min, 200/day)
+- `/compose-screen-splitter` — audit and split monolithic Compose Screen files
+- `/dev-jump <screen>` — launch the app directly on a screen for visual verification (via `nutrisport://` deep link)
+- `/claude-in-mobile` — emulator/simulator capture router (Android `android-cli` + iOS binary)
+- `/r8-analyzer` — R8/ProGuard keep-rule audit before release
+- `/firebase-ops` — Firebase operations (FCM test send, config inspection)
+- `/infra-weekly` — Sunday review of the `docs/infrastructure/` portfolio docs
 
 ## Quick Reference
 

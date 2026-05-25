@@ -10,6 +10,9 @@ local.properties
 captures
 .externalNativeBuild
 .cxx
+
+# Claude Code transient hook state (nav-compile gate, gradle output log)
+.claude/state/
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/

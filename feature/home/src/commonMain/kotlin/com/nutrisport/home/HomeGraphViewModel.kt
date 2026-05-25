@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.navigation.Router
-import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.domain.usecase.CalculateCartTotalUseCase
 import com.nutrisport.shared.domain.usecase.ObserveEnrichedCartUseCase
 import com.nutrisport.shared.domain.usecase.SignOutUseCase
+import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi

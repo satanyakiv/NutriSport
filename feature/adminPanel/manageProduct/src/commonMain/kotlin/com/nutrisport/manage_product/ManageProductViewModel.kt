@@ -7,10 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.AdminRepository
-import com.nutrisport.shared.domain.navigation.Router
-import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.domain.PlatformFile
 import com.nutrisport.shared.domain.ProductCategory
+import com.nutrisport.shared.domain.navigation.Router
 import com.nutrisport.shared.util.AppError
 import com.nutrisport.shared.util.Either
 import com.nutrisport.shared.util.UiState

@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.domain.CustomerRepository
-import com.nutrisport.shared.domain.navigation.Router
-import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.domain.PhoneNumber
+import com.nutrisport.shared.domain.navigation.Router
 import com.nutrisport.shared.domain.usecase.UpdateCustomerUseCase
 import com.nutrisport.shared.domain.usecase.ValidateProfileFormUseCase
 import com.nutrisport.shared.util.AppError

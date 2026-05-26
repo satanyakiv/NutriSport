@@ -41,3 +41,9 @@ tracey-dumps/
 
 # Source video files (too large for git, only GIFs tracked)
 assets/*.mov
+
+# Emulator/simulator captures (local-dev only, not portfolio source)
+screenshots/
+
+# Codex review raw transcripts (large; the verified summary .md is tracked instead)
+.claude/codex-reviews/raw/

@@ -12,7 +12,10 @@ struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().onOpenURL(perform: { url in
-                GIDSignIn.sharedInstance.handle(url)
+                if GIDSignIn.sharedInstance.handle(url) {
+                    return
+                }
+                DeeplinkSwiftBridge.shared.handleUri(uri: url.absoluteString, source: "CustomScheme")
             })
         }
     }

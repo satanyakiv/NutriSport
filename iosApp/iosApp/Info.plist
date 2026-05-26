@@ -15,6 +15,14 @@
 					<string>com.googleusercontent.apps.388178172033-ea2631usc989s6p5mj1dd2par4obehlr</string>
 				</array>
 			</dict>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>com.portfolio.nutrisport</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>nutrisport</string>
+				</array>
+			</dict>
 		</array>
 	</dict>
 </plist>

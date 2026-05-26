@@ -7,6 +7,7 @@ import assertk.assertions.isTrue
 import com.nutrisport.shared.domain.navigation.NavigationCommand
 import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.test.FakeCustomerRepository
+import com.nutrisport.shared.test.FakePendingDeeplinkStorage
 import com.nutrisport.shared.test.FakeRouter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,10 +37,11 @@ class AuthViewModelTest {
 
     private val fakeCustomerRepo = FakeCustomerRepository()
     private val fakeRouter = FakeRouter()
+    private val fakePending = FakePendingDeeplinkStorage()
 
     @Test
     fun `should emit Replace HomeGraph when goToHome is called`() = runTest(testDispatcher) {
-        val viewModel = AuthViewModel(fakeCustomerRepo, fakeRouter)
+        val viewModel = AuthViewModel(fakeCustomerRepo, fakePending, fakeRouter)
 
         viewModel.goToHome()
 
@@ -48,9 +50,20 @@ class AuthViewModelTest {
     }
 
     @Test
+    fun `should resume parked deeplink when goToHome is called`() = runTest(testDispatcher) {
+        fakePending.set(Screen.Profile)
+        val viewModel = AuthViewModel(fakeCustomerRepo, fakePending, fakeRouter)
+
+        viewModel.goToHome()
+
+        assertThat(fakeRouter.recordedCommands)
+            .containsExactly(NavigationCommand.Replace(Screen.Profile))
+    }
+
+    @Test
     fun `should call onSuccess when createCustomer succeeds`() = runTest(testDispatcher) {
         // Arrange
-        val viewModel = AuthViewModel(fakeCustomerRepo, fakeRouter)
+        val viewModel = AuthViewModel(fakeCustomerRepo, fakePending, fakeRouter)
         var successCalled = false
 
         // Act
@@ -71,7 +84,7 @@ class AuthViewModelTest {
     fun `should call onError when createCustomer fails`() = runTest(testDispatcher) {
         // Arrange
         fakeCustomerRepo.createCustomerError = "Connection failed"
-        val viewModel = AuthViewModel(fakeCustomerRepo, fakeRouter)
+        val viewModel = AuthViewModel(fakeCustomerRepo, fakePending, fakeRouter)
         var errorMessage: String? = null
 
         // Act

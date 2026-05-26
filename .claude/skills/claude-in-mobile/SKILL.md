@@ -92,13 +92,11 @@ Full iOS reference: [`references/cli.md`](references/cli.md).
 
 ## iOS deep-link / location
 
-> The `nutrisport` custom scheme, the `:core:deeplink` registry, and the `onOpenURL` routing in `iosApp/iosApp/iOSApp.swift` are established by the deep-links track. Until that lands, only the `simctl` _mechanism_ below is live; the specific paths describe the contract the deep-links track fulfils.
-
-The iOS host registers the `nutrisport` custom scheme (`iosApp/iosApp/Info.plist` → `CFBundleURLSchemes`) and routes incoming URLs through `onOpenURL` in `iosApp/iosApp/iOSApp.swift`. Deliver a URL to the booted simulator and that path runs, so deep-link routing can be exercised without a manual Safari / Notes tap.
+The iOS host registers the `nutrisport` custom scheme (`iosApp/iosApp/Info.plist` → `CFBundleURLSchemes`) and routes incoming URLs through `onOpenURL` in `iosApp/iosApp/iOSApp.swift` (non-Google URLs go to `DeeplinkSwiftBridge`). Deliver a URL to the booted simulator and that path runs, so deep-link routing can be exercised without a manual Safari / Notes tap. Full contract: [`docs/DEEPLINKS.md`](../../../docs/DEEPLINKS.md).
 
 Prefer `xcrun simctl openurl booted` over the binary's `open-url ios --simulator <name>`: the binary resolves the simulator by **name** and, when several devices share a name (e.g. four "iPhone 16e" after an Xcode upgrade), targets a _shutdown_ duplicate and fails with `Unable to lookup in current state: Shutdown` — and it does not accept a UDID. `booted` is unambiguous and needs no binary.
 
-URL form is `nutrisport://<host>/<path>` — the `<host>` authority is discarded; the resolver matches on `<path>`. Valid paths are the single source of truth in the `:core:deeplink` registry (public: `/products/{id}`, `/categories/{category}`; auth-gated: `/cart`, `/checkout`, `/profile`; admin-gated: `/admin`). Auth-gated paths with no active session land on the auth screen and park the target for post-login replay.
+For the custom scheme the host segment IS the first route segment and is folded into the path, so `nutrisport://products/123` resolves to `/products/123`. Valid paths are the single source of truth in the `:core:deeplink` registry — public: `/products/{id}`, `/categories/{category}`; signed-in: `/profile`; admin: `/admin`. A signed-in path with no active session lands on the auth screen and parks the target for post-login replay; an admin path for a non-admin is dropped silently.
 
 ```bash
 # Public route — non-destructive, no session needed

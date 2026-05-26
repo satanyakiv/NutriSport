@@ -6,6 +6,7 @@ import com.nutrisport.analytics.firebase.di.analyticsFirebaseModule
 import com.nutrisport.auth.di.authModule
 import com.nutrisport.cart.di.cartModule
 import com.nutrisport.checkout.di.checkoutModule
+import com.nutrisport.core.deeplink.di.deeplinkModule
 import com.nutrisport.data.di.networkModule
 import com.nutrisport.database.di.databaseModule
 import com.nutrisport.details.di.detailsModule
@@ -46,6 +47,7 @@ fun initializeKoin(
       buildList {
         add(debugToolkitFallback)
         add(routerModule)
+        add(deeplinkModule)
         addAll(additionalModules)
         add(targetModule)
         add(analyticsCoreModule)

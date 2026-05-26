@@ -37,6 +37,7 @@ kotlin {
             implementation(project(":domain"))
             implementation(project(":network"))
             implementation(project(":database"))
+            implementation(project(":core:deeplink"))
             implementation(project(":shared:utils"))
             implementation(project(":shared:testing"))
         }

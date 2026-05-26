@@ -20,11 +20,9 @@ internal inline fun <T> withAuth(action: (userId: String) -> DomainResult<T>): D
   return if (userId != null) action(userId) else Either.Left(AppError.Unauthorized())
 }
 
-internal suspend inline fun <T> withAdminAuth(
-  action: (userId: String) -> DomainResult<T>,
-): DomainResult<T> {
-  val userId = currentUserId() ?: return Either.Left(AppError.Unauthorized())
-  val isAdmin = try {
+internal suspend fun isCurrentUserAdmin(): Boolean {
+  val userId = currentUserId() ?: return false
+  return try {
     Firebase.firestore
       .collection("customer")
       .document(userId)
@@ -35,7 +33,13 @@ internal suspend inline fun <T> withAdminAuth(
   } catch (_: Exception) {
     false
   }
-  return if (isAdmin) action(userId) else Either.Left(AppError.Unauthorized("Admin access required"))
+}
+
+internal suspend inline fun <T> withAdminAuth(
+  action: (userId: String) -> DomainResult<T>,
+): DomainResult<T> {
+  val userId = currentUserId() ?: return Either.Left(AppError.Unauthorized())
+  return if (isCurrentUserAdmin()) action(userId) else Either.Left(AppError.Unauthorized("Admin access required"))
 }
 
 internal fun Query.toProductDtoListFlow(

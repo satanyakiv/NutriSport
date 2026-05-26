@@ -4,8 +4,10 @@ import com.nutrisport.shared.domain.AdminRepository
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.ProductRepository
+import com.nutrisport.shared.domain.deeplink.DeeplinkAuthGate
 import com.nutrisport.shared.test.FakeAdminRepository
 import com.nutrisport.shared.test.FakeCustomerRepository
+import com.nutrisport.shared.test.FakeDeeplinkAuthGate
 import com.nutrisport.shared.test.FakeOrderRepository
 import com.nutrisport.shared.test.FakeProductRepository
 import com.nutrisport.shared.test.fakeCartItem
@@ -104,4 +106,5 @@ val fakeNetworkModule = module {
 
   single<OrderRepository> { FakeOrderRepository() }
   single<AdminRepository> { FakeAdminRepository() }
+  single<DeeplinkAuthGate> { FakeDeeplinkAuthGate(signedIn = true) }
 }

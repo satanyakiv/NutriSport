@@ -3,6 +3,7 @@ package com.nutrisport.data.di
 import com.nutrisport.data.AdminRepositoryImpl
 import com.nutrisport.data.CustomerMapper
 import com.nutrisport.data.CustomerRepositoryImpl
+import com.nutrisport.data.FirebaseDeeplinkAuthGate
 import com.nutrisport.data.OrderRepositoryImpl
 import com.nutrisport.data.ProductMapper
 import com.nutrisport.data.ProductRepositoryImpl
@@ -17,6 +18,7 @@ import com.nutrisport.shared.domain.AdminRepository
 import com.nutrisport.shared.domain.CustomerRepository
 import com.nutrisport.shared.domain.OrderRepository
 import com.nutrisport.shared.domain.ProductRepository
+import com.nutrisport.shared.domain.deeplink.DeeplinkAuthGate
 import org.koin.dsl.module
 
 val networkModule = module {
@@ -42,4 +44,7 @@ val networkModule = module {
     ProductRepositoryImpl(get(), get(), get(), get())
   }
   single<OrderRepository> { OrderRepositoryImpl(get(), get()) }
+
+  // Deeplink auth gate — signed-in + admin signals for :core:deeplink.
+  single<DeeplinkAuthGate> { FirebaseDeeplinkAuthGate() }
 }

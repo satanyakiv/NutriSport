@@ -1,5 +1,6 @@
 package com.portfolio.nutrisport
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.WindowManager
@@ -12,6 +13,10 @@ import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import com.mmk.kmpnotifier.permission.permissionUtil
 import com.nutrisport.app.AppContent
+import com.nutrisport.core.deeplink.ColdStartDeeplinkQueue
+import com.nutrisport.core.deeplink.DeeplinkBridge
+import com.nutrisport.core.deeplink.DeeplinkSource
+import org.koin.android.ext.android.get
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +36,24 @@ class MainActivity : ComponentActivity() {
     initNotifier()
     requestNotificationPermission()
 
+    // Cold start: buffer the launch deeplink until the NavGraph collector attaches.
+    if (savedInstanceState == null) {
+      intent.data?.toString()?.let {
+        ColdStartDeeplinkQueue.handle(it, DeeplinkSource.CustomScheme)
+      }
+    }
+
     setContent {
       AppContent()
+    }
+  }
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    // Warm start: NavGraph is alive, dispatch straight through the bridge.
+    intent.data?.toString()?.let {
+      get<DeeplinkBridge>().handle(it, DeeplinkSource.CustomScheme)
     }
   }
 

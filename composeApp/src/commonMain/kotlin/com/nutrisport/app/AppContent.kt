@@ -12,10 +12,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
+import com.nutrisport.core.deeplink.ColdStartDeeplinkDrainEffect
 import com.nutrisport.navigation.SetupNavGraph
 import com.nutrisport.navigation.debug.DebugToolkit
 import com.nutrisport.shared.Constants
 import com.nutrisport.shared.domain.CustomerRepository
+import com.nutrisport.shared.domain.navigation.Router
 import com.nutrisport.shared.navigation.Screen
 import org.koin.compose.koinInject
 
@@ -23,6 +25,7 @@ import org.koin.compose.koinInject
 fun AppContent() {
   MaterialTheme {
     val debugToolkit = koinInject<DebugToolkit>()
+    val router = koinInject<Router>()
     val customerRepository = koinInject<CustomerRepository>()
     val isUserAuthenticated = remember { customerRepository.getCurrentUserId() != null }
     val startDestination = remember { if (isUserAuthenticated) Screen.HomeGraph else Screen.Auth }
@@ -33,6 +36,10 @@ fun AppContent() {
       )
       appReady = true
     }
+
+    // Drains any deeplink buffered during cold start once SetupNavGraph attaches
+    // its Router.commands collector (Router.awaitReady() resolves at that point).
+    ColdStartDeeplinkDrainEffect(router)
 
     AnimatedVisibility(
       modifier = Modifier.fillMaxSize(),

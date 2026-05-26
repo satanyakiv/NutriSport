@@ -25,6 +25,7 @@ kotlin {
             isStatic = true
             binaryOption("bundleId", "com.nutrisport.composeapp")
             export(libs.kmp.notifier)
+            export(project(":core:deeplink"))
         }
     }
 
@@ -48,6 +49,7 @@ kotlin {
             implementation(libs.firebase.app)
 
             api(libs.kmp.notifier)
+            api(project(":core:deeplink"))
 
             implementation(project(":analytics:core"))
             implementation(project(":analytics:firebase"))

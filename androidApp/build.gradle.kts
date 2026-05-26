@@ -122,6 +122,7 @@ dependencies {
     implementation(project(":navigation"))
     implementation(project(":di"))
     implementation(project(":domain"))
+    implementation(project(":core:deeplink"))
     implementation(project(":shared:utils"))
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.common)

@@ -30,7 +30,7 @@ Chronological journal of the Sunday infrastructure reviews. Each section is one 
 
 ## 2026-05-26 — Week 1 (continued): Router + cross-platform deep links
 
-**Commits scanned.** Router abstraction — `604d6c9`, `642f771`, `b7aa3b8`, `96ffc79`; cross-platform deep links — `f48fee9`, `c9e2ee2`, `781838a`, `a49844f`, `b158cf2`. Local on `chore/port-toscana-practices`; not pushed.
+**Commits scanned.** Router abstraction — `604d6c9`, `642f771`, `b7aa3b8`, `96ffc79`; cross-platform deep links — `f48fee9`, `c9e2ee2`, `781838a`, `a49844f`, `b158cf2`. Local feature branch; not pushed.
 
 **Modified infra files.** `.claude/rules/navigation.md` (new, B1), `.claude/skills/claude-in-mobile/SKILL.md` (iOS deep-link section updated to the landed registry), `docs/DEEPLINKS.md` (new), `docs/adr/0007-deeplink-architecture.md` (new). Surface now: 18 skills / 8 hook commands / 15 rules.
 

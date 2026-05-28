@@ -61,7 +61,7 @@ Security matters. Client-side auth bypasses, PII left after sign-out, cleartext 
 - OWASP-hardened: server-side admin auth via Firestore rules, HTTPS-only, Room + cart cleared on sign-out, no secrets in git.
 - **4 CI/CD pipelines.** PR validation (lint + test + coverage), debug deploy to Firebase App Distribution, tag-triggered signed release, iOS via Fastlane + TestFlight.
 - 169 tests across 34 files. Domain use cases at 98% coverage. ViewModels tested with Turbine + Fake repositories. UI smoke tests on JVM via Robolectric, ~30s full run, no emulator.
-- `.claude/` directory: 3 agents, 7 commands, 8 skills, 8 rules, 3 hooks. Anyone joining the project (human or AI) follows the same standards.
+- `.claude/` directory: 3 agents, 7 commands, 18 skills, 15 rules, 8 hooks. Anyone joining the project (human or AI) follows the same standards.
 
 ## Architecture
 
@@ -173,27 +173,29 @@ Auto-versioning from git tags. Android tests run on JVM. No emulator in CI. [Ful
 169 tests across 34 files. All JVM. Full run takes ~30 seconds, no emulator.
 
 <!-- coverage:start -->
-| Package | Line coverage |
-| ------- | ------------- |
-| domain:usecase | 98.8% |
-| feature:productsOverview | 90.3% |
-| feature:details | 90.1% |
-| feature:cart | 86.6% |
-| domain:models | 84.0% |
-| analytics:core | 77.4% |
-| shared:utils | 76.4% |
-| feature:profile | 64.2% |
-| feature:categories:search | 46.4% |
-| analytics:firebase | 45.2% |
-| feature:adminPanel | 30.0% |
-| feature:manageProduct | 22.2% |
-| feature:auth | 14.7% |
-| feature:home | 9.2% |
-| network | 0.0% |
-| feature:paymentCompleted | 0.0% |
-| feature:checkout | 0.0% |
+
+| Package                   | Line coverage |
+| ------------------------- | ------------- |
+| domain:usecase            | 98.8%         |
+| feature:productsOverview  | 90.3%         |
+| feature:details           | 90.1%         |
+| feature:cart              | 86.6%         |
+| domain:models             | 84.0%         |
+| analytics:core            | 77.4%         |
+| shared:utils              | 76.4%         |
+| feature:profile           | 64.2%         |
+| feature:categories:search | 46.4%         |
+| analytics:firebase        | 45.2%         |
+| feature:adminPanel        | 30.0%         |
+| feature:manageProduct     | 22.2%         |
+| feature:auth              | 14.7%         |
+| feature:home              | 9.2%          |
+| network                   | 0.0%          |
+| feature:paymentCompleted  | 0.0%          |
+| feature:checkout          | 0.0%          |
 
 > Overall line coverage: 37.4%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+. Report: 2026-04-01.
+
 <!-- coverage:end -->
 
 Stack: `kotlin.test` + `Turbine` + `Mokkery` + `Assertk` + `Robolectric` + `Kover`. [Full testing docs](docs/TESTING.md)
@@ -223,14 +225,14 @@ Crash reporting: Firebase Crashlytics in release builds, [Tracey flight recorder
 
 ### Infrastructure
 
-| Component     | Count | Examples                                                                                                                                          |
-| ------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Agents        | 3     | Architecture reviewer, OWASP security auditor, Crash analyzer                                                                                     |
-| Commands      | 7     | `/fix` (TDD), `/refactor`, `/clean-arch`, `/debug-deps`, `/security-audit`, `/debug-crash`, `/natural-docs`                                       |
-| Skills        | 8     | Test generation, Feature scaffolding, Coverage analysis, Feature orchestration, Live crash analysis, Session replay, Remote Compose, Natural docs |
-| Rules         | 8     | Architecture, Conventions, Testing, Models, Error handling, Docs, Prompts, Plan mode                                                              |
-| Feature plans | 13    | Orchestrated across 5 parallel groups with conflict matrix                                                                                        |
-| Hooks         | 3     | PreToolUse blocks editing secrets files; PostToolUse auto-detects crashes in logs; Notification on permission prompt                              |
+| Component     | Count | Examples                                                                                                                                                                                                                                         |
+| ------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Agents        | 3     | Architecture reviewer, OWASP security auditor, Crash analyzer                                                                                                                                                                                    |
+| Commands      | 7     | `/fix` (TDD), `/refactor`, `/clean-arch`, `/debug-deps`, `/security-audit`, `/debug-crash`, `/natural-docs`                                                                                                                                      |
+| Skills        | 18    | Feature pipeline, Figma handoff, Compose screen split, R8 audit, Emulator capture, Dev-jump deep-link launch, Sentry setup, Firebase ops, Weekly infra review, Test generation, Coverage analysis, Live crash analysis, …                        |
+| Rules         | 15    | Architecture, Navigation, Conventions, Testing, Models, Error handling, Docs, Prompts, Plan mode, Methodology, Preview, Fake data, Media budget, CI budget, Bash output                                                                          |
+| Feature plans | 13    | Orchestrated across 5 parallel groups with conflict matrix                                                                                                                                                                                       |
+| Hooks         | 8     | PreToolUse blocks secret-file edits + runs navigation compile-gate / skill-frontmatter check / Figma budget guard; PostToolUse auto-detects crashes, posts gradle-output notices, auto-appends session memory; Notification on permission prompt |
 
 ### What This Means in Practice
 

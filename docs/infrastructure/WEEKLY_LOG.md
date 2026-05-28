@@ -27,3 +27,25 @@ Chronological journal of the Sunday infrastructure reviews. Each section is one 
 1. _What worked well?_ Mirroring a proven infra-docs structure and seeding it with already-measured facts (test runtime, coverage, module/plugin counts) rather than inventing numbers.
 2. _What did we try and drop? Why?_ Carrying over benchmark numbers from elsewhere — dropped, because portfolio entries must use this repo's own measurements; un-measured fields are marked `qualitative only`.
 3. _What to try next week?_ Capture a real Baseline-Profile device run and a per-repo rtk benchmark to replace the two `qualitative only` placeholders.
+
+## 2026-05-26 — Week 1 (continued): Router + cross-platform deep links
+
+**Commits scanned.** Router abstraction — `604d6c9`, `642f771`, `b7aa3b8`, `96ffc79`; cross-platform deep links — `f48fee9`, `c9e2ee2`, `781838a`, `a49844f`, `b158cf2`. Local on `chore/port-toscana-practices`; not pushed.
+
+**Modified infra files.** `.claude/rules/navigation.md` (new, B1), `.claude/skills/claude-in-mobile/SKILL.md` (iOS deep-link section updated to the landed registry), `docs/DEEPLINKS.md` (new), `docs/adr/0007-deeplink-architecture.md` (new). Surface now: 18 skills / 8 hook commands / 15 rules.
+
+**Entries added.**
+
+- [process-and-workflow](process-and-workflow.md): plan-mode exploration caught a cross-platform deep-link bug before code.
+
+**Entries deferred.**
+
+- Push-tap → deep-link wiring — deferred until the KMPNotifier tap-payload contract is settled.
+- App Links / Universal Links before→after — needs a production domain; re-evaluate when one exists.
+- iOS simulator deep-link E2E — only Android was live-verified this session; re-run once the iOS framework is built.
+
+**Reflection.**
+
+1. _What worked well?_ Plan-mode with three parallel Explore agents surfaced the resolver host-folding mismatch and two navigation-topology conflicts (Cart inner-tab, Checkout amount) before any code — the registry was right on the first pass, zero rework commits.
+2. _What did we try and drop? Why?_ A verbatim resolver port — dropped once exploration showed the source's throwaway-host convention (`scheme://app/...`) would not match NutriSport's natural `nutrisport://products/123` URLs; replaced with scheme-aware host folding. Also dropped `/cart` and `/checkout` from the registry (inner tab / needs a cart-derived amount).
+3. _What to try next week?_ Wire push-tap deep links once the KMPNotifier tap-payload contract is settled, and run the iOS simulator E2E to match the Android live verification.

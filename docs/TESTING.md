@@ -55,25 +55,25 @@ Convention plugin applies Kover after android configuration. Root `build.gradle.
 | ------- | ------------- |
 | domain:usecase | 98.8% |
 | feature:productsOverview | 90.3% |
-| feature:details | 90.1% |
+| feature:details | 89.8% |
 | feature:cart | 86.6% |
-| domain:models | 84.0% |
+| domain:models | 81.3% |
 | analytics:core | 77.4% |
-| shared:utils | 76.4% |
-| feature:profile | 64.2% |
-| feature:categories:search | 46.4% |
+| shared:utils | 75.8% |
+| feature:profile | 63.9% |
+| feature:categories:search | 46.1% |
 | analytics:firebase | 45.2% |
-| feature:adminPanel | 30.0% |
-| feature:manageProduct | 22.2% |
-| feature:auth | 14.7% |
-| feature:home | 9.2% |
+| feature:paymentCompleted | 38.3% |
+| feature:adminPanel | 23.3% |
+| feature:manageProduct | 22.3% |
+| feature:auth | 18.3% |
+| feature:home | 10.2% |
 | network | 0.0% |
-| feature:paymentCompleted | 0.0% |
 | feature:checkout | 0.0% |
 
-> Overall line coverage: 37.4%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
+> Overall line coverage: 36.8%. Low aggregate reflects untested generated code, UI composables, and data layer — tested packages average 80%+.
 
-**Report:** 2026-04-01 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
+**Report:** 2026-05-28 | Regenerate: `./gradlew koverXmlReport` | HTML: `build/reports/kover/html/index.html`
 
 ### What Kover Excludes
 
